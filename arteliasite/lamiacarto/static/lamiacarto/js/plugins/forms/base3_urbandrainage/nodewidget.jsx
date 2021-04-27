@@ -36,6 +36,17 @@ class NodeEditingFormReact extends EditingFormReact {
         this.childwdg[1].SKIPUI = true
         // this.props = { childwdg: [MediaEditingFormReact], ...this.props }
 
+
+        this.PARENTJOIN = {
+            "facility": {
+                "colparent": "id_facility",
+                "colthistable": "lid_facility",
+                "tctable": null,
+                "tctablecolparent": null,
+                "tctablecolthistable": null,
+            }
+        }
+
     }
 
     domLoaded() {

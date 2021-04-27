@@ -83,6 +83,8 @@ class AbstractDBaseParser:
 
         #:the dictionnary of dbase (cf DBconfigReader)
         self.dbasetables = None
+        # dict storing column name request : {...tablename: [column names],...}
+        self.columnsnames = {}
 
         if messageinstance is None:
             self.messageinstance = LamiaIFaceAbstractConnectors()
@@ -335,9 +337,9 @@ class AbstractDBaseParser:
         ][0]
 
         if resdir[0] == "." and hasattr(self, "spatialitefile"):
-            self.dbaseressourcesdirectory = os.path.join(
+            self.dbaseressourcesdirectory = os.path.normpath(os.path.join(
                 os.path.dirname(self.spatialitefile), resdir
-            )
+            ))
         else:
             self.dbaseressourcesdirectory = os.path.normpath(resdir)
         self.crsnumber = crs
@@ -353,6 +355,7 @@ class AbstractDBaseParser:
             self.baseversion < self.dbconfigreader.maxbaseversion
             or self.workversion < self.dbconfigreader.maxworkversion
         ):
+            # pass
             self.updateDBaseVersion()
 
         if self.TYPE == "spatialite" and os.path.isfile(
@@ -537,16 +540,19 @@ class AbstractDBaseParser:
             else:
                 sql = "ALTER TABLE " + table + " ADD COLUMN " + field + " "
 
-                if self.__class__.__name__ == "SpatialiteDBaseParser":
+                if self.__class__.TYPE == "spatialite":
                     if "VARCHAR" in dictnew[table]["fields"][field]["PGtype"]:
                         sql += " TEXT "
                     else:
                         sql += PGTYPE_TO_SLTYPE[
                             dictnew[table]["fields"][field]["PGtype"]
                         ]
-                elif self.__class__.__name__ == "PostGisDBaseParser":
+                elif self.__class__.TYPE in ["django", "postgis"]:
                     sql += dictnew[table]["fields"][field]["PGtype"]
-                self.query(sql)
+                try:
+                    self.query(sql)
+                except:
+                    self.commit()
 
         # * read potential python file
         pythonfile, ext = os.path.splitext(pythonupdatefile)

@@ -44,12 +44,12 @@ class EditingFormReact extends React.Component {
         let childdom = []
         this.childwdg.forEach((childwd, idx) => {
             if (true) {
-                childdom.push(<input value={idx + 1} type="radio" id={'maintab' + childwd.label} key={'maintab' + childwd.label + idx * 3} name={this.table} onChange={this.handleTabChange} />)
-                childdom.push(<label htmlFor={'maintab' + childwd.label} key={'maintab' + childwd.label + idx * 3 + 1}><Message msgId={'qtdesigner.' + childwd.label} /></label>)
+                childdom.push(<input value={idx + 1} type="radio" id={'maintab' + this.table + childwd.label} key={'maintab' + this.table + childwd.label + idx * 3} name={this.table} onChange={this.handleTabChange} />)
+                childdom.push(<label htmlFor={'maintab' + this.table + childwd.label} key={'maintab' + this.table + childwd.label + idx * 3 + 1}><Message msgId={'qtdesigner.' + childwd.label} /></label>)
             }
             let Childwd = childwd
             childdom.push(
-                <div className="qt-designer-tab" key={'maintab' + childwd.label + idx * 3 + 2}>
+                <div className="qt-designer-tab" key={'maintab' + this.table + childwd.label + idx * 3 + 2}>
                     {<Childwd
                         ref={this.childrefs[idx]}
                         // setCurrentWidgetInstance={this.props.setCurrentWidgetInstance}
@@ -168,11 +168,14 @@ class EditingFormReact extends React.Component {
 
     async getPropertiesFromPk(pk) {
 
-        let qgisserverurl = this.projectdata.qgisserverurl.split('?')[0]
-        let qgisserverquery
-        this.projectdata.qgisserverurl.split('?').length > 1 ? qgisserverquery = this.projectdata.qgisserverurl.split('?')[1] : qgisserverquery = null
-        let databaseurl = qgisserverurl + '/wfs3/collections/' + this.table + '_qgis/items/' + pk + '.json'
-        qgisserverquery ? databaseurl = databaseurl + '?' + qgisserverquery : null
+        // let qgisserverurl = this.projectdata.qgisserverurl.split('?')[0]
+        // let qgisserverquery
+        // this.projectdata.qgisserverurl.split('?').length > 1 ? qgisserverquery = this.projectdata.qgisserverurl.split('?')[1] : qgisserverquery = null
+        // let databaseurl = qgisserverurl + '/wfs3/collections/' + this.table + '_qgis/items/' + pk + '.json'
+        // qgisserverquery ? databaseurl = databaseurl + '?' + qgisserverquery : null
+
+        let qgisserverurl = 'http://' + window.location.host
+        let databaseurl = qgisserverurl + '/qgisserver/' + this.projectdata.id_project + '/wfs3/collections/' + this.table + '_qgis/items/' + pk + '.json'
 
         // let temp = this.projectdata.qgisserverurl + 'qgisserver/wfs3/collections/' + this.table + '_qgis/items/' + pk + '.json'
         let feat = await axios.get(databaseurl)

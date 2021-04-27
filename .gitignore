@@ -12,7 +12,7 @@ testfiles/
 
 sandbox/*/
 frontend/
-secrets/
+secrets/*_secrets.*
 
 arteliasite/node_modules
 arteliasite/lamiacarto/static/lamiacarto/bundle

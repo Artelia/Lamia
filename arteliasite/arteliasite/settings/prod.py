@@ -17,14 +17,14 @@ lamiapath = os.path.normpath(
     os.path.join(os.path.dirname(__file__), "..", "..", "..", "..")
 )
 sys.path.append(lamiapath)
-from Lamia.secrets import postgis_aws as pgsecret, djangosecrets, aws_secrets
+from Lamia.secrets import postgis_aws_secrets as pgsecret, django_secrets, aws_secrets
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = djangosecrets.SECRET_KEY
+SECRET_KEY = django_secrets.SECRET_KEY
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
@@ -41,7 +41,7 @@ DEBUG = False
 #     }
 # }
 
-ALLOWED_HOSTS = djangosecrets.ALLOWED_HOSTS
+ALLOWED_HOSTS = django_secrets.ALLOWED_HOSTS
 
 CORS_ORIGIN_WHITELIST = ["http://127.0.0.1:8000", "localhost"]
 

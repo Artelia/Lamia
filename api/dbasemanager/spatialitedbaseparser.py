@@ -221,9 +221,13 @@ class SpatialiteDBaseParser(AbstractDBaseParser):
         return [elem[0] for elem in result]
 
     def getColumns(self, tablename):
+        if tablename in self.columnsnames.keys():
+            return self.columnsnames[tablename]
+
         sql = "PRAGMA table_info(" + str(tablename) + ")"
         query = self.query(sql)
         result = [row[1] for row in query]
+        self.columnsnames[tablename] = result
         return result
 
     def getFirstIdColumn(self, tablename):

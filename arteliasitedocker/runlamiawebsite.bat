@@ -1,1 +1,1 @@
-docker run --name lamia_website -p 8082:80 710412343115.dkr.ecr.eu-west-3.amazonaws.com/lamia-website
+docker run --name lamia_website -p 8082:80 --env LAMIA_URL=http://localhost:8082/qgisserver 710412343115.dkr.ecr.eu-west-3.amazonaws.com/lamia-website

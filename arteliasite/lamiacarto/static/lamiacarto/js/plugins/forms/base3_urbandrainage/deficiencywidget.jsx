@@ -35,7 +35,7 @@ class DeficiencyEditingFormReact extends EditingFormReact {
             "tctablecolparent": null,
             "tctablecolthistable": null,
         }
-        let tables = ["node", "edge", "equipment"]
+        let tables = ["node", "edge", "equipment","facility","surface"]
         tables.forEach((el) => {
             tempparentjoin[el] = linkdict
         })

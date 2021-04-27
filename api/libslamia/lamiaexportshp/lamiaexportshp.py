@@ -128,10 +128,14 @@ class ExportShapefileCore(AbstractLibsLamia):
                     if res:
                         res = res[0][0]
 
+                print('***', res)
+
                 if res == "LINESTRING":
                     geomtype = qgis.core.QgsWkbTypes.LineString
                 elif res == "POINT":
                     geomtype = qgis.core.QgsWkbTypes.Point
+                elif res == "POLYGON":
+                    geomtype = qgis.core.QgsWkbTypes.Polygon
 
         self.fillShapefile(
             destinationshapefile,
@@ -364,7 +368,7 @@ class ExportShapefileCore(AbstractLibsLamia):
                 for j, name in enumerate(table["fields"].keys()):
                     typefield = eval("QtCore.QVariant." + table["fields"][name]["type"])
                     shapefilename = (
-                        name if len(name) < 10 else name[0:2] + "_" + name[-6:]
+                        name if len(name) <= 10 else name[0:2] + "_" + name[-6:]
                     )
                     if shapefilename in [field.name() for field in fields]:
                         self.messageinstance.showErrorMessage(

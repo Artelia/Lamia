@@ -123,11 +123,11 @@ class BaseSurfaceTool(AbstractLamiaFormTool):
 
     def changeCategory(self, intcat):
 
-        pagecount = self.toolwidget.stackedWidget_category.count()
+        pagecount = self.toolwidget.stackedWidget_surfcategory.count()
         if intcat >= pagecount - 1:
-            self.toolwidget.stackedWidget_category.setCurrentIndex(pagecount - 1)
+            self.toolwidget.stackedWidget_surfcategory.setCurrentIndex(pagecount - 1)
         else:
-            self.toolwidget.stackedWidget_category.setCurrentIndex(intcat)
+            self.toolwidget.stackedWidget_surfcategory.setCurrentIndex(intcat)
 
 
 class UserUI(QWidget):

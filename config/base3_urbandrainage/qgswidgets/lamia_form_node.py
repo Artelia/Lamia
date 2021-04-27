@@ -319,14 +319,14 @@ class BaseUrbandrainageNodeTool(BaseNodeTool):
 
         # changing secondary properties tab
         secondarypropertiestab = UserUI_2()
-        self.toolwidgetmain.tabWidget_2.removeTab(1)
-        self.toolwidgetmain.tabWidget_2.insertTab(
+        self.toolwidgetmain.tabWidget_node.removeTab(1)
+        self.toolwidgetmain.tabWidget_node.insertTab(
             1, secondarypropertiestab, r"Secondary\nproperties"
         )
         self.formutils.mergeQtWidgets(self.toolwidgetmain, secondarypropertiestab)
 
         # remove manage tab
-        self.toolwidgetmain.tabWidget_2.removeTab(4)
+        self.toolwidgetmain.tabWidget_node.removeTab(4)
 
         # conf
         self.formtoolwidgetconfdictmain = {

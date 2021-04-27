@@ -1,195 +1,190 @@
 <!DOCTYPE qgis PUBLIC 'http://mrcc.com/qgis.dtd' 'SYSTEM'>
-<qgis simplifyDrawingTol="1" styleCategories="AllStyleCategories" maxScale="0" simplifyMaxScale="1" labelsEnabled="1" readOnly="0" minScale="1e+08" simplifyAlgorithm="0" version="3.10.6-A Coruña" simplifyDrawingHints="1" simplifyLocal="1" hasScaleBasedVisibilityFlag="0">
+<qgis simplifyDrawingHints="1" simplifyMaxScale="1" hasScaleBasedVisibilityFlag="0" simplifyLocal="1" readOnly="0" styleCategories="AllStyleCategories" simplifyAlgorithm="0" labelsEnabled="0" simplifyDrawingTol="1" minScale="0" version="3.10.6-A Coruña" maxScale="0">
   <flags>
     <Identifiable>1</Identifiable>
     <Removable>1</Removable>
     <Searchable>1</Searchable>
   </flags>
-  <renderer-v2 type="RuleRenderer" forceraster="0" enableorderby="0" symbollevels="0">
+  <renderer-v2 symbollevels="0" forceraster="0" enableorderby="0" type="RuleRenderer">
     <rules key="{5e78f11d-4178-4ed7-8af6-f80178c4ba25}">
-      <rule filter=" &quot;edgecategory&quot;  =  'HAB' " key="{221c65f2-4316-4674-9cdd-43cfb1e49457}">
-        <rule filter=" distance(start_point( $geometry) ,  end_point( $geometry))&lt; 0.01" key="{a2565bbe-a09c-4371-b9a8-992380c9601a}" symbol="0"/>
-        <rule filter="ELSE" key="{e170a888-6ec6-432d-9dc7-98756b30abcc}" symbol="1"/>
+      <rule key="{221c65f2-4316-4674-9cdd-43cfb1e49457}" filter=" &quot;edgecategory&quot;  =  'HAB' ">
+        <rule key="{a2565bbe-a09c-4371-b9a8-992380c9601a}" symbol="0" filter=" distance(start_point( $geometry) ,  end_point( $geometry))&lt; 0.01"/>
+        <rule key="{e170a888-6ec6-432d-9dc7-98756b30abcc}" symbol="1" filter="ELSE"/>
       </rule>
-      <rule filter=" &quot;edgecategory&quot;  =  'PRO' " key="{b14c7500-1664-4f11-9a34-dcba657b9e96}">
-        <rule filter=" $length &lt; 0.01" key="{53cff050-4d86-4fed-bbd2-59afeb6b5daf}" symbol="2"/>
-        <rule filter="ELSE" key="{f1b60d11-bfe9-47f5-b586-4a88ec792bcc}" symbol="3"/>
+      <rule key="{b14c7500-1664-4f11-9a34-dcba657b9e96}" filter=" &quot;edgecategory&quot;  =  'PRO' ">
+        <rule key="{53cff050-4d86-4fed-bbd2-59afeb6b5daf}" symbol="2" filter=" $length &lt; 0.01"/>
+        <rule key="{f1b60d11-bfe9-47f5-b586-4a88ec792bcc}" symbol="3" filter="ELSE"/>
       </rule>
-      <rule filter="ELSE" key="{1cbe3cbd-c1b7-4bc0-8f98-c82a875d39f3}" symbol="4"/>
+      <rule key="{1cbe3cbd-c1b7-4bc0-8f98-c82a875d39f3}" symbol="4" filter="ELSE"/>
     </rules>
     <symbols>
-      <symbol name="0" type="line" force_rhr="0" clip_to_extent="1" alpha="1">
-        <layer enabled="1" locked="0" pass="0" class="GeometryGenerator">
-          <prop k="SymbolType" v="Fill"/>
-          <prop k="geometryModifier" v=" make_polygon( $geometry)"/>
+      <symbol force_rhr="0" name="0" clip_to_extent="1" type="line" alpha="1">
+        <layer enabled="1" class="GeometryGenerator" pass="0" locked="0">
+          <prop v="Fill" k="SymbolType"/>
+          <prop v=" make_polygon( $geometry)" k="geometryModifier"/>
           <data_defined_properties>
             <Option type="Map">
-              <Option name="name" type="QString" value=""/>
+              <Option name="name" value="" type="QString"/>
               <Option name="properties"/>
-              <Option name="type" type="QString" value="collection"/>
+              <Option name="type" value="collection" type="QString"/>
             </Option>
           </data_defined_properties>
-          <symbol name="@0@0" type="fill" force_rhr="0" clip_to_extent="1" alpha="1">
-            <layer enabled="1" locked="0" pass="0" class="ShapeburstFill">
-              <prop k="blur_radius" v="0"/>
-              <prop k="color" v="51,160,44,255"/>
-              <prop k="color1" v="0,0,255,255"/>
-              <prop k="color2" v="0,255,0,255"/>
-              <prop k="color_type" v="0"/>
-              <prop k="discrete" v="0"/>
-              <prop k="distance_map_unit_scale" v="3x:0,0,0,0,0,0"/>
-              <prop k="distance_unit" v="MM"/>
-              <prop k="gradient_color2" v="255,255,255,255"/>
-              <prop k="ignore_rings" v="0"/>
-              <prop k="max_distance" v="5"/>
-              <prop k="offset" v="0,0"/>
-              <prop k="offset_map_unit_scale" v="3x:0,0,0,0,0,0"/>
-              <prop k="offset_unit" v="MM"/>
-              <prop k="rampType" v="gradient"/>
-              <prop k="use_whole_shape" v="1"/>
+          <symbol force_rhr="0" name="@0@0" clip_to_extent="1" type="fill" alpha="1">
+            <layer enabled="1" class="SimpleFill" pass="0" locked="0">
+              <prop v="3x:0,0,0,0,0,0" k="border_width_map_unit_scale"/>
+              <prop v="51,255,44,76" k="color"/>
+              <prop v="bevel" k="joinstyle"/>
+              <prop v="0,0" k="offset"/>
+              <prop v="3x:0,0,0,0,0,0" k="offset_map_unit_scale"/>
+              <prop v="MM" k="offset_unit"/>
+              <prop v="51,255,44,255" k="outline_color"/>
+              <prop v="solid" k="outline_style"/>
+              <prop v="0.46" k="outline_width"/>
+              <prop v="MM" k="outline_width_unit"/>
+              <prop v="solid" k="style"/>
               <data_defined_properties>
                 <Option type="Map">
-                  <Option name="name" type="QString" value=""/>
+                  <Option name="name" value="" type="QString"/>
                   <Option name="properties"/>
-                  <Option name="type" type="QString" value="collection"/>
+                  <Option name="type" value="collection" type="QString"/>
                 </Option>
               </data_defined_properties>
             </layer>
           </symbol>
         </layer>
       </symbol>
-      <symbol name="1" type="line" force_rhr="0" clip_to_extent="1" alpha="1">
-        <layer enabled="1" locked="0" pass="0" class="SimpleLine">
-          <prop k="capstyle" v="square"/>
-          <prop k="customdash" v="5;2"/>
-          <prop k="customdash_map_unit_scale" v="3x:0,0,0,0,0,0"/>
-          <prop k="customdash_unit" v="MM"/>
-          <prop k="draw_inside_polygon" v="0"/>
-          <prop k="joinstyle" v="bevel"/>
-          <prop k="line_color" v="51,160,44,255"/>
-          <prop k="line_style" v="solid"/>
-          <prop k="line_width" v="0.86"/>
-          <prop k="line_width_unit" v="MM"/>
-          <prop k="offset" v="0"/>
-          <prop k="offset_map_unit_scale" v="3x:0,0,0,0,0,0"/>
-          <prop k="offset_unit" v="MM"/>
-          <prop k="ring_filter" v="0"/>
-          <prop k="use_custom_dash" v="0"/>
-          <prop k="width_map_unit_scale" v="3x:0,0,0,0,0,0"/>
+      <symbol force_rhr="0" name="1" clip_to_extent="1" type="line" alpha="1">
+        <layer enabled="1" class="SimpleLine" pass="0" locked="0">
+          <prop v="square" k="capstyle"/>
+          <prop v="5;2" k="customdash"/>
+          <prop v="3x:0,0,0,0,0,0" k="customdash_map_unit_scale"/>
+          <prop v="MM" k="customdash_unit"/>
+          <prop v="0" k="draw_inside_polygon"/>
+          <prop v="bevel" k="joinstyle"/>
+          <prop v="51,160,44,255" k="line_color"/>
+          <prop v="solid" k="line_style"/>
+          <prop v="0.86" k="line_width"/>
+          <prop v="MM" k="line_width_unit"/>
+          <prop v="0" k="offset"/>
+          <prop v="3x:0,0,0,0,0,0" k="offset_map_unit_scale"/>
+          <prop v="MM" k="offset_unit"/>
+          <prop v="0" k="ring_filter"/>
+          <prop v="0" k="use_custom_dash"/>
+          <prop v="3x:0,0,0,0,0,0" k="width_map_unit_scale"/>
           <data_defined_properties>
             <Option type="Map">
-              <Option name="name" type="QString" value=""/>
+              <Option name="name" value="" type="QString"/>
               <Option name="properties"/>
-              <Option name="type" type="QString" value="collection"/>
+              <Option name="type" value="collection" type="QString"/>
             </Option>
           </data_defined_properties>
         </layer>
       </symbol>
-      <symbol name="2" type="line" force_rhr="0" clip_to_extent="1" alpha="1">
-        <layer enabled="1" locked="0" pass="0" class="MarkerLine">
-          <prop k="average_angle_length" v="4"/>
-          <prop k="average_angle_map_unit_scale" v="3x:0,0,0,0,0,0"/>
-          <prop k="average_angle_unit" v="MM"/>
-          <prop k="interval" v="3"/>
-          <prop k="interval_map_unit_scale" v="3x:0,0,0,0,0,0"/>
-          <prop k="interval_unit" v="MM"/>
-          <prop k="offset" v="0"/>
-          <prop k="offset_along_line" v="0"/>
-          <prop k="offset_along_line_map_unit_scale" v="3x:0,0,0,0,0,0"/>
-          <prop k="offset_along_line_unit" v="MM"/>
-          <prop k="offset_map_unit_scale" v="3x:0,0,0,0,0,0"/>
-          <prop k="offset_unit" v="MM"/>
-          <prop k="placement" v="firstvertex"/>
-          <prop k="ring_filter" v="0"/>
-          <prop k="rotate" v="1"/>
+      <symbol force_rhr="0" name="2" clip_to_extent="1" type="line" alpha="1">
+        <layer enabled="1" class="MarkerLine" pass="0" locked="0">
+          <prop v="4" k="average_angle_length"/>
+          <prop v="3x:0,0,0,0,0,0" k="average_angle_map_unit_scale"/>
+          <prop v="MM" k="average_angle_unit"/>
+          <prop v="3" k="interval"/>
+          <prop v="3x:0,0,0,0,0,0" k="interval_map_unit_scale"/>
+          <prop v="MM" k="interval_unit"/>
+          <prop v="0" k="offset"/>
+          <prop v="0" k="offset_along_line"/>
+          <prop v="3x:0,0,0,0,0,0" k="offset_along_line_map_unit_scale"/>
+          <prop v="MM" k="offset_along_line_unit"/>
+          <prop v="3x:0,0,0,0,0,0" k="offset_map_unit_scale"/>
+          <prop v="MM" k="offset_unit"/>
+          <prop v="firstvertex" k="placement"/>
+          <prop v="0" k="ring_filter"/>
+          <prop v="1" k="rotate"/>
           <data_defined_properties>
             <Option type="Map">
-              <Option name="name" type="QString" value=""/>
+              <Option name="name" value="" type="QString"/>
               <Option name="properties"/>
-              <Option name="type" type="QString" value="collection"/>
+              <Option name="type" value="collection" type="QString"/>
             </Option>
           </data_defined_properties>
-          <symbol name="@2@0" type="marker" force_rhr="0" clip_to_extent="1" alpha="1">
-            <layer enabled="1" locked="0" pass="0" class="SimpleMarker">
-              <prop k="angle" v="0"/>
-              <prop k="color" v="31,120,180,255"/>
-              <prop k="horizontal_anchor_point" v="1"/>
-              <prop k="joinstyle" v="bevel"/>
-              <prop k="name" v="circle"/>
-              <prop k="offset" v="0,0"/>
-              <prop k="offset_map_unit_scale" v="3x:0,0,0,0,0,0"/>
-              <prop k="offset_unit" v="MM"/>
-              <prop k="outline_color" v="35,35,35,255"/>
-              <prop k="outline_style" v="solid"/>
-              <prop k="outline_width" v="0"/>
-              <prop k="outline_width_map_unit_scale" v="3x:0,0,0,0,0,0"/>
-              <prop k="outline_width_unit" v="MM"/>
-              <prop k="scale_method" v="diameter"/>
-              <prop k="size" v="2"/>
-              <prop k="size_map_unit_scale" v="3x:0,0,0,0,0,0"/>
-              <prop k="size_unit" v="MM"/>
-              <prop k="vertical_anchor_point" v="1"/>
+          <symbol force_rhr="0" name="@2@0" clip_to_extent="1" type="marker" alpha="1">
+            <layer enabled="1" class="SimpleMarker" pass="0" locked="0">
+              <prop v="0" k="angle"/>
+              <prop v="31,120,180,255" k="color"/>
+              <prop v="1" k="horizontal_anchor_point"/>
+              <prop v="bevel" k="joinstyle"/>
+              <prop v="circle" k="name"/>
+              <prop v="0,0" k="offset"/>
+              <prop v="3x:0,0,0,0,0,0" k="offset_map_unit_scale"/>
+              <prop v="MM" k="offset_unit"/>
+              <prop v="35,35,35,255" k="outline_color"/>
+              <prop v="solid" k="outline_style"/>
+              <prop v="0" k="outline_width"/>
+              <prop v="3x:0,0,0,0,0,0" k="outline_width_map_unit_scale"/>
+              <prop v="MM" k="outline_width_unit"/>
+              <prop v="diameter" k="scale_method"/>
+              <prop v="2" k="size"/>
+              <prop v="3x:0,0,0,0,0,0" k="size_map_unit_scale"/>
+              <prop v="MM" k="size_unit"/>
+              <prop v="1" k="vertical_anchor_point"/>
               <data_defined_properties>
                 <Option type="Map">
-                  <Option name="name" type="QString" value=""/>
+                  <Option name="name" value="" type="QString"/>
                   <Option name="properties"/>
-                  <Option name="type" type="QString" value="collection"/>
+                  <Option name="type" value="collection" type="QString"/>
                 </Option>
               </data_defined_properties>
             </layer>
           </symbol>
         </layer>
       </symbol>
-      <symbol name="3" type="line" force_rhr="0" clip_to_extent="1" alpha="1">
-        <layer enabled="1" locked="0" pass="0" class="SimpleLine">
-          <prop k="capstyle" v="square"/>
-          <prop k="customdash" v="5;2"/>
-          <prop k="customdash_map_unit_scale" v="3x:0,0,0,0,0,0"/>
-          <prop k="customdash_unit" v="MM"/>
-          <prop k="draw_inside_polygon" v="0"/>
-          <prop k="joinstyle" v="bevel"/>
-          <prop k="line_color" v="31,120,180,255"/>
-          <prop k="line_style" v="solid"/>
-          <prop k="line_width" v="0.66"/>
-          <prop k="line_width_unit" v="MM"/>
-          <prop k="offset" v="0"/>
-          <prop k="offset_map_unit_scale" v="3x:0,0,0,0,0,0"/>
-          <prop k="offset_unit" v="MM"/>
-          <prop k="ring_filter" v="0"/>
-          <prop k="use_custom_dash" v="0"/>
-          <prop k="width_map_unit_scale" v="3x:0,0,0,0,0,0"/>
+      <symbol force_rhr="0" name="3" clip_to_extent="1" type="line" alpha="1">
+        <layer enabled="1" class="SimpleLine" pass="0" locked="0">
+          <prop v="square" k="capstyle"/>
+          <prop v="5;2" k="customdash"/>
+          <prop v="3x:0,0,0,0,0,0" k="customdash_map_unit_scale"/>
+          <prop v="MM" k="customdash_unit"/>
+          <prop v="0" k="draw_inside_polygon"/>
+          <prop v="bevel" k="joinstyle"/>
+          <prop v="31,120,180,255" k="line_color"/>
+          <prop v="solid" k="line_style"/>
+          <prop v="0.66" k="line_width"/>
+          <prop v="MM" k="line_width_unit"/>
+          <prop v="0" k="offset"/>
+          <prop v="3x:0,0,0,0,0,0" k="offset_map_unit_scale"/>
+          <prop v="MM" k="offset_unit"/>
+          <prop v="0" k="ring_filter"/>
+          <prop v="0" k="use_custom_dash"/>
+          <prop v="3x:0,0,0,0,0,0" k="width_map_unit_scale"/>
           <data_defined_properties>
             <Option type="Map">
-              <Option name="name" type="QString" value=""/>
+              <Option name="name" value="" type="QString"/>
               <Option name="properties"/>
-              <Option name="type" type="QString" value="collection"/>
+              <Option name="type" value="collection" type="QString"/>
             </Option>
           </data_defined_properties>
         </layer>
       </symbol>
-      <symbol name="4" type="line" force_rhr="0" clip_to_extent="1" alpha="1">
-        <layer enabled="1" locked="0" pass="0" class="SimpleLine">
-          <prop k="capstyle" v="square"/>
-          <prop k="customdash" v="5;2"/>
-          <prop k="customdash_map_unit_scale" v="3x:0,0,0,0,0,0"/>
-          <prop k="customdash_unit" v="MM"/>
-          <prop k="draw_inside_polygon" v="0"/>
-          <prop k="joinstyle" v="bevel"/>
-          <prop k="line_color" v="183,72,75,255"/>
-          <prop k="line_style" v="solid"/>
-          <prop k="line_width" v="0.26"/>
-          <prop k="line_width_unit" v="MM"/>
-          <prop k="offset" v="0"/>
-          <prop k="offset_map_unit_scale" v="3x:0,0,0,0,0,0"/>
-          <prop k="offset_unit" v="MM"/>
-          <prop k="ring_filter" v="0"/>
-          <prop k="use_custom_dash" v="0"/>
-          <prop k="width_map_unit_scale" v="3x:0,0,0,0,0,0"/>
+      <symbol force_rhr="0" name="4" clip_to_extent="1" type="line" alpha="1">
+        <layer enabled="1" class="SimpleLine" pass="0" locked="0">
+          <prop v="square" k="capstyle"/>
+          <prop v="5;2" k="customdash"/>
+          <prop v="3x:0,0,0,0,0,0" k="customdash_map_unit_scale"/>
+          <prop v="MM" k="customdash_unit"/>
+          <prop v="0" k="draw_inside_polygon"/>
+          <prop v="bevel" k="joinstyle"/>
+          <prop v="183,72,75,255" k="line_color"/>
+          <prop v="solid" k="line_style"/>
+          <prop v="0.26" k="line_width"/>
+          <prop v="MM" k="line_width_unit"/>
+          <prop v="0" k="offset"/>
+          <prop v="3x:0,0,0,0,0,0" k="offset_map_unit_scale"/>
+          <prop v="MM" k="offset_unit"/>
+          <prop v="0" k="ring_filter"/>
+          <prop v="0" k="use_custom_dash"/>
+          <prop v="3x:0,0,0,0,0,0" k="width_map_unit_scale"/>
           <data_defined_properties>
             <Option type="Map">
-              <Option name="name" type="QString" value=""/>
+              <Option name="name" value="" type="QString"/>
               <Option name="properties"/>
-              <Option name="type" type="QString" value="collection"/>
+              <Option name="type" value="collection" type="QString"/>
             </Option>
           </data_defined_properties>
         </layer>
@@ -198,107 +193,106 @@
   </renderer-v2>
   <labeling type="simple">
     <settings calloutType="simple">
-      <text-style fontSizeUnit="Point" fontItalic="0" fontStrikeout="0" fontWordSpacing="0" fontWeight="50" namedStyle="Normal" fontSizeMapUnitScale="3x:0,0,0,0,0,0" textColor="0,0,0,255" useSubstitutions="0" fontSize="8.25" fieldName=" &quot;diametreNominal&quot; *1000" fontKerning="1" fontUnderline="0" multilineHeight="1" fontCapitals="0" blendMode="0" fontFamily="MS Shell Dlg 2" fontLetterSpacing="0" textOrientation="horizontal" previewBkgrdColor="255,255,255,255" textOpacity="1" isExpression="1">
-        <text-buffer bufferNoFill="0" bufferBlendMode="0" bufferSizeUnits="MM" bufferSize="1" bufferSizeMapUnitScale="3x:0,0,0,0,0,0" bufferJoinStyle="128" bufferDraw="1" bufferOpacity="1" bufferColor="255,255,255,255"/>
-        <background shapeType="0" shapeOffsetX="0" shapeSizeX="0" shapeSizeUnit="MM" shapeRotation="0" shapeSizeType="0" shapeBorderWidth="0" shapeJoinStyle="64" shapeOffsetY="0" shapeSizeMapUnitScale="3x:0,0,0,0,0,0" shapeBorderWidthMapUnitScale="3x:0,0,0,0,0,0" shapeSVGFile="" shapeRotationType="0" shapeBlendMode="0" shapeRadiiUnit="MM" shapeDraw="0" shapeRadiiY="0" shapeBorderWidthUnit="MM" shapeOpacity="1" shapeFillColor="255,255,255,255" shapeOffsetMapUnitScale="3x:0,0,0,0,0,0" shapeSizeY="0" shapeRadiiMapUnitScale="3x:0,0,0,0,0,0" shapeOffsetUnit="MM" shapeRadiiX="0" shapeBorderColor="128,128,128,255">
-          <symbol name="markerSymbol" type="marker" force_rhr="0" clip_to_extent="1" alpha="1">
-            <layer enabled="1" locked="0" pass="0" class="SimpleMarker">
-              <prop k="angle" v="0"/>
-              <prop k="color" v="133,182,111,255"/>
-              <prop k="horizontal_anchor_point" v="1"/>
-              <prop k="joinstyle" v="bevel"/>
-              <prop k="name" v="circle"/>
-              <prop k="offset" v="0,0"/>
-              <prop k="offset_map_unit_scale" v="3x:0,0,0,0,0,0"/>
-              <prop k="offset_unit" v="MM"/>
-              <prop k="outline_color" v="35,35,35,255"/>
-              <prop k="outline_style" v="solid"/>
-              <prop k="outline_width" v="0"/>
-              <prop k="outline_width_map_unit_scale" v="3x:0,0,0,0,0,0"/>
-              <prop k="outline_width_unit" v="MM"/>
-              <prop k="scale_method" v="diameter"/>
-              <prop k="size" v="2"/>
-              <prop k="size_map_unit_scale" v="3x:0,0,0,0,0,0"/>
-              <prop k="size_unit" v="MM"/>
-              <prop k="vertical_anchor_point" v="1"/>
+      <text-style fontSize="8" textOrientation="horizontal" fontWeight="75" isExpression="1" textOpacity="1" previewBkgrdColor="255,255,255,255" fontFamily="MS Shell Dlg 2" blendMode="0" fontLetterSpacing="0" useSubstitutions="0" fontUnderline="0" fontWordSpacing="0" fontSizeMapUnitScale="3x:0,0,0,0,0,0" textColor="51,255,44,255" multilineHeight="1" fontItalic="0" namedStyle="Bold" fontStrikeout="0" fontSizeUnit="Point" fontCapitals="0" fontKerning="1" fieldName="coalesce(&quot;habitatcode&quot;,'')  || 'x' || coalesce( &quot;habitat2code&quot;, '')">
+        <text-buffer bufferSizeMapUnitScale="3x:0,0,0,0,0,0" bufferDraw="1" bufferNoFill="0" bufferOpacity="1" bufferSize="1" bufferSizeUnits="MM" bufferBlendMode="0" bufferJoinStyle="128" bufferColor="255,255,255,255"/>
+        <background shapeRadiiX="0" shapeRadiiUnit="MM" shapeBorderColor="128,128,128,255" shapeSizeType="0" shapeRadiiY="0" shapeOpacity="1" shapeBorderWidth="0" shapeRotationType="0" shapeBorderWidthMapUnitScale="3x:0,0,0,0,0,0" shapeOffsetX="0" shapeSizeY="0" shapeOffsetMapUnitScale="3x:0,0,0,0,0,0" shapeSizeUnit="MM" shapeSizeX="0" shapeFillColor="255,255,255,255" shapeRadiiMapUnitScale="3x:0,0,0,0,0,0" shapeType="0" shapeJoinStyle="64" shapeOffsetUnit="MM" shapeOffsetY="0" shapeBorderWidthUnit="MM" shapeBlendMode="0" shapeRotation="0" shapeSVGFile="" shapeDraw="0" shapeSizeMapUnitScale="3x:0,0,0,0,0,0">
+          <symbol force_rhr="0" name="markerSymbol" clip_to_extent="1" type="marker" alpha="1">
+            <layer enabled="1" class="SimpleMarker" pass="0" locked="0">
+              <prop v="0" k="angle"/>
+              <prop v="133,182,111,255" k="color"/>
+              <prop v="1" k="horizontal_anchor_point"/>
+              <prop v="bevel" k="joinstyle"/>
+              <prop v="circle" k="name"/>
+              <prop v="0,0" k="offset"/>
+              <prop v="3x:0,0,0,0,0,0" k="offset_map_unit_scale"/>
+              <prop v="MM" k="offset_unit"/>
+              <prop v="35,35,35,255" k="outline_color"/>
+              <prop v="solid" k="outline_style"/>
+              <prop v="0" k="outline_width"/>
+              <prop v="3x:0,0,0,0,0,0" k="outline_width_map_unit_scale"/>
+              <prop v="MM" k="outline_width_unit"/>
+              <prop v="diameter" k="scale_method"/>
+              <prop v="2" k="size"/>
+              <prop v="3x:0,0,0,0,0,0" k="size_map_unit_scale"/>
+              <prop v="MM" k="size_unit"/>
+              <prop v="1" k="vertical_anchor_point"/>
               <data_defined_properties>
                 <Option type="Map">
-                  <Option name="name" type="QString" value=""/>
+                  <Option name="name" value="" type="QString"/>
                   <Option name="properties"/>
-                  <Option name="type" type="QString" value="collection"/>
+                  <Option name="type" value="collection" type="QString"/>
                 </Option>
               </data_defined_properties>
             </layer>
           </symbol>
         </background>
-        <shadow shadowRadiusUnit="MM" shadowOffsetUnit="MM" shadowOffsetGlobal="1" shadowScale="100" shadowRadiusMapUnitScale="3x:0,0,0,0,0,0" shadowBlendMode="6" shadowRadiusAlphaOnly="0" shadowColor="0,0,0,255" shadowUnder="0" shadowDraw="0" shadowOffsetMapUnitScale="3x:0,0,0,0,0,0" shadowOpacity="0.7" shadowOffsetDist="1" shadowRadius="1.5" shadowOffsetAngle="135"/>
+        <shadow shadowOffsetGlobal="1" shadowRadius="1.5" shadowColor="0,0,0,255" shadowBlendMode="6" shadowOffsetAngle="135" shadowRadiusUnit="MM" shadowRadiusAlphaOnly="0" shadowScale="100" shadowOpacity="0.7" shadowOffsetUnit="MM" shadowUnder="0" shadowRadiusMapUnitScale="3x:0,0,0,0,0,0" shadowDraw="0" shadowOffsetDist="1" shadowOffsetMapUnitScale="3x:0,0,0,0,0,0"/>
         <dd_properties>
           <Option type="Map">
-            <Option name="name" type="QString" value=""/>
+            <Option name="name" value="" type="QString"/>
             <Option name="properties"/>
-            <Option name="type" type="QString" value="collection"/>
+            <Option name="type" value="collection" type="QString"/>
           </Option>
         </dd_properties>
         <substitutions/>
       </text-style>
-      <text-format reverseDirectionSymbol="0" decimals="3" autoWrapLength="0" useMaxLineLengthForAutoWrap="1" leftDirectionSymbol="&lt;" rightDirectionSymbol=">" formatNumbers="0" addDirectionSymbol="0" multilineAlign="4294967295" wrapChar="" plussign="0" placeDirectionSymbol="0"/>
-      <placement rotationAngle="0" predefinedPositionOrder="TR,TL,BR,BL,R,L,TSR,BSR" repeatDistance="0" quadOffset="4" yOffset="0" geometryGeneratorType="PointGeometry" xOffset="0" distUnits="MM" offsetUnits="MapUnit" priority="5" overrunDistanceUnit="MM" geometryGeneratorEnabled="0" geometryGenerator="" preserveRotation="1" centroidWhole="0" maxCurvedCharAngleOut="-25" placement="3" fitInPolygonOnly="0" labelOffsetMapUnitScale="3x:0,0,0,0,0,0" maxCurvedCharAngleIn="25" repeatDistanceMapUnitScale="3x:0,0,0,0,0,0" layerType="LineGeometry" offsetType="0" placementFlags="2" dist="0.5" overrunDistanceMapUnitScale="3x:0,0,0,0,0,0" distMapUnitScale="3x:0,0,0,0,0,0" centroidInside="0" overrunDistance="0" repeatDistanceUnits="MM"/>
-      <rendering obstacleType="0" drawLabels="1" minFeatureSize="2" obstacle="1" fontLimitPixelSize="0" zIndex="0" fontMaxPixelSize="10000" displayAll="0" obstacleFactor="1" fontMinPixelSize="3" mergeLines="1" labelPerPart="0" scaleVisibility="1" scaleMin="1" scaleMax="5000" upsidedownLabels="0" maxNumLabels="2000" limitNumLabels="0"/>
+      <text-format useMaxLineLengthForAutoWrap="1" autoWrapLength="0" addDirectionSymbol="0" leftDirectionSymbol="&lt;" formatNumbers="0" multilineAlign="0" placeDirectionSymbol="0" rightDirectionSymbol=">" decimals="3" plussign="0" wrapChar="" reverseDirectionSymbol="0"/>
+      <placement priority="5" quadOffset="4" geometryGenerator=" make_polygon( $geometry)" offsetType="0" predefinedPositionOrder="TR,TL,BR,BL,R,L,TSR,BSR" repeatDistanceUnits="MM" fitInPolygonOnly="0" maxCurvedCharAngleIn="25" rotationAngle="0" layerType="LineGeometry" maxCurvedCharAngleOut="-25" xOffset="0" placementFlags="2" labelOffsetMapUnitScale="3x:0,0,0,0,0,0" geometryGeneratorType="PolygonGeometry" offsetUnits="MapUnit" placement="1" centroidInside="0" distMapUnitScale="3x:0,0,0,0,0,0" overrunDistanceUnit="MM" dist="0.5" distUnits="MM" preserveRotation="1" repeatDistanceMapUnitScale="3x:0,0,0,0,0,0" overrunDistanceMapUnitScale="3x:0,0,0,0,0,0" centroidWhole="0" repeatDistance="0" yOffset="0" overrunDistance="100" geometryGeneratorEnabled="1"/>
+      <rendering fontMinPixelSize="3" fontMaxPixelSize="10000" minFeatureSize="2" obstacleFactor="1" upsidedownLabels="0" scaleMax="5000" drawLabels="1" scaleVisibility="1" obstacleType="0" scaleMin="1" limitNumLabels="0" fontLimitPixelSize="0" zIndex="0" obstacle="1" labelPerPart="0" maxNumLabels="2000" mergeLines="1" displayAll="0"/>
       <dd_properties>
         <Option type="Map">
-          <Option name="name" type="QString" value=""/>
+          <Option name="name" value="" type="QString"/>
           <Option name="properties"/>
-          <Option name="type" type="QString" value="collection"/>
+          <Option name="type" value="collection" type="QString"/>
         </Option>
       </dd_properties>
       <callout type="simple">
         <Option type="Map">
-          <Option name="anchorPoint" type="QString" value="pole_of_inaccessibility"/>
+          <Option name="anchorPoint" value="pole_of_inaccessibility" type="QString"/>
           <Option name="ddProperties" type="Map">
-            <Option name="name" type="QString" value=""/>
+            <Option name="name" value="" type="QString"/>
             <Option name="properties"/>
-            <Option name="type" type="QString" value="collection"/>
+            <Option name="type" value="collection" type="QString"/>
           </Option>
-          <Option name="drawToAllParts" type="bool" value="false"/>
-          <Option name="enabled" type="QString" value="0"/>
-          <Option name="lineSymbol" type="QString" value="&lt;symbol name=&quot;symbol&quot; type=&quot;line&quot; force_rhr=&quot;0&quot; clip_to_extent=&quot;1&quot; alpha=&quot;1&quot;>&lt;layer enabled=&quot;1&quot; locked=&quot;0&quot; pass=&quot;0&quot; class=&quot;SimpleLine&quot;>&lt;prop k=&quot;capstyle&quot; v=&quot;square&quot;/>&lt;prop k=&quot;customdash&quot; v=&quot;5;2&quot;/>&lt;prop k=&quot;customdash_map_unit_scale&quot; v=&quot;3x:0,0,0,0,0,0&quot;/>&lt;prop k=&quot;customdash_unit&quot; v=&quot;MM&quot;/>&lt;prop k=&quot;draw_inside_polygon&quot; v=&quot;0&quot;/>&lt;prop k=&quot;joinstyle&quot; v=&quot;bevel&quot;/>&lt;prop k=&quot;line_color&quot; v=&quot;60,60,60,255&quot;/>&lt;prop k=&quot;line_style&quot; v=&quot;solid&quot;/>&lt;prop k=&quot;line_width&quot; v=&quot;0.3&quot;/>&lt;prop k=&quot;line_width_unit&quot; v=&quot;MM&quot;/>&lt;prop k=&quot;offset&quot; v=&quot;0&quot;/>&lt;prop k=&quot;offset_map_unit_scale&quot; v=&quot;3x:0,0,0,0,0,0&quot;/>&lt;prop k=&quot;offset_unit&quot; v=&quot;MM&quot;/>&lt;prop k=&quot;ring_filter&quot; v=&quot;0&quot;/>&lt;prop k=&quot;use_custom_dash&quot; v=&quot;0&quot;/>&lt;prop k=&quot;width_map_unit_scale&quot; v=&quot;3x:0,0,0,0,0,0&quot;/>&lt;data_defined_properties>&lt;Option type=&quot;Map&quot;>&lt;Option name=&quot;name&quot; type=&quot;QString&quot; value=&quot;&quot;/>&lt;Option name=&quot;properties&quot;/>&lt;Option name=&quot;type&quot; type=&quot;QString&quot; value=&quot;collection&quot;/>&lt;/Option>&lt;/data_defined_properties>&lt;/layer>&lt;/symbol>"/>
-          <Option name="minLength" type="double" value="0"/>
-          <Option name="minLengthMapUnitScale" type="QString" value="3x:0,0,0,0,0,0"/>
-          <Option name="minLengthUnit" type="QString" value="MM"/>
-          <Option name="offsetFromAnchor" type="double" value="0"/>
-          <Option name="offsetFromAnchorMapUnitScale" type="QString" value="3x:0,0,0,0,0,0"/>
-          <Option name="offsetFromAnchorUnit" type="QString" value="MM"/>
-          <Option name="offsetFromLabel" type="double" value="0"/>
-          <Option name="offsetFromLabelMapUnitScale" type="QString" value="3x:0,0,0,0,0,0"/>
-          <Option name="offsetFromLabelUnit" type="QString" value="MM"/>
+          <Option name="drawToAllParts" value="false" type="bool"/>
+          <Option name="enabled" value="0" type="QString"/>
+          <Option name="lineSymbol" value="&lt;symbol force_rhr=&quot;0&quot; name=&quot;symbol&quot; clip_to_extent=&quot;1&quot; type=&quot;line&quot; alpha=&quot;1&quot;>&lt;layer enabled=&quot;1&quot; class=&quot;SimpleLine&quot; pass=&quot;0&quot; locked=&quot;0&quot;>&lt;prop v=&quot;square&quot; k=&quot;capstyle&quot;/>&lt;prop v=&quot;5;2&quot; k=&quot;customdash&quot;/>&lt;prop v=&quot;3x:0,0,0,0,0,0&quot; k=&quot;customdash_map_unit_scale&quot;/>&lt;prop v=&quot;MM&quot; k=&quot;customdash_unit&quot;/>&lt;prop v=&quot;0&quot; k=&quot;draw_inside_polygon&quot;/>&lt;prop v=&quot;bevel&quot; k=&quot;joinstyle&quot;/>&lt;prop v=&quot;60,60,60,255&quot; k=&quot;line_color&quot;/>&lt;prop v=&quot;solid&quot; k=&quot;line_style&quot;/>&lt;prop v=&quot;0.3&quot; k=&quot;line_width&quot;/>&lt;prop v=&quot;MM&quot; k=&quot;line_width_unit&quot;/>&lt;prop v=&quot;0&quot; k=&quot;offset&quot;/>&lt;prop v=&quot;3x:0,0,0,0,0,0&quot; k=&quot;offset_map_unit_scale&quot;/>&lt;prop v=&quot;MM&quot; k=&quot;offset_unit&quot;/>&lt;prop v=&quot;0&quot; k=&quot;ring_filter&quot;/>&lt;prop v=&quot;0&quot; k=&quot;use_custom_dash&quot;/>&lt;prop v=&quot;3x:0,0,0,0,0,0&quot; k=&quot;width_map_unit_scale&quot;/>&lt;data_defined_properties>&lt;Option type=&quot;Map&quot;>&lt;Option name=&quot;name&quot; value=&quot;&quot; type=&quot;QString&quot;/>&lt;Option name=&quot;properties&quot;/>&lt;Option name=&quot;type&quot; value=&quot;collection&quot; type=&quot;QString&quot;/>&lt;/Option>&lt;/data_defined_properties>&lt;/layer>&lt;/symbol>" type="QString"/>
+          <Option name="minLength" value="0" type="double"/>
+          <Option name="minLengthMapUnitScale" value="3x:0,0,0,0,0,0" type="QString"/>
+          <Option name="minLengthUnit" value="MM" type="QString"/>
+          <Option name="offsetFromAnchor" value="0" type="double"/>
+          <Option name="offsetFromAnchorMapUnitScale" value="3x:0,0,0,0,0,0" type="QString"/>
+          <Option name="offsetFromAnchorUnit" value="MM" type="QString"/>
+          <Option name="offsetFromLabel" value="0" type="double"/>
+          <Option name="offsetFromLabelMapUnitScale" value="3x:0,0,0,0,0,0" type="QString"/>
+          <Option name="offsetFromLabelUnit" value="MM" type="QString"/>
         </Option>
       </callout>
     </settings>
   </labeling>
   <customproperties>
-    <property value="0" key="embeddedWidgets/count"/>
+    <property key="embeddedWidgets/count" value="0"/>
     <property key="variableNames"/>
     <property key="variableValues"/>
   </customproperties>
   <blendMode>0</blendMode>
   <featureBlendMode>0</featureBlendMode>
   <layerOpacity>1</layerOpacity>
-  <SingleCategoryDiagramRenderer attributeLegend="1" diagramType="Histogram">
-    <DiagramCategory penWidth="0" opacity="1" barWidth="5" backgroundAlpha="255" scaleBasedVisibility="0" diagramOrientation="Up" width="15" penColor="#000000" enabled="0" sizeType="MM" scaleDependency="Area" backgroundColor="#ffffff" rotationOffset="270" sizeScale="3x:0,0,0,0,0,0" lineSizeType="MM" penAlpha="255" maxScaleDenominator="1e+08" height="15" minimumSize="0" minScaleDenominator="0" labelPlacementMethod="XHeight" lineSizeScale="3x:0,0,0,0,0,0">
-      <fontProperties description="MS Shell Dlg 2,9.75,-1,5,50,0,0,0,0,0" style=""/>
-      <attribute field="" color="#000000" label=""/>
+  <SingleCategoryDiagramRenderer diagramType="Histogram" attributeLegend="1">
+    <DiagramCategory opacity="1" penColor="#000000" rotationOffset="270" height="15" barWidth="5" minScaleDenominator="0" minimumSize="0" backgroundColor="#ffffff" scaleBasedVisibility="0" sizeType="MM" penAlpha="255" enabled="0" penWidth="0" sizeScale="3x:0,0,0,0,0,0" scaleDependency="Area" width="15" lineSizeScale="3x:0,0,0,0,0,0" labelPlacementMethod="XHeight" backgroundAlpha="255" maxScaleDenominator="0" lineSizeType="MM" diagramOrientation="Up">
+      <fontProperties style="" description="MS Shell Dlg 2,7.8,-1,5,50,0,0,0,0,0"/>
     </DiagramCategory>
   </SingleCategoryDiagramRenderer>
-  <DiagramLayerSettings linePlacementFlags="18" showAll="1" priority="0" placement="2" dist="0" zIndex="0" obstacle="0">
+  <DiagramLayerSettings obstacle="0" zIndex="0" dist="0" linePlacementFlags="18" placement="2" priority="0" showAll="1">
     <properties>
       <Option type="Map">
-        <Option name="name" type="QString" value=""/>
+        <Option name="name" value="" type="QString"/>
         <Option name="properties"/>
-        <Option name="type" type="QString" value="collection"/>
+        <Option name="type" value="collection" type="QString"/>
       </Option>
     </properties>
   </DiagramLayerSettings>
-  <geometryOptions geometryPrecision="0" removeDuplicateNodes="0">
+  <geometryOptions removeDuplicateNodes="0" geometryPrecision="0">
     <activeChecks/>
     <checkConfiguration/>
   </geometryOptions>
@@ -351,10 +345,10 @@
           <Option type="Map">
             <Option name="map" type="List">
               <Option type="Map">
-                <Option name="Protocole" type="QString" value="PRO"/>
+                <Option name="Protocole" value="PRO" type="QString"/>
               </Option>
               <Option type="Map">
-                <Option name="Habitat" type="QString" value="HAB"/>
+                <Option name="Habitat" value="HAB" type="QString"/>
               </Option>
             </Option>
           </Option>
@@ -367,40 +361,40 @@
           <Option type="Map">
             <Option name="map" type="List">
               <Option type="Map">
-                <Option name="IPA" type="QString" value="IPA"/>
+                <Option name="IPA" value="IPA" type="QString"/>
               </Option>
               <Option type="Map">
-                <Option name="Transect oiseaux nicheurs" type="QString" value="TON"/>
+                <Option name="Transect oiseaux nicheurs" value="TON" type="QString"/>
               </Option>
               <Option type="Map">
-                <Option name="Transect oiseaux hivernants" type="QString" value="TOH"/>
+                <Option name="Transect oiseaux hivernants" value="TOH" type="QString"/>
               </Option>
               <Option type="Map">
-                <Option name="Point oiseaux migrateurs" type="QString" value="POM"/>
+                <Option name="Point oiseaux migrateurs" value="POM" type="QString"/>
               </Option>
               <Option type="Map">
-                <Option name="Plaque reptile" type="QString" value="PRE"/>
+                <Option name="Plaque reptile" value="PRE" type="QString"/>
               </Option>
               <Option type="Map">
-                <Option name="Transects entomologie" type="QString" value="TEN"/>
+                <Option name="Transects entomologie" value="TEN" type="QString"/>
               </Option>
               <Option type="Map">
-                <Option name="Repasse nocturne" type="QString" value="RNO"/>
+                <Option name="Repasse nocturne" value="RNO" type="QString"/>
               </Option>
               <Option type="Map">
-                <Option name="Enregistreurs chiroptères" type="QString" value="ECH"/>
+                <Option name="Enregistreurs chiroptères" value="ECH" type="QString"/>
               </Option>
               <Option type="Map">
-                <Option name="Nasse amphibiens" type="QString" value="NAM"/>
+                <Option name="Nasse amphibiens" value="NAM" type="QString"/>
               </Option>
               <Option type="Map">
-                <Option name="Piège photo" type="QString" value="PPH"/>
+                <Option name="Piège photo" value="PPH" type="QString"/>
               </Option>
               <Option type="Map">
-                <Option name="Relevé de végétation" type="QString" value="VEG"/>
+                <Option name="Relevé de végétation" value="VEG" type="QString"/>
               </Option>
               <Option type="Map">
-                <Option name="Sondage pédologique" type="QString" value="PED"/>
+                <Option name="Sondage pédologique" value="PED" type="QString"/>
               </Option>
             </Option>
           </Option>
@@ -413,13 +407,13 @@
           <Option type="Map">
             <Option name="map" type="List">
               <Option type="Map">
-                <Option name="Humide" type="QString" value="HUM"/>
+                <Option name="Humide" value="HUM" type="QString"/>
               </Option>
               <Option type="Map">
-                <Option name="Non humide" type="QString" value="NHU"/>
+                <Option name="Non humide" value="NHU" type="QString"/>
               </Option>
               <Option type="Map">
-                <Option name="Non interprétable" type="QString" value="NIN"/>
+                <Option name="Non interprétable" value="NIN" type="QString"/>
               </Option>
             </Option>
           </Option>
@@ -523,13 +517,13 @@
           <Option type="Map">
             <Option name="map" type="List">
               <Option type="Map">
-                <Option name="/" type="QString" value=""/>
+                <Option name="/" value="" type="QString"/>
               </Option>
               <Option type="Map">
-                <Option name="Oui" type="QString" value="1"/>
+                <Option name="Oui" value="1" type="QString"/>
               </Option>
               <Option type="Map">
-                <Option name="Non" type="QString" value="0"/>
+                <Option name="Non" value="0" type="QString"/>
               </Option>
             </Option>
           </Option>
@@ -570,19 +564,19 @@
           <Option type="Map">
             <Option name="map" type="List">
               <Option type="Map">
-                <Option name="/" type="QString" value=""/>
+                <Option name="/" value="" type="QString"/>
               </Option>
               <Option type="Map">
-                <Option name="A" type="QString" value="A"/>
+                <Option name="A" value="A" type="QString"/>
               </Option>
               <Option type="Map">
-                <Option name="B" type="QString" value="B"/>
+                <Option name="B" value="B" type="QString"/>
               </Option>
               <Option type="Map">
-                <Option name="C" type="QString" value="C"/>
+                <Option name="C" value="C" type="QString"/>
               </Option>
               <Option type="Map">
-                <Option name="NC" type="QString" value="NC"/>
+                <Option name="NC" value="NC" type="QString"/>
               </Option>
             </Option>
           </Option>
@@ -602,16 +596,16 @@
           <Option type="Map">
             <Option name="map" type="List">
               <Option type="Map">
-                <Option name="/" type="QString" value=""/>
+                <Option name="/" value="" type="QString"/>
               </Option>
               <Option type="Map">
-                <Option name="Classe A" type="QString" value="1"/>
+                <Option name="Classe A" value="1" type="QString"/>
               </Option>
               <Option type="Map">
-                <Option name="Classe B" type="QString" value="2"/>
+                <Option name="Classe B" value="2" type="QString"/>
               </Option>
               <Option type="Map">
-                <Option name="Classe C" type="QString" value="3"/>
+                <Option name="Classe C" value="3" type="QString"/>
               </Option>
             </Option>
           </Option>
@@ -624,16 +618,16 @@
           <Option type="Map">
             <Option name="map" type="List">
               <Option type="Map">
-                <Option name="/" type="QString" value=""/>
+                <Option name="/" value="" type="QString"/>
               </Option>
               <Option type="Map">
-                <Option name="Classe A" type="QString" value="1"/>
+                <Option name="Classe A" value="1" type="QString"/>
               </Option>
               <Option type="Map">
-                <Option name="Classe B" type="QString" value="2"/>
+                <Option name="Classe B" value="2" type="QString"/>
               </Option>
               <Option type="Map">
-                <Option name="Classe C" type="QString" value="3"/>
+                <Option name="Classe C" value="3" type="QString"/>
               </Option>
             </Option>
           </Option>
@@ -1061,334 +1055,334 @@
   <excludeAttributesWMS/>
   <excludeAttributesWFS/>
   <defaults>
-    <default field="pk_edge" expression="" applyOnUpdate="0"/>
-    <default field="id_edge" expression="" applyOnUpdate="0"/>
-    <default field="lpk_descriptionsystem" expression="" applyOnUpdate="0"/>
-    <default field="lid_resource_1" expression="" applyOnUpdate="0"/>
-    <default field="lid_descriptionsystem_1" expression="" applyOnUpdate="0"/>
-    <default field="lid_descriptionsystem_2" expression="" applyOnUpdate="0"/>
-    <default field="edgecategory" expression="" applyOnUpdate="0"/>
-    <default field="edgetype" expression="" applyOnUpdate="0"/>
-    <default field="edgesubtype" expression="" applyOnUpdate="0"/>
-    <default field="edgenumber" expression="" applyOnUpdate="0"/>
-    <default field="habitatwetland" expression="" applyOnUpdate="0"/>
-    <default field="habitatrepository" expression="" applyOnUpdate="0"/>
-    <default field="habitatname" expression="" applyOnUpdate="0"/>
-    <default field="habitatcode" expression="" applyOnUpdate="0"/>
-    <default field="habitat2wetland" expression="" applyOnUpdate="0"/>
-    <default field="habitat2repository" expression="" applyOnUpdate="0"/>
-    <default field="habitat2name" expression="" applyOnUpdate="0"/>
-    <default field="habitat2code" expression="" applyOnUpdate="0"/>
-    <default field="pk_descriptionsystem" expression="" applyOnUpdate="0"/>
-    <default field="id_descriptionsystem" expression="" applyOnUpdate="0"/>
-    <default field="lpk_object" expression="" applyOnUpdate="0"/>
-    <default field="strategicvalue" expression="" applyOnUpdate="0"/>
-    <default field="operational" expression="" applyOnUpdate="0"/>
-    <default field="structuralstate" expression="" applyOnUpdate="0"/>
-    <default field="operationalstate" expression="" applyOnUpdate="0"/>
-    <default field="dateoperationalcreation" expression="" applyOnUpdate="0"/>
-    <default field="dateoperationalcreationupper" expression="" applyOnUpdate="0"/>
-    <default field="operationaldatecreationaccuracy" expression="" applyOnUpdate="0"/>
-    <default field="datetimeoperationaldestruction" expression="" applyOnUpdate="0"/>
-    <default field="geotrackingxyquality" expression="" applyOnUpdate="0"/>
-    <default field="geotrackingzquality" expression="" applyOnUpdate="0"/>
-    <default field="geotrackingdate" expression="" applyOnUpdate="0"/>
-    <default field="geotrackingsource" expression="" applyOnUpdate="0"/>
-    <default field="parameters" expression="" applyOnUpdate="0"/>
-    <default field="parameterslist" expression="" applyOnUpdate="0"/>
-    <default field="city" expression="" applyOnUpdate="0"/>
-    <default field="streetname" expression="" applyOnUpdate="0"/>
-    <default field="streetupname" expression="" applyOnUpdate="0"/>
-    <default field="streetdownname" expression="" applyOnUpdate="0"/>
-    <default field="streetcomment" expression="" applyOnUpdate="0"/>
-    <default field="lid_actor_1" expression="" applyOnUpdate="0"/>
-    <default field="lid_actor_2" expression="" applyOnUpdate="0"/>
-    <default field="lid_actor_3" expression="" applyOnUpdate="0"/>
-    <default field="lid_facility" expression="" applyOnUpdate="0"/>
-    <default field="float_1" expression="" applyOnUpdate="0"/>
-    <default field="float_2" expression="" applyOnUpdate="0"/>
-    <default field="float_3" expression="" applyOnUpdate="0"/>
-    <default field="float_4" expression="" applyOnUpdate="0"/>
-    <default field="float_5" expression="" applyOnUpdate="0"/>
-    <default field="float_6" expression="" applyOnUpdate="0"/>
-    <default field="float_7" expression="" applyOnUpdate="0"/>
-    <default field="float_8" expression="" applyOnUpdate="0"/>
-    <default field="float_9" expression="" applyOnUpdate="0"/>
-    <default field="float_10" expression="" applyOnUpdate="0"/>
-    <default field="string_1" expression="" applyOnUpdate="0"/>
-    <default field="string_2" expression="" applyOnUpdate="0"/>
-    <default field="string_3" expression="" applyOnUpdate="0"/>
-    <default field="string_4" expression="" applyOnUpdate="0"/>
-    <default field="string_5" expression="" applyOnUpdate="0"/>
-    <default field="string_6" expression="" applyOnUpdate="0"/>
-    <default field="string_7" expression="" applyOnUpdate="0"/>
-    <default field="string_8" expression="" applyOnUpdate="0"/>
-    <default field="string_9" expression="" applyOnUpdate="0"/>
-    <default field="string_10" expression="" applyOnUpdate="0"/>
-    <default field="commonname" expression="" applyOnUpdate="0"/>
-    <default field="scientificname" expression="" applyOnUpdate="0"/>
-    <default field="orderclass" expression="" applyOnUpdate="0"/>
-    <default field="pk_object" expression="" applyOnUpdate="0"/>
-    <default field="id_object" expression="" applyOnUpdate="0"/>
-    <default field="lpk_revision_begin" expression="" applyOnUpdate="0"/>
-    <default field="lpk_revision_end" expression="" applyOnUpdate="0"/>
-    <default field="datetimecreation" expression="" applyOnUpdate="0"/>
-    <default field="datetimemodification" expression="" applyOnUpdate="0"/>
-    <default field="datetimedestruction" expression="" applyOnUpdate="0"/>
-    <default field="comment" expression="" applyOnUpdate="0"/>
-    <default field="name" expression="" applyOnUpdate="0"/>
-    <default field="importid" expression="" applyOnUpdate="0"/>
-    <default field="importtable" expression="" applyOnUpdate="0"/>
-    <default field="lid_actor" expression="" applyOnUpdate="0"/>
+    <default expression="" field="pk_edge" applyOnUpdate="0"/>
+    <default expression="" field="id_edge" applyOnUpdate="0"/>
+    <default expression="" field="lpk_descriptionsystem" applyOnUpdate="0"/>
+    <default expression="" field="lid_resource_1" applyOnUpdate="0"/>
+    <default expression="" field="lid_descriptionsystem_1" applyOnUpdate="0"/>
+    <default expression="" field="lid_descriptionsystem_2" applyOnUpdate="0"/>
+    <default expression="" field="edgecategory" applyOnUpdate="0"/>
+    <default expression="" field="edgetype" applyOnUpdate="0"/>
+    <default expression="" field="edgesubtype" applyOnUpdate="0"/>
+    <default expression="" field="edgenumber" applyOnUpdate="0"/>
+    <default expression="" field="habitatwetland" applyOnUpdate="0"/>
+    <default expression="" field="habitatrepository" applyOnUpdate="0"/>
+    <default expression="" field="habitatname" applyOnUpdate="0"/>
+    <default expression="" field="habitatcode" applyOnUpdate="0"/>
+    <default expression="" field="habitat2wetland" applyOnUpdate="0"/>
+    <default expression="" field="habitat2repository" applyOnUpdate="0"/>
+    <default expression="" field="habitat2name" applyOnUpdate="0"/>
+    <default expression="" field="habitat2code" applyOnUpdate="0"/>
+    <default expression="" field="pk_descriptionsystem" applyOnUpdate="0"/>
+    <default expression="" field="id_descriptionsystem" applyOnUpdate="0"/>
+    <default expression="" field="lpk_object" applyOnUpdate="0"/>
+    <default expression="" field="strategicvalue" applyOnUpdate="0"/>
+    <default expression="" field="operational" applyOnUpdate="0"/>
+    <default expression="" field="structuralstate" applyOnUpdate="0"/>
+    <default expression="" field="operationalstate" applyOnUpdate="0"/>
+    <default expression="" field="dateoperationalcreation" applyOnUpdate="0"/>
+    <default expression="" field="dateoperationalcreationupper" applyOnUpdate="0"/>
+    <default expression="" field="operationaldatecreationaccuracy" applyOnUpdate="0"/>
+    <default expression="" field="datetimeoperationaldestruction" applyOnUpdate="0"/>
+    <default expression="" field="geotrackingxyquality" applyOnUpdate="0"/>
+    <default expression="" field="geotrackingzquality" applyOnUpdate="0"/>
+    <default expression="" field="geotrackingdate" applyOnUpdate="0"/>
+    <default expression="" field="geotrackingsource" applyOnUpdate="0"/>
+    <default expression="" field="parameters" applyOnUpdate="0"/>
+    <default expression="" field="parameterslist" applyOnUpdate="0"/>
+    <default expression="" field="city" applyOnUpdate="0"/>
+    <default expression="" field="streetname" applyOnUpdate="0"/>
+    <default expression="" field="streetupname" applyOnUpdate="0"/>
+    <default expression="" field="streetdownname" applyOnUpdate="0"/>
+    <default expression="" field="streetcomment" applyOnUpdate="0"/>
+    <default expression="" field="lid_actor_1" applyOnUpdate="0"/>
+    <default expression="" field="lid_actor_2" applyOnUpdate="0"/>
+    <default expression="" field="lid_actor_3" applyOnUpdate="0"/>
+    <default expression="" field="lid_facility" applyOnUpdate="0"/>
+    <default expression="" field="float_1" applyOnUpdate="0"/>
+    <default expression="" field="float_2" applyOnUpdate="0"/>
+    <default expression="" field="float_3" applyOnUpdate="0"/>
+    <default expression="" field="float_4" applyOnUpdate="0"/>
+    <default expression="" field="float_5" applyOnUpdate="0"/>
+    <default expression="" field="float_6" applyOnUpdate="0"/>
+    <default expression="" field="float_7" applyOnUpdate="0"/>
+    <default expression="" field="float_8" applyOnUpdate="0"/>
+    <default expression="" field="float_9" applyOnUpdate="0"/>
+    <default expression="" field="float_10" applyOnUpdate="0"/>
+    <default expression="" field="string_1" applyOnUpdate="0"/>
+    <default expression="" field="string_2" applyOnUpdate="0"/>
+    <default expression="" field="string_3" applyOnUpdate="0"/>
+    <default expression="" field="string_4" applyOnUpdate="0"/>
+    <default expression="" field="string_5" applyOnUpdate="0"/>
+    <default expression="" field="string_6" applyOnUpdate="0"/>
+    <default expression="" field="string_7" applyOnUpdate="0"/>
+    <default expression="" field="string_8" applyOnUpdate="0"/>
+    <default expression="" field="string_9" applyOnUpdate="0"/>
+    <default expression="" field="string_10" applyOnUpdate="0"/>
+    <default expression="" field="commonname" applyOnUpdate="0"/>
+    <default expression="" field="scientificname" applyOnUpdate="0"/>
+    <default expression="" field="orderclass" applyOnUpdate="0"/>
+    <default expression="" field="pk_object" applyOnUpdate="0"/>
+    <default expression="" field="id_object" applyOnUpdate="0"/>
+    <default expression="" field="lpk_revision_begin" applyOnUpdate="0"/>
+    <default expression="" field="lpk_revision_end" applyOnUpdate="0"/>
+    <default expression="" field="datetimecreation" applyOnUpdate="0"/>
+    <default expression="" field="datetimemodification" applyOnUpdate="0"/>
+    <default expression="" field="datetimedestruction" applyOnUpdate="0"/>
+    <default expression="" field="comment" applyOnUpdate="0"/>
+    <default expression="" field="name" applyOnUpdate="0"/>
+    <default expression="" field="importid" applyOnUpdate="0"/>
+    <default expression="" field="importtable" applyOnUpdate="0"/>
+    <default expression="" field="lid_actor" applyOnUpdate="0"/>
   </defaults>
   <constraints>
-    <constraint field="pk_edge" exp_strength="0" unique_strength="0" notnull_strength="0" constraints="0"/>
-    <constraint field="id_edge" exp_strength="0" unique_strength="0" notnull_strength="0" constraints="0"/>
-    <constraint field="lpk_descriptionsystem" exp_strength="0" unique_strength="0" notnull_strength="0" constraints="0"/>
-    <constraint field="lid_resource_1" exp_strength="0" unique_strength="0" notnull_strength="0" constraints="0"/>
-    <constraint field="lid_descriptionsystem_1" exp_strength="0" unique_strength="0" notnull_strength="0" constraints="0"/>
-    <constraint field="lid_descriptionsystem_2" exp_strength="0" unique_strength="0" notnull_strength="0" constraints="0"/>
-    <constraint field="edgecategory" exp_strength="0" unique_strength="0" notnull_strength="0" constraints="0"/>
-    <constraint field="edgetype" exp_strength="0" unique_strength="0" notnull_strength="0" constraints="0"/>
-    <constraint field="edgesubtype" exp_strength="0" unique_strength="0" notnull_strength="0" constraints="0"/>
-    <constraint field="edgenumber" exp_strength="0" unique_strength="0" notnull_strength="0" constraints="0"/>
-    <constraint field="habitatwetland" exp_strength="0" unique_strength="0" notnull_strength="0" constraints="0"/>
-    <constraint field="habitatrepository" exp_strength="0" unique_strength="0" notnull_strength="0" constraints="0"/>
-    <constraint field="habitatname" exp_strength="0" unique_strength="0" notnull_strength="0" constraints="0"/>
-    <constraint field="habitatcode" exp_strength="0" unique_strength="0" notnull_strength="0" constraints="0"/>
-    <constraint field="habitat2wetland" exp_strength="0" unique_strength="0" notnull_strength="0" constraints="0"/>
-    <constraint field="habitat2repository" exp_strength="0" unique_strength="0" notnull_strength="0" constraints="0"/>
-    <constraint field="habitat2name" exp_strength="0" unique_strength="0" notnull_strength="0" constraints="0"/>
-    <constraint field="habitat2code" exp_strength="0" unique_strength="0" notnull_strength="0" constraints="0"/>
-    <constraint field="pk_descriptionsystem" exp_strength="0" unique_strength="0" notnull_strength="0" constraints="0"/>
-    <constraint field="id_descriptionsystem" exp_strength="0" unique_strength="0" notnull_strength="0" constraints="0"/>
-    <constraint field="lpk_object" exp_strength="0" unique_strength="0" notnull_strength="0" constraints="0"/>
-    <constraint field="strategicvalue" exp_strength="0" unique_strength="0" notnull_strength="0" constraints="0"/>
-    <constraint field="operational" exp_strength="0" unique_strength="0" notnull_strength="0" constraints="0"/>
-    <constraint field="structuralstate" exp_strength="0" unique_strength="0" notnull_strength="0" constraints="0"/>
-    <constraint field="operationalstate" exp_strength="0" unique_strength="0" notnull_strength="0" constraints="0"/>
-    <constraint field="dateoperationalcreation" exp_strength="0" unique_strength="0" notnull_strength="0" constraints="0"/>
-    <constraint field="dateoperationalcreationupper" exp_strength="0" unique_strength="0" notnull_strength="0" constraints="0"/>
-    <constraint field="operationaldatecreationaccuracy" exp_strength="0" unique_strength="0" notnull_strength="0" constraints="0"/>
-    <constraint field="datetimeoperationaldestruction" exp_strength="0" unique_strength="0" notnull_strength="0" constraints="0"/>
-    <constraint field="geotrackingxyquality" exp_strength="0" unique_strength="0" notnull_strength="0" constraints="0"/>
-    <constraint field="geotrackingzquality" exp_strength="0" unique_strength="0" notnull_strength="0" constraints="0"/>
-    <constraint field="geotrackingdate" exp_strength="0" unique_strength="0" notnull_strength="0" constraints="0"/>
-    <constraint field="geotrackingsource" exp_strength="0" unique_strength="0" notnull_strength="0" constraints="0"/>
-    <constraint field="parameters" exp_strength="0" unique_strength="0" notnull_strength="0" constraints="0"/>
-    <constraint field="parameterslist" exp_strength="0" unique_strength="0" notnull_strength="0" constraints="0"/>
-    <constraint field="city" exp_strength="0" unique_strength="0" notnull_strength="0" constraints="0"/>
-    <constraint field="streetname" exp_strength="0" unique_strength="0" notnull_strength="0" constraints="0"/>
-    <constraint field="streetupname" exp_strength="0" unique_strength="0" notnull_strength="0" constraints="0"/>
-    <constraint field="streetdownname" exp_strength="0" unique_strength="0" notnull_strength="0" constraints="0"/>
-    <constraint field="streetcomment" exp_strength="0" unique_strength="0" notnull_strength="0" constraints="0"/>
-    <constraint field="lid_actor_1" exp_strength="0" unique_strength="0" notnull_strength="0" constraints="0"/>
-    <constraint field="lid_actor_2" exp_strength="0" unique_strength="0" notnull_strength="0" constraints="0"/>
-    <constraint field="lid_actor_3" exp_strength="0" unique_strength="0" notnull_strength="0" constraints="0"/>
-    <constraint field="lid_facility" exp_strength="0" unique_strength="0" notnull_strength="0" constraints="0"/>
-    <constraint field="float_1" exp_strength="0" unique_strength="0" notnull_strength="0" constraints="0"/>
-    <constraint field="float_2" exp_strength="0" unique_strength="0" notnull_strength="0" constraints="0"/>
-    <constraint field="float_3" exp_strength="0" unique_strength="0" notnull_strength="0" constraints="0"/>
-    <constraint field="float_4" exp_strength="0" unique_strength="0" notnull_strength="0" constraints="0"/>
-    <constraint field="float_5" exp_strength="0" unique_strength="0" notnull_strength="0" constraints="0"/>
-    <constraint field="float_6" exp_strength="0" unique_strength="0" notnull_strength="0" constraints="0"/>
-    <constraint field="float_7" exp_strength="0" unique_strength="0" notnull_strength="0" constraints="0"/>
-    <constraint field="float_8" exp_strength="0" unique_strength="0" notnull_strength="0" constraints="0"/>
-    <constraint field="float_9" exp_strength="0" unique_strength="0" notnull_strength="0" constraints="0"/>
-    <constraint field="float_10" exp_strength="0" unique_strength="0" notnull_strength="0" constraints="0"/>
-    <constraint field="string_1" exp_strength="0" unique_strength="0" notnull_strength="0" constraints="0"/>
-    <constraint field="string_2" exp_strength="0" unique_strength="0" notnull_strength="0" constraints="0"/>
-    <constraint field="string_3" exp_strength="0" unique_strength="0" notnull_strength="0" constraints="0"/>
-    <constraint field="string_4" exp_strength="0" unique_strength="0" notnull_strength="0" constraints="0"/>
-    <constraint field="string_5" exp_strength="0" unique_strength="0" notnull_strength="0" constraints="0"/>
-    <constraint field="string_6" exp_strength="0" unique_strength="0" notnull_strength="0" constraints="0"/>
-    <constraint field="string_7" exp_strength="0" unique_strength="0" notnull_strength="0" constraints="0"/>
-    <constraint field="string_8" exp_strength="0" unique_strength="0" notnull_strength="0" constraints="0"/>
-    <constraint field="string_9" exp_strength="0" unique_strength="0" notnull_strength="0" constraints="0"/>
-    <constraint field="string_10" exp_strength="0" unique_strength="0" notnull_strength="0" constraints="0"/>
-    <constraint field="commonname" exp_strength="0" unique_strength="0" notnull_strength="0" constraints="0"/>
-    <constraint field="scientificname" exp_strength="0" unique_strength="0" notnull_strength="0" constraints="0"/>
-    <constraint field="orderclass" exp_strength="0" unique_strength="0" notnull_strength="0" constraints="0"/>
-    <constraint field="pk_object" exp_strength="0" unique_strength="0" notnull_strength="0" constraints="0"/>
-    <constraint field="id_object" exp_strength="0" unique_strength="0" notnull_strength="0" constraints="0"/>
-    <constraint field="lpk_revision_begin" exp_strength="0" unique_strength="0" notnull_strength="0" constraints="0"/>
-    <constraint field="lpk_revision_end" exp_strength="0" unique_strength="0" notnull_strength="0" constraints="0"/>
-    <constraint field="datetimecreation" exp_strength="0" unique_strength="0" notnull_strength="0" constraints="0"/>
-    <constraint field="datetimemodification" exp_strength="0" unique_strength="0" notnull_strength="0" constraints="0"/>
-    <constraint field="datetimedestruction" exp_strength="0" unique_strength="0" notnull_strength="0" constraints="0"/>
-    <constraint field="comment" exp_strength="0" unique_strength="0" notnull_strength="0" constraints="0"/>
-    <constraint field="name" exp_strength="0" unique_strength="0" notnull_strength="0" constraints="0"/>
-    <constraint field="importid" exp_strength="0" unique_strength="0" notnull_strength="0" constraints="0"/>
-    <constraint field="importtable" exp_strength="0" unique_strength="0" notnull_strength="0" constraints="0"/>
-    <constraint field="lid_actor" exp_strength="0" unique_strength="0" notnull_strength="0" constraints="0"/>
+    <constraint exp_strength="0" notnull_strength="0" unique_strength="0" constraints="0" field="pk_edge"/>
+    <constraint exp_strength="0" notnull_strength="0" unique_strength="0" constraints="0" field="id_edge"/>
+    <constraint exp_strength="0" notnull_strength="0" unique_strength="0" constraints="0" field="lpk_descriptionsystem"/>
+    <constraint exp_strength="0" notnull_strength="0" unique_strength="0" constraints="0" field="lid_resource_1"/>
+    <constraint exp_strength="0" notnull_strength="0" unique_strength="0" constraints="0" field="lid_descriptionsystem_1"/>
+    <constraint exp_strength="0" notnull_strength="0" unique_strength="0" constraints="0" field="lid_descriptionsystem_2"/>
+    <constraint exp_strength="0" notnull_strength="0" unique_strength="0" constraints="0" field="edgecategory"/>
+    <constraint exp_strength="0" notnull_strength="0" unique_strength="0" constraints="0" field="edgetype"/>
+    <constraint exp_strength="0" notnull_strength="0" unique_strength="0" constraints="0" field="edgesubtype"/>
+    <constraint exp_strength="0" notnull_strength="0" unique_strength="0" constraints="0" field="edgenumber"/>
+    <constraint exp_strength="0" notnull_strength="0" unique_strength="0" constraints="0" field="habitatwetland"/>
+    <constraint exp_strength="0" notnull_strength="0" unique_strength="0" constraints="0" field="habitatrepository"/>
+    <constraint exp_strength="0" notnull_strength="0" unique_strength="0" constraints="0" field="habitatname"/>
+    <constraint exp_strength="0" notnull_strength="0" unique_strength="0" constraints="0" field="habitatcode"/>
+    <constraint exp_strength="0" notnull_strength="0" unique_strength="0" constraints="0" field="habitat2wetland"/>
+    <constraint exp_strength="0" notnull_strength="0" unique_strength="0" constraints="0" field="habitat2repository"/>
+    <constraint exp_strength="0" notnull_strength="0" unique_strength="0" constraints="0" field="habitat2name"/>
+    <constraint exp_strength="0" notnull_strength="0" unique_strength="0" constraints="0" field="habitat2code"/>
+    <constraint exp_strength="0" notnull_strength="0" unique_strength="0" constraints="0" field="pk_descriptionsystem"/>
+    <constraint exp_strength="0" notnull_strength="0" unique_strength="0" constraints="0" field="id_descriptionsystem"/>
+    <constraint exp_strength="0" notnull_strength="0" unique_strength="0" constraints="0" field="lpk_object"/>
+    <constraint exp_strength="0" notnull_strength="0" unique_strength="0" constraints="0" field="strategicvalue"/>
+    <constraint exp_strength="0" notnull_strength="0" unique_strength="0" constraints="0" field="operational"/>
+    <constraint exp_strength="0" notnull_strength="0" unique_strength="0" constraints="0" field="structuralstate"/>
+    <constraint exp_strength="0" notnull_strength="0" unique_strength="0" constraints="0" field="operationalstate"/>
+    <constraint exp_strength="0" notnull_strength="0" unique_strength="0" constraints="0" field="dateoperationalcreation"/>
+    <constraint exp_strength="0" notnull_strength="0" unique_strength="0" constraints="0" field="dateoperationalcreationupper"/>
+    <constraint exp_strength="0" notnull_strength="0" unique_strength="0" constraints="0" field="operationaldatecreationaccuracy"/>
+    <constraint exp_strength="0" notnull_strength="0" unique_strength="0" constraints="0" field="datetimeoperationaldestruction"/>
+    <constraint exp_strength="0" notnull_strength="0" unique_strength="0" constraints="0" field="geotrackingxyquality"/>
+    <constraint exp_strength="0" notnull_strength="0" unique_strength="0" constraints="0" field="geotrackingzquality"/>
+    <constraint exp_strength="0" notnull_strength="0" unique_strength="0" constraints="0" field="geotrackingdate"/>
+    <constraint exp_strength="0" notnull_strength="0" unique_strength="0" constraints="0" field="geotrackingsource"/>
+    <constraint exp_strength="0" notnull_strength="0" unique_strength="0" constraints="0" field="parameters"/>
+    <constraint exp_strength="0" notnull_strength="0" unique_strength="0" constraints="0" field="parameterslist"/>
+    <constraint exp_strength="0" notnull_strength="0" unique_strength="0" constraints="0" field="city"/>
+    <constraint exp_strength="0" notnull_strength="0" unique_strength="0" constraints="0" field="streetname"/>
+    <constraint exp_strength="0" notnull_strength="0" unique_strength="0" constraints="0" field="streetupname"/>
+    <constraint exp_strength="0" notnull_strength="0" unique_strength="0" constraints="0" field="streetdownname"/>
+    <constraint exp_strength="0" notnull_strength="0" unique_strength="0" constraints="0" field="streetcomment"/>
+    <constraint exp_strength="0" notnull_strength="0" unique_strength="0" constraints="0" field="lid_actor_1"/>
+    <constraint exp_strength="0" notnull_strength="0" unique_strength="0" constraints="0" field="lid_actor_2"/>
+    <constraint exp_strength="0" notnull_strength="0" unique_strength="0" constraints="0" field="lid_actor_3"/>
+    <constraint exp_strength="0" notnull_strength="0" unique_strength="0" constraints="0" field="lid_facility"/>
+    <constraint exp_strength="0" notnull_strength="0" unique_strength="0" constraints="0" field="float_1"/>
+    <constraint exp_strength="0" notnull_strength="0" unique_strength="0" constraints="0" field="float_2"/>
+    <constraint exp_strength="0" notnull_strength="0" unique_strength="0" constraints="0" field="float_3"/>
+    <constraint exp_strength="0" notnull_strength="0" unique_strength="0" constraints="0" field="float_4"/>
+    <constraint exp_strength="0" notnull_strength="0" unique_strength="0" constraints="0" field="float_5"/>
+    <constraint exp_strength="0" notnull_strength="0" unique_strength="0" constraints="0" field="float_6"/>
+    <constraint exp_strength="0" notnull_strength="0" unique_strength="0" constraints="0" field="float_7"/>
+    <constraint exp_strength="0" notnull_strength="0" unique_strength="0" constraints="0" field="float_8"/>
+    <constraint exp_strength="0" notnull_strength="0" unique_strength="0" constraints="0" field="float_9"/>
+    <constraint exp_strength="0" notnull_strength="0" unique_strength="0" constraints="0" field="float_10"/>
+    <constraint exp_strength="0" notnull_strength="0" unique_strength="0" constraints="0" field="string_1"/>
+    <constraint exp_strength="0" notnull_strength="0" unique_strength="0" constraints="0" field="string_2"/>
+    <constraint exp_strength="0" notnull_strength="0" unique_strength="0" constraints="0" field="string_3"/>
+    <constraint exp_strength="0" notnull_strength="0" unique_strength="0" constraints="0" field="string_4"/>
+    <constraint exp_strength="0" notnull_strength="0" unique_strength="0" constraints="0" field="string_5"/>
+    <constraint exp_strength="0" notnull_strength="0" unique_strength="0" constraints="0" field="string_6"/>
+    <constraint exp_strength="0" notnull_strength="0" unique_strength="0" constraints="0" field="string_7"/>
+    <constraint exp_strength="0" notnull_strength="0" unique_strength="0" constraints="0" field="string_8"/>
+    <constraint exp_strength="0" notnull_strength="0" unique_strength="0" constraints="0" field="string_9"/>
+    <constraint exp_strength="0" notnull_strength="0" unique_strength="0" constraints="0" field="string_10"/>
+    <constraint exp_strength="0" notnull_strength="0" unique_strength="0" constraints="0" field="commonname"/>
+    <constraint exp_strength="0" notnull_strength="0" unique_strength="0" constraints="0" field="scientificname"/>
+    <constraint exp_strength="0" notnull_strength="0" unique_strength="0" constraints="0" field="orderclass"/>
+    <constraint exp_strength="0" notnull_strength="0" unique_strength="0" constraints="0" field="pk_object"/>
+    <constraint exp_strength="0" notnull_strength="0" unique_strength="0" constraints="0" field="id_object"/>
+    <constraint exp_strength="0" notnull_strength="0" unique_strength="0" constraints="0" field="lpk_revision_begin"/>
+    <constraint exp_strength="0" notnull_strength="0" unique_strength="0" constraints="0" field="lpk_revision_end"/>
+    <constraint exp_strength="0" notnull_strength="0" unique_strength="0" constraints="0" field="datetimecreation"/>
+    <constraint exp_strength="0" notnull_strength="0" unique_strength="0" constraints="0" field="datetimemodification"/>
+    <constraint exp_strength="0" notnull_strength="0" unique_strength="0" constraints="0" field="datetimedestruction"/>
+    <constraint exp_strength="0" notnull_strength="0" unique_strength="0" constraints="0" field="comment"/>
+    <constraint exp_strength="0" notnull_strength="0" unique_strength="0" constraints="0" field="name"/>
+    <constraint exp_strength="0" notnull_strength="0" unique_strength="0" constraints="0" field="importid"/>
+    <constraint exp_strength="0" notnull_strength="0" unique_strength="0" constraints="0" field="importtable"/>
+    <constraint exp_strength="0" notnull_strength="0" unique_strength="0" constraints="0" field="lid_actor"/>
   </constraints>
   <constraintExpressions>
-    <constraint field="pk_edge" exp="" desc=""/>
-    <constraint field="id_edge" exp="" desc=""/>
-    <constraint field="lpk_descriptionsystem" exp="" desc=""/>
-    <constraint field="lid_resource_1" exp="" desc=""/>
-    <constraint field="lid_descriptionsystem_1" exp="" desc=""/>
-    <constraint field="lid_descriptionsystem_2" exp="" desc=""/>
-    <constraint field="edgecategory" exp="" desc=""/>
-    <constraint field="edgetype" exp="" desc=""/>
-    <constraint field="edgesubtype" exp="" desc=""/>
-    <constraint field="edgenumber" exp="" desc=""/>
-    <constraint field="habitatwetland" exp="" desc=""/>
-    <constraint field="habitatrepository" exp="" desc=""/>
-    <constraint field="habitatname" exp="" desc=""/>
-    <constraint field="habitatcode" exp="" desc=""/>
-    <constraint field="habitat2wetland" exp="" desc=""/>
-    <constraint field="habitat2repository" exp="" desc=""/>
-    <constraint field="habitat2name" exp="" desc=""/>
-    <constraint field="habitat2code" exp="" desc=""/>
-    <constraint field="pk_descriptionsystem" exp="" desc=""/>
-    <constraint field="id_descriptionsystem" exp="" desc=""/>
-    <constraint field="lpk_object" exp="" desc=""/>
-    <constraint field="strategicvalue" exp="" desc=""/>
-    <constraint field="operational" exp="" desc=""/>
-    <constraint field="structuralstate" exp="" desc=""/>
-    <constraint field="operationalstate" exp="" desc=""/>
-    <constraint field="dateoperationalcreation" exp="" desc=""/>
-    <constraint field="dateoperationalcreationupper" exp="" desc=""/>
-    <constraint field="operationaldatecreationaccuracy" exp="" desc=""/>
-    <constraint field="datetimeoperationaldestruction" exp="" desc=""/>
-    <constraint field="geotrackingxyquality" exp="" desc=""/>
-    <constraint field="geotrackingzquality" exp="" desc=""/>
-    <constraint field="geotrackingdate" exp="" desc=""/>
-    <constraint field="geotrackingsource" exp="" desc=""/>
-    <constraint field="parameters" exp="" desc=""/>
-    <constraint field="parameterslist" exp="" desc=""/>
-    <constraint field="city" exp="" desc=""/>
-    <constraint field="streetname" exp="" desc=""/>
-    <constraint field="streetupname" exp="" desc=""/>
-    <constraint field="streetdownname" exp="" desc=""/>
-    <constraint field="streetcomment" exp="" desc=""/>
-    <constraint field="lid_actor_1" exp="" desc=""/>
-    <constraint field="lid_actor_2" exp="" desc=""/>
-    <constraint field="lid_actor_3" exp="" desc=""/>
-    <constraint field="lid_facility" exp="" desc=""/>
-    <constraint field="float_1" exp="" desc=""/>
-    <constraint field="float_2" exp="" desc=""/>
-    <constraint field="float_3" exp="" desc=""/>
-    <constraint field="float_4" exp="" desc=""/>
-    <constraint field="float_5" exp="" desc=""/>
-    <constraint field="float_6" exp="" desc=""/>
-    <constraint field="float_7" exp="" desc=""/>
-    <constraint field="float_8" exp="" desc=""/>
-    <constraint field="float_9" exp="" desc=""/>
-    <constraint field="float_10" exp="" desc=""/>
-    <constraint field="string_1" exp="" desc=""/>
-    <constraint field="string_2" exp="" desc=""/>
-    <constraint field="string_3" exp="" desc=""/>
-    <constraint field="string_4" exp="" desc=""/>
-    <constraint field="string_5" exp="" desc=""/>
-    <constraint field="string_6" exp="" desc=""/>
-    <constraint field="string_7" exp="" desc=""/>
-    <constraint field="string_8" exp="" desc=""/>
-    <constraint field="string_9" exp="" desc=""/>
-    <constraint field="string_10" exp="" desc=""/>
-    <constraint field="commonname" exp="" desc=""/>
-    <constraint field="scientificname" exp="" desc=""/>
-    <constraint field="orderclass" exp="" desc=""/>
-    <constraint field="pk_object" exp="" desc=""/>
-    <constraint field="id_object" exp="" desc=""/>
-    <constraint field="lpk_revision_begin" exp="" desc=""/>
-    <constraint field="lpk_revision_end" exp="" desc=""/>
-    <constraint field="datetimecreation" exp="" desc=""/>
-    <constraint field="datetimemodification" exp="" desc=""/>
-    <constraint field="datetimedestruction" exp="" desc=""/>
-    <constraint field="comment" exp="" desc=""/>
-    <constraint field="name" exp="" desc=""/>
-    <constraint field="importid" exp="" desc=""/>
-    <constraint field="importtable" exp="" desc=""/>
-    <constraint field="lid_actor" exp="" desc=""/>
+    <constraint desc="" field="pk_edge" exp=""/>
+    <constraint desc="" field="id_edge" exp=""/>
+    <constraint desc="" field="lpk_descriptionsystem" exp=""/>
+    <constraint desc="" field="lid_resource_1" exp=""/>
+    <constraint desc="" field="lid_descriptionsystem_1" exp=""/>
+    <constraint desc="" field="lid_descriptionsystem_2" exp=""/>
+    <constraint desc="" field="edgecategory" exp=""/>
+    <constraint desc="" field="edgetype" exp=""/>
+    <constraint desc="" field="edgesubtype" exp=""/>
+    <constraint desc="" field="edgenumber" exp=""/>
+    <constraint desc="" field="habitatwetland" exp=""/>
+    <constraint desc="" field="habitatrepository" exp=""/>
+    <constraint desc="" field="habitatname" exp=""/>
+    <constraint desc="" field="habitatcode" exp=""/>
+    <constraint desc="" field="habitat2wetland" exp=""/>
+    <constraint desc="" field="habitat2repository" exp=""/>
+    <constraint desc="" field="habitat2name" exp=""/>
+    <constraint desc="" field="habitat2code" exp=""/>
+    <constraint desc="" field="pk_descriptionsystem" exp=""/>
+    <constraint desc="" field="id_descriptionsystem" exp=""/>
+    <constraint desc="" field="lpk_object" exp=""/>
+    <constraint desc="" field="strategicvalue" exp=""/>
+    <constraint desc="" field="operational" exp=""/>
+    <constraint desc="" field="structuralstate" exp=""/>
+    <constraint desc="" field="operationalstate" exp=""/>
+    <constraint desc="" field="dateoperationalcreation" exp=""/>
+    <constraint desc="" field="dateoperationalcreationupper" exp=""/>
+    <constraint desc="" field="operationaldatecreationaccuracy" exp=""/>
+    <constraint desc="" field="datetimeoperationaldestruction" exp=""/>
+    <constraint desc="" field="geotrackingxyquality" exp=""/>
+    <constraint desc="" field="geotrackingzquality" exp=""/>
+    <constraint desc="" field="geotrackingdate" exp=""/>
+    <constraint desc="" field="geotrackingsource" exp=""/>
+    <constraint desc="" field="parameters" exp=""/>
+    <constraint desc="" field="parameterslist" exp=""/>
+    <constraint desc="" field="city" exp=""/>
+    <constraint desc="" field="streetname" exp=""/>
+    <constraint desc="" field="streetupname" exp=""/>
+    <constraint desc="" field="streetdownname" exp=""/>
+    <constraint desc="" field="streetcomment" exp=""/>
+    <constraint desc="" field="lid_actor_1" exp=""/>
+    <constraint desc="" field="lid_actor_2" exp=""/>
+    <constraint desc="" field="lid_actor_3" exp=""/>
+    <constraint desc="" field="lid_facility" exp=""/>
+    <constraint desc="" field="float_1" exp=""/>
+    <constraint desc="" field="float_2" exp=""/>
+    <constraint desc="" field="float_3" exp=""/>
+    <constraint desc="" field="float_4" exp=""/>
+    <constraint desc="" field="float_5" exp=""/>
+    <constraint desc="" field="float_6" exp=""/>
+    <constraint desc="" field="float_7" exp=""/>
+    <constraint desc="" field="float_8" exp=""/>
+    <constraint desc="" field="float_9" exp=""/>
+    <constraint desc="" field="float_10" exp=""/>
+    <constraint desc="" field="string_1" exp=""/>
+    <constraint desc="" field="string_2" exp=""/>
+    <constraint desc="" field="string_3" exp=""/>
+    <constraint desc="" field="string_4" exp=""/>
+    <constraint desc="" field="string_5" exp=""/>
+    <constraint desc="" field="string_6" exp=""/>
+    <constraint desc="" field="string_7" exp=""/>
+    <constraint desc="" field="string_8" exp=""/>
+    <constraint desc="" field="string_9" exp=""/>
+    <constraint desc="" field="string_10" exp=""/>
+    <constraint desc="" field="commonname" exp=""/>
+    <constraint desc="" field="scientificname" exp=""/>
+    <constraint desc="" field="orderclass" exp=""/>
+    <constraint desc="" field="pk_object" exp=""/>
+    <constraint desc="" field="id_object" exp=""/>
+    <constraint desc="" field="lpk_revision_begin" exp=""/>
+    <constraint desc="" field="lpk_revision_end" exp=""/>
+    <constraint desc="" field="datetimecreation" exp=""/>
+    <constraint desc="" field="datetimemodification" exp=""/>
+    <constraint desc="" field="datetimedestruction" exp=""/>
+    <constraint desc="" field="comment" exp=""/>
+    <constraint desc="" field="name" exp=""/>
+    <constraint desc="" field="importid" exp=""/>
+    <constraint desc="" field="importtable" exp=""/>
+    <constraint desc="" field="lid_actor" exp=""/>
   </constraintExpressions>
   <expressionfields/>
   <attributeactions>
-    <defaultAction value="{00000000-0000-0000-0000-000000000000}" key="Canvas"/>
+    <defaultAction key="Canvas" value="{00000000-0000-0000-0000-000000000000}"/>
   </attributeactions>
-  <attributetableconfig sortExpression="" actionWidgetStyle="dropDown" sortOrder="0">
+  <attributetableconfig sortOrder="0" actionWidgetStyle="dropDown" sortExpression="">
     <columns>
-      <column name="pk_edge" type="field" width="-1" hidden="0"/>
-      <column name="id_edge" type="field" width="-1" hidden="0"/>
-      <column name="lpk_descriptionsystem" type="field" width="-1" hidden="0"/>
-      <column name="lid_resource_1" type="field" width="-1" hidden="0"/>
-      <column name="lid_descriptionsystem_1" type="field" width="-1" hidden="0"/>
-      <column name="lid_descriptionsystem_2" type="field" width="-1" hidden="0"/>
-      <column name="edgecategory" type="field" width="-1" hidden="0"/>
-      <column name="edgetype" type="field" width="-1" hidden="0"/>
-      <column name="edgesubtype" type="field" width="-1" hidden="0"/>
-      <column name="edgenumber" type="field" width="-1" hidden="0"/>
-      <column name="habitatwetland" type="field" width="-1" hidden="0"/>
-      <column name="habitatrepository" type="field" width="-1" hidden="0"/>
-      <column name="habitatname" type="field" width="-1" hidden="0"/>
-      <column name="habitatcode" type="field" width="-1" hidden="0"/>
-      <column name="habitat2wetland" type="field" width="-1" hidden="0"/>
-      <column name="habitat2repository" type="field" width="-1" hidden="0"/>
-      <column name="habitat2name" type="field" width="-1" hidden="0"/>
-      <column name="habitat2code" type="field" width="-1" hidden="0"/>
-      <column name="pk_descriptionsystem" type="field" width="-1" hidden="0"/>
-      <column name="id_descriptionsystem" type="field" width="-1" hidden="0"/>
-      <column name="lpk_object" type="field" width="-1" hidden="0"/>
-      <column name="strategicvalue" type="field" width="-1" hidden="0"/>
-      <column name="operational" type="field" width="-1" hidden="0"/>
-      <column name="structuralstate" type="field" width="-1" hidden="0"/>
-      <column name="operationalstate" type="field" width="-1" hidden="0"/>
-      <column name="dateoperationalcreation" type="field" width="-1" hidden="0"/>
-      <column name="dateoperationalcreationupper" type="field" width="-1" hidden="0"/>
-      <column name="operationaldatecreationaccuracy" type="field" width="-1" hidden="0"/>
-      <column name="datetimeoperationaldestruction" type="field" width="-1" hidden="0"/>
-      <column name="geotrackingxyquality" type="field" width="-1" hidden="0"/>
-      <column name="geotrackingzquality" type="field" width="-1" hidden="0"/>
-      <column name="geotrackingdate" type="field" width="-1" hidden="0"/>
-      <column name="geotrackingsource" type="field" width="-1" hidden="0"/>
-      <column name="parameters" type="field" width="-1" hidden="0"/>
-      <column name="parameterslist" type="field" width="-1" hidden="0"/>
-      <column name="city" type="field" width="-1" hidden="0"/>
-      <column name="streetname" type="field" width="-1" hidden="0"/>
-      <column name="streetupname" type="field" width="-1" hidden="0"/>
-      <column name="streetdownname" type="field" width="-1" hidden="0"/>
-      <column name="streetcomment" type="field" width="-1" hidden="0"/>
-      <column name="lid_actor_1" type="field" width="-1" hidden="0"/>
-      <column name="lid_actor_2" type="field" width="-1" hidden="0"/>
-      <column name="lid_actor_3" type="field" width="-1" hidden="0"/>
-      <column name="lid_facility" type="field" width="-1" hidden="0"/>
-      <column name="float_1" type="field" width="-1" hidden="0"/>
-      <column name="float_2" type="field" width="-1" hidden="0"/>
-      <column name="float_3" type="field" width="-1" hidden="0"/>
-      <column name="float_4" type="field" width="-1" hidden="0"/>
-      <column name="float_5" type="field" width="-1" hidden="0"/>
-      <column name="float_6" type="field" width="-1" hidden="0"/>
-      <column name="float_7" type="field" width="-1" hidden="0"/>
-      <column name="float_8" type="field" width="-1" hidden="0"/>
-      <column name="float_9" type="field" width="-1" hidden="0"/>
-      <column name="float_10" type="field" width="-1" hidden="0"/>
-      <column name="string_1" type="field" width="-1" hidden="0"/>
-      <column name="string_2" type="field" width="-1" hidden="0"/>
-      <column name="string_3" type="field" width="-1" hidden="0"/>
-      <column name="string_4" type="field" width="-1" hidden="0"/>
-      <column name="string_5" type="field" width="-1" hidden="0"/>
-      <column name="string_6" type="field" width="-1" hidden="0"/>
-      <column name="string_7" type="field" width="-1" hidden="0"/>
-      <column name="string_8" type="field" width="-1" hidden="0"/>
-      <column name="string_9" type="field" width="-1" hidden="0"/>
-      <column name="string_10" type="field" width="-1" hidden="0"/>
-      <column name="commonname" type="field" width="-1" hidden="0"/>
-      <column name="scientificname" type="field" width="-1" hidden="0"/>
-      <column name="orderclass" type="field" width="-1" hidden="0"/>
-      <column name="pk_object" type="field" width="-1" hidden="0"/>
-      <column name="id_object" type="field" width="-1" hidden="0"/>
-      <column name="lpk_revision_begin" type="field" width="-1" hidden="0"/>
-      <column name="lpk_revision_end" type="field" width="-1" hidden="0"/>
-      <column name="datetimecreation" type="field" width="-1" hidden="0"/>
-      <column name="datetimemodification" type="field" width="-1" hidden="0"/>
-      <column name="datetimedestruction" type="field" width="-1" hidden="0"/>
-      <column name="comment" type="field" width="-1" hidden="0"/>
-      <column name="name" type="field" width="-1" hidden="0"/>
-      <column name="importid" type="field" width="-1" hidden="0"/>
-      <column name="importtable" type="field" width="-1" hidden="0"/>
-      <column name="lid_actor" type="field" width="-1" hidden="0"/>
-      <column type="actions" width="-1" hidden="1"/>
+      <column width="-1" hidden="0" name="pk_edge" type="field"/>
+      <column width="-1" hidden="0" name="id_edge" type="field"/>
+      <column width="-1" hidden="0" name="lpk_descriptionsystem" type="field"/>
+      <column width="-1" hidden="0" name="lid_resource_1" type="field"/>
+      <column width="-1" hidden="0" name="lid_descriptionsystem_1" type="field"/>
+      <column width="-1" hidden="0" name="lid_descriptionsystem_2" type="field"/>
+      <column width="-1" hidden="0" name="edgecategory" type="field"/>
+      <column width="-1" hidden="0" name="edgetype" type="field"/>
+      <column width="-1" hidden="0" name="edgesubtype" type="field"/>
+      <column width="-1" hidden="0" name="edgenumber" type="field"/>
+      <column width="-1" hidden="0" name="habitatwetland" type="field"/>
+      <column width="-1" hidden="0" name="habitatrepository" type="field"/>
+      <column width="-1" hidden="0" name="habitatname" type="field"/>
+      <column width="-1" hidden="0" name="habitatcode" type="field"/>
+      <column width="-1" hidden="0" name="habitat2wetland" type="field"/>
+      <column width="-1" hidden="0" name="habitat2repository" type="field"/>
+      <column width="-1" hidden="0" name="habitat2name" type="field"/>
+      <column width="-1" hidden="0" name="habitat2code" type="field"/>
+      <column width="-1" hidden="0" name="pk_descriptionsystem" type="field"/>
+      <column width="-1" hidden="0" name="id_descriptionsystem" type="field"/>
+      <column width="-1" hidden="0" name="lpk_object" type="field"/>
+      <column width="-1" hidden="0" name="strategicvalue" type="field"/>
+      <column width="-1" hidden="0" name="operational" type="field"/>
+      <column width="-1" hidden="0" name="structuralstate" type="field"/>
+      <column width="-1" hidden="0" name="operationalstate" type="field"/>
+      <column width="-1" hidden="0" name="dateoperationalcreation" type="field"/>
+      <column width="-1" hidden="0" name="dateoperationalcreationupper" type="field"/>
+      <column width="-1" hidden="0" name="operationaldatecreationaccuracy" type="field"/>
+      <column width="-1" hidden="0" name="datetimeoperationaldestruction" type="field"/>
+      <column width="-1" hidden="0" name="geotrackingxyquality" type="field"/>
+      <column width="-1" hidden="0" name="geotrackingzquality" type="field"/>
+      <column width="-1" hidden="0" name="geotrackingdate" type="field"/>
+      <column width="-1" hidden="0" name="geotrackingsource" type="field"/>
+      <column width="-1" hidden="0" name="parameters" type="field"/>
+      <column width="-1" hidden="0" name="parameterslist" type="field"/>
+      <column width="-1" hidden="0" name="city" type="field"/>
+      <column width="-1" hidden="0" name="streetname" type="field"/>
+      <column width="-1" hidden="0" name="streetupname" type="field"/>
+      <column width="-1" hidden="0" name="streetdownname" type="field"/>
+      <column width="-1" hidden="0" name="streetcomment" type="field"/>
+      <column width="-1" hidden="0" name="lid_actor_1" type="field"/>
+      <column width="-1" hidden="0" name="lid_actor_2" type="field"/>
+      <column width="-1" hidden="0" name="lid_actor_3" type="field"/>
+      <column width="-1" hidden="0" name="lid_facility" type="field"/>
+      <column width="-1" hidden="0" name="float_1" type="field"/>
+      <column width="-1" hidden="0" name="float_2" type="field"/>
+      <column width="-1" hidden="0" name="float_3" type="field"/>
+      <column width="-1" hidden="0" name="float_4" type="field"/>
+      <column width="-1" hidden="0" name="float_5" type="field"/>
+      <column width="-1" hidden="0" name="float_6" type="field"/>
+      <column width="-1" hidden="0" name="float_7" type="field"/>
+      <column width="-1" hidden="0" name="float_8" type="field"/>
+      <column width="-1" hidden="0" name="float_9" type="field"/>
+      <column width="-1" hidden="0" name="float_10" type="field"/>
+      <column width="-1" hidden="0" name="string_1" type="field"/>
+      <column width="-1" hidden="0" name="string_2" type="field"/>
+      <column width="-1" hidden="0" name="string_3" type="field"/>
+      <column width="-1" hidden="0" name="string_4" type="field"/>
+      <column width="-1" hidden="0" name="string_5" type="field"/>
+      <column width="-1" hidden="0" name="string_6" type="field"/>
+      <column width="-1" hidden="0" name="string_7" type="field"/>
+      <column width="-1" hidden="0" name="string_8" type="field"/>
+      <column width="-1" hidden="0" name="string_9" type="field"/>
+      <column width="-1" hidden="0" name="string_10" type="field"/>
+      <column width="-1" hidden="0" name="commonname" type="field"/>
+      <column width="-1" hidden="0" name="scientificname" type="field"/>
+      <column width="-1" hidden="0" name="orderclass" type="field"/>
+      <column width="-1" hidden="0" name="pk_object" type="field"/>
+      <column width="-1" hidden="0" name="id_object" type="field"/>
+      <column width="-1" hidden="0" name="lpk_revision_begin" type="field"/>
+      <column width="-1" hidden="0" name="lpk_revision_end" type="field"/>
+      <column width="-1" hidden="0" name="datetimecreation" type="field"/>
+      <column width="-1" hidden="0" name="datetimemodification" type="field"/>
+      <column width="-1" hidden="0" name="datetimedestruction" type="field"/>
+      <column width="-1" hidden="0" name="comment" type="field"/>
+      <column width="-1" hidden="0" name="name" type="field"/>
+      <column width="-1" hidden="0" name="importid" type="field"/>
+      <column width="-1" hidden="0" name="importtable" type="field"/>
+      <column width="-1" hidden="0" name="lid_actor" type="field"/>
+      <column width="-1" hidden="1" type="actions"/>
     </columns>
   </attributetableconfig>
   <conditionalstyles>

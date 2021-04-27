@@ -16,7 +16,7 @@ lamiapath = os.path.normpath(
     os.path.join(os.path.dirname(__file__), "..", "..", "..", "..")
 )
 sys.path.append(lamiapath)
-from Lamia.secrets import postgis_localhost as pgsecret, djangosecrets
+from Lamia.secrets import postgis_localhost_secrets as pgsecret, django_secrets
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -26,7 +26,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__fil
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = djangosecrets.SECRET_KEY
+SECRET_KEY = django_secrets.SECRET_KEY
 
 
 # Application definition

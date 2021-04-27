@@ -275,9 +275,12 @@ class printPDFBaseWorker(QtCore.QObject):
             self.pklist = None
 
             self.pdffile = parentprintPDFworker.pdffile
-            self.reportconffilename = self.parentprintPDFworker.atlasconfData[
-                "childprint"
-            ]["confname"]
+            if reportconffilename:
+                self.reportconffilename = reportconffilename
+            else:
+                self.reportconffilename = self.parentprintPDFworker.atlasconfData[
+                    "childprint"
+                ]["confname"]
 
             self.qgiscanvas = parentprintPDFworker.qgiscanvas
             self.networkcore = parentprintPDFworker.networkcore
@@ -319,11 +322,14 @@ class printPDFBaseWorker(QtCore.QObject):
             self.qgiscanvas.createLayers(self.dbase)
             if self.dbase.base3version:
                 try:
-                    self.qgiscanvas.applyStyle(self.dbase.worktype, "0_default")
+                    # self.qgiscanvas.applyStyle(self.dbase.worktype, "0_default")
+                    self.qgiscanvas.applyStyle(self.dbase, "0_default")
                 except:
-                    self.qgiscanvas.applyStyle(self.dbase.worktype, "_default")
+                    # self.qgiscanvas.applyStyle(self.dbase.worktype, "_default")
+                    self.qgiscanvas.applyStyle(self.dbase, "_default")
             else:
-                self.qgiscanvas.applyStyle(self.dbase.worktype, "0_Defaut")
+                # self.qgiscanvas.applyStyle(self.dbase.worktype, "0_Defaut")
+                self.qgiscanvas.applyStyle(self.dbase, "0_Defaut")
 
             if self.dbase.base3version:
                 strtoexec = f"Lamia.config.{self.dbase.worktype.lower()}.lamiareport.lamiareportworktypefunc"
@@ -671,11 +677,11 @@ class printPDFBaseWorker(QtCore.QObject):
             sqlwhere = ""
             if "WHERE" in sqlsplitted.keys():
                 sqlwhere += sqlsplitted["WHERE"] + " AND "
-            sqlwhere += self.parentprintPDFworker.atlasconfData["childprint"][
+            sqlwhere += self.parentprintPDFworker.atlasconfData["childprint"][self.reportconffilename][
                 "linkcolumn"
             ]
 
-            linkcolumnname = self.parentprintPDFworker.atlasconfData["childprint"][
+            linkcolumnname = self.parentprintPDFworker.atlasconfData["childprint"][self.reportconffilename][
                 "linkcolumn"
             ].split(".")[-1]
             if linkcolumnname.split("_")[0] in ["lpk", "lid"]:
@@ -692,7 +698,7 @@ class printPDFBaseWorker(QtCore.QObject):
             sql = self.dbase.utils.rebuildSplittedQuery(sqlsplitted)
 
             sql += (
-                " " + self.parentprintPDFworker.atlasconfData["childprint"]["optionsql"]
+                " " + self.parentprintPDFworker.atlasconfData["childprint"][self.reportconffilename]["optionsql"]
             )
 
         sql = self.dbase.updateQueryTableNow(sql)
@@ -789,7 +795,7 @@ class printPDFBaseWorker(QtCore.QObject):
                 if isinstance(imageitem, qgis.core.QgsLayoutItemPicture):
                     imageitem.setPicturePath(imageresult)
                     imageitem.refreshPicture()
-                if isinstance(imageitem, qgis.core.QgsLayoutFrame):
+                elif isinstance(imageitem, qgis.core.QgsLayoutFrame):
                     imageitem.multiFrame().setContentMode(1)
                     imageitem.multiFrame().setHtml(imageresult)
                     imageitem.multiFrame().loadHtml()
@@ -844,7 +850,7 @@ class printPDFBaseWorker(QtCore.QObject):
                         if self.parentprintPDFworker is not None:
                             sql += (
                                 " AND "
-                                + self.parentprintPDFworker.atlasconfData["childprint"][
+                                + self.parentprintPDFworker.atlasconfData["childprint"][self.reportconffilename][
                                     "linkcolumn"
                                 ]
                             )
@@ -852,7 +858,7 @@ class printPDFBaseWorker(QtCore.QObject):
                             # sql += ' = ' + str(self.parentprintPDFworker.currentid)
                             linktablename = self.parentprintPDFworker.atlasconfData[
                                 "childprint"
-                            ]["linkcolumn"].split("_")[-1]
+                            ][self.reportconffilename]["linkcolumn"].split("_")[-1]
                             sql += " = " + str(
                                 self.parentprintPDFworker.currentatlasfeat[
                                     "id_" + linktablename
@@ -860,7 +866,7 @@ class printPDFBaseWorker(QtCore.QObject):
                             )
                             sql += (
                                 " "
-                                + self.parentprintPDFworker.atlasconfData["childprint"][
+                                + self.parentprintPDFworker.atlasconfData["childprint"][self.reportconffilename][
                                     "optionsql"
                                 ]
                             )
@@ -1619,12 +1625,14 @@ class printPDFBaseWorker(QtCore.QObject):
 
     def childPrint(self):
         # childprint
-        if len(self.atlasconfData["childprint"].keys()) > 0:
+        # if len(self.atlasconfData["childprint"].keys()) > 0:
+        for k, v in self.atlasconfData["childprint"].items():
             childrapport = self.__class__(
                 reportcore=self.reportcore,
                 # windowdialog=self.windowdialog,
                 parentprintPDFworker=self,
-                reportconffilename=None,
+                # reportconffilename=None,
+                reportconffilename=k,
                 # confData=self.confData,
                 pdffile=None,
                 # reporttype=reporttype,
@@ -1797,9 +1805,9 @@ class printPDFBaseWorker(QtCore.QObject):
                                                                                 typescale : le type d'echelle,
                                                                                 layers: list des maplayers à mettre dans le  mapitem},
                                  ...},
-                 childprint :  {confname : le nom du fichier txt dans rapporttools à utiliser
-                                linkcolumn: le colonne de liaison avec l'id du coverage layer,
-                                optionsql: requete sql à rajouter à la fin de la requete de selection des enfants}
+                 childprint :  {confname : le nom du fichier txt dans rapporttools à utiliser : 
+                                {linkcolumn: le colonne de liaison avec l'id du coverage layer,
+                                optionsql: requete sql à rajouter à la fin de la requete de selection des enfants}}
                  }
         """
 
@@ -1850,6 +1858,8 @@ class printPDFBaseWorker(QtCore.QObject):
                     "ordering",
                 ]:
                     confData[actualdictkey] = ""
+                # elif actualdictkey in ["childprint"]:
+                #     confData[actualdictkey] = []
                 else:
                     confData[actualdictkey] = {}
             elif line[0:1] == "#":
@@ -1883,10 +1893,17 @@ class printPDFBaseWorker(QtCore.QObject):
                 elif actualdictkey in ["spatial"]:
                     confData[actualdictkey] = eval(line.strip())
                 elif actualdictkey in ["childprint"]:
+                    # confData[actualdictkey].append({})
                     speclist = line.split(";")
-                    confData[actualdictkey]["confname"] = speclist[0].strip()
-                    confData[actualdictkey]["linkcolumn"] = speclist[1].strip()
-                    confData[actualdictkey]["optionsql"] = speclist[2].strip()
+
+                    confData[actualdictkey][speclist[0].strip()] = {'linkcolumn':speclist[1].strip(),
+                    'optionsql': speclist[2].strip()}
+
+                    # confData[actualdictkey][-1]["confname"] = speclist[0].strip()
+                    # confData[actualdictkey][-1]["linkcolumn"] = speclist[1].strip()
+                    # confData[actualdictkey][-1]["optionsql"] = speclist[2].strip()
+
+
                 elif actualdictkey in ["images"]:
                     speclist = line.split(";")
                     confData[actualdictkey][speclist[0].strip()] = speclist[1].strip()

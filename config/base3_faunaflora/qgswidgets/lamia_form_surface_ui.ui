@@ -61,7 +61,7 @@
     </widget>
    </item>
    <item>
-    <widget class="QStackedWidget" name="stackedWidget_category">
+    <widget class="QStackedWidget" name="stackedWidget_surfcategory">
      <property name="currentIndex">
       <number>1</number>
      </property>

@@ -95,7 +95,7 @@ def launchIface():
     # SLFILE = r"C:\01_WORKINGDIR\reims\testast\mergeddbase.sqlite"
     # SLFILE = r"C:\01_WORKINGDIR\alban\lamia\test_alban.sqlite"
     # SLFILE = r"C:\01_WORKINGDIR\sebastien\VTA_2020_Noailles.sqlite"
-    # SLFILE = r"C:\01_WORKINGDIR\bm\BD_totale_ind15.sqlite"
+    SLFILE = r"C:\01_WORKINGDIR\bm\BD_totale_ind15.sqlite"
     # SLFILE = r"C:\Users\Public\Documents\lamia\BD_totale_ind15\BD_totale_ind15.sqlite"
     # SLFILE = r"C:\01_WORKINGDIR\sebastien\VTA_2020_Noailles.sqlite"
     # SLFILE = r"C:\01_WORKINGDIR\herve\fusion\mergeddbase.sqlite"
@@ -133,6 +133,17 @@ def launchIface():
     #     user="pvr",
     #     password="pvr",
     # )
+    # lamiawidget.loadDBase(
+    #     dbtype="Postgis",
+    #     host="lamia-test.cnku0apmx0rg.eu-west-3.rds.amazonaws.com",
+    #     # host="localhost",
+    #     port=5432,
+    #     dbname="lamia",
+    #     # schema="base3_urbandrainage_lamia",
+    #     schema="reims",
+    #     user="reims",
+    #     password="reims",
+    # )
 
     # lamiawidget.qgiscanvas.unloadLayersInCanvas()
 
@@ -163,7 +174,7 @@ def launchIface():
 
     lamiawidget.setVisualMode(visualmode=INTERFACEINDEX)
     lamiawidget.dbase.raiseexceptions = False  # False True
-    lamiawidget.dbase.printsql = False  # False True
+    lamiawidget.dbase.printsql = True  # False True
     lamiawidget.dbase.printorm = True  # False True
 
     if PROFILING:
@@ -214,6 +225,7 @@ def main():
         datefmt="%H:%M:%S",
     )
     logging.getLogger("Lamia").setLevel(logging.DEBUG)
+    logging.getLogger("Lamia_unittest").setLevel(logging.DEBUG)
     logging.getLogger("Lamia.iface.qgscanvas.ifaceqgiscanvas").setLevel(logging.DEBUG)
     # logging.getLogger("Lamia").setLevel(logging.DEBUG)
 

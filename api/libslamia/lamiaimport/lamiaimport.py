@@ -95,13 +95,17 @@ class ImportCore(AbstractLibsLamia):
             zipdict = dict(zip(fieldsnames.tolist(), valueline.tolist()))
             if "geom" in self.dbase.dbasetables[rawtablename].keys():
                 zipdict["geom"] = self._getCleanedWktGeom(geoms[i])
+                # input('*' + str(zipdict["geom"]))
 
             if "geom" in self.dbase.dbasetables[rawtablename].keys():
+                # zipdict["geom"] = self._convertGeomTypeIfNecessary(
+                #     rawtablename, geoms[i]
+                # )
                 zipdict["geom"] = self._convertGeomTypeIfNecessary(
-                    rawtablename, geoms[i]
+                    rawtablename, zipdict["geom"]
                 )
+                # input('**' + str(zipdict["geom"]))
 
-            # print(zipdict)
             # self.setLoadingProgressBar(progress, i)
             if i % 50 == 0:
                 # return
@@ -147,7 +151,7 @@ class ImportCore(AbstractLibsLamia):
             geomsql += wktgeom
             geomsql += "', " + str(self.dbase.crsnumber) + ")),0))"
         geomwkt = self.dbase.query(geomsql)
-        # print("*", geomwkt)
+
         return geomwkt[0][0]
 
     def _convertGeomTypeIfNecessary(self, rawtablename, wktgeom):

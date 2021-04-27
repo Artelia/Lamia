@@ -34,14 +34,14 @@
         "printResolutions": [150, 300, 600],
         "backgroundLayers": [
           {
-            "name": "mapnik",
+            "name": "AerialWithLabelsOnDemand",
             "visibility": true
           },
           {
             "name": "opentopomap"
           },
           {
-            "name": "AerialWithLabelsOnDemand"
+            "name": "mapnik"
           }
         ],
         "searchProviders": ["coordinates", "uster", "nominatim"],

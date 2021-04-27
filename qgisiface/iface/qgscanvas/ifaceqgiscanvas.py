@@ -195,7 +195,7 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
 
         # print(project.dataDefinedServerProperties().referencedFields())
 
-        return
+        # return
 
         for rawtablename, rawdict in dbaseparser.dbasetables.items():
             # if 'geom' not in rawdict:
@@ -236,6 +236,8 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
                         qgsgeomtype = qgis.core.QgsWkbTypes.Point
                     elif geomtype == "LINESTRING":
                         qgsgeomtype = qgis.core.QgsWkbTypes.LineString
+                    elif geomtype == "POLYGON":
+                        qgsgeomtype = qgis.core.QgsWkbTypes.Polygon
                     elif geomtype == "MULTIPOLYGON":
                         qgsgeomtype = qgis.core.QgsWkbTypes.MultiPolygon
                     # print(geomtype)
@@ -257,7 +259,8 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
 
         # load layers and set style
         root = project.layerTreeRoot()
-        styledirectory = self._getStyleDirectory(dbaseparser.worktype)
+        # styledirectory = self._getStyleDirectory(dbaseparser.worktype)
+        styledirectory = self._getStyleDirectory(dbaseparser)
         if dbaseparser.base3version:
             defaultstyledirectory = os.path.join(styledirectory, "0_default",)
         else:
@@ -267,8 +270,8 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
             if (
                 "layerqgis"
                 in layers[tablename].keys()
-                # and layers[tablename]["layerqgis"].geometryType()
-                != qgis.core.QgsWkbTypes.NullGeometry
+                # and layers[tablename]["layerqgis"].geometryType() != qgis.core.QgsWkbTypes.NullGeometry
+                
             ):
                 stylesdir = [
                     os.path.basename(f.path)
@@ -696,9 +699,12 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
         self.canvas.refreshAllLayers()
         QApplication.processEvents()
 
-    def applyStyle(self, worktype, styledir):
+    # def applyStyle(self, worktype, styledir):
+    def applyStyle(self, dbaseparser, styledir):
 
-        styledirectory = os.path.join(self._getStyleDirectory(worktype), styledir)
+        # styledirectory = os.path.join(self._getStyleDirectory(dbaseparser.worktype), styledir)
+        styledirectory = self._getStyleDirectory(dbaseparser)[styledir]
+        # styledirectory = os.path.join(self._getStyleDirectory(dbaseparser), styledir)
 
         allfiles = [x[2] for x in os.walk(styledirectory)][0]
         qmlfiles = [
@@ -1226,10 +1232,23 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
             self.canvas.setCenter(point2)
             self.canvas.refresh()
 
-    def _getStyleDirectory(self, worktype):
+    # def _getStyleDirectory(self, worktype):
+    def _getStyleDirectory(self, dbaseparser):
+
+        stylesdict={}
         styledirectory = os.path.join(
-            os.path.dirname(Lamia.config.__file__), worktype, "qgsstyles",
+            os.path.dirname(Lamia.config.__file__), dbaseparser.worktype, "qgsstyles",
+        )
+        projetstyledir = os.path.join(
+            dbaseparser.dbaseressourcesdirectory, 'config', "qgsstyles",
         )
 
-        return styledirectory
+        # styledirs = [x[1] for x in os.walk(stylepath) if len(x[1]) > 0]
+        for styledir in [styledirectory, projetstyledir]:
+            for x in os.walk(styledir):
+                if len(x[1]) > 0 :
+                    for rep in x[1]:
+                        stylesdict[rep] = os.path.join(x[0],rep)
+
+        return stylesdict
 
