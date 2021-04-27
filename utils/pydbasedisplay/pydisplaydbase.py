@@ -58,7 +58,7 @@ numpy.seterr(all="ignore")
 from Lamia.qgisiface.iface.qgsconnector.ifaceloggingconnector import LoggingConnector
 from Lamia.qgisiface.iface.qgscanvas.ifaceqgiscanvas import QgisCanvas
 
-INTERFACEINDEX = 0
+INTERFACEINDEX = 4
 PROFILING = False
 
 
@@ -88,6 +88,7 @@ def launchIface():
     # sl_base3_constructionsite_Lamia   sl_base3_constructionsite_Orange
     # sl_base3_levee_Lamia   sl_base3_levee_SIRS   sl_base3_faunaflora_Lamia
     worktype = "sl_base3_waterdistribution_Lamia"
+    SLFILE = "/usr/src/Lamia/work_jb/GPMB_Bacalan.sqlite"
     # SLFILE = os.path.join(TESTDIR, "c_creation", worktype, "test01.sqlite")
     # SLFILE = r"C:\01_WORKINGDIR\bm\BD_totale_ind15.sqlite"
     # SLFILE = r"C:\01_WORKINGDIR\reims\testast\BDD_REIMS_J1_AST.sqlite"
@@ -116,7 +117,7 @@ def launchIface():
     # SLFILE = r"C:\01_WORKINGDIR\aaa\base\vide.sqlite"
     # SLFILE = r"C:\Users\Public\Documents\lamia\GPMB_Bacalan_offline\GPMB_Bacalan_offline.sqlite"
     # SLFILE = r"C:\01_WORKINGDIR\fauna\test.sqlite"
-    SLFILE = r"C:\01_WORKINGDIR\aaaa\test6.sqlite"
+    # SLFILE = r"C:\01_WORKINGDIR\aaaa\test6.sqlite"
 
     print(f"{bcolors.OKGREEN}Opening: {os.path.abspath(SLFILE)} {bcolors.ENDC}")
 
@@ -168,8 +169,10 @@ def launchIface():
     if PROFILING:
         pr.enable()
     #   toolpostpro     toolprepro
-    # wdg = lamiawidget.toolwidgets["lamiamca"]
-    # wdg.tooltreewidget.currentItemChanged.emit(wdg.qtreewidgetitem, None)
+    wdg = lamiawidget.toolwidgets["lamiaITVimport"]
+    wdg.tooltreewidget.currentItemChanged.emit(wdg.qtreewidgetitem, None)
+    # wdg.toolwidgetmain.pushButton_analysis.clicked.emit()
+
     # wdg.editAMC()
     # wdg.analyseSubdomains()
     # wdg.mcacore.mcavirtualayerFactory.setConfName("_test")
