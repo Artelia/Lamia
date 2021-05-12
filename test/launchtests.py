@@ -22,6 +22,8 @@ import test_c_reporttool
 
 import test_c_costtool
 
+# import test_c_rereau
+
 
 def suite():
     suite = unittest.TestSuite()

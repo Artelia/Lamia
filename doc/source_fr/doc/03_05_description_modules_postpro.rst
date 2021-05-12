@@ -11,3 +11,4 @@ Contents:
     ./src_lamia_postpro/02_import_photos.rst
     ./src_lamia_postpro/03_export
     ./src_lamia_postpro/04_topology
+    ./src_lamia_postpro/05_rereau

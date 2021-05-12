@@ -42,6 +42,8 @@ from qgis.PyQt.QtWidgets import (
     QDialog,
 )
 
+import Lamia
+
 from Lamia.qgisiface.iface.qgiswidget.tools.lamia_abstracttool import AbstractLamiaTool
 from Lamia.api.libslamia.lamiaITVimport.lamiaITVimport import ITVImportCore
 from Lamia.qgisiface.iface.qgiswidget.tools.general_subwidgets.abstractfilemanager import (
@@ -91,7 +93,7 @@ class RereauTool(AbstractLamiaTool):
         if not os.path.exists(result_folder):
             os.makedirs(result_folder)
 
-    def _check_combobox_indicator(self, other_layer=None, itv_name="ITV"):
+    def _check_combobox_indicator(self, other_layer=None, name_itv="ITV"):
         """
         change color of edge based on indicator value
         """
@@ -99,6 +101,29 @@ class RereauTool(AbstractLamiaTool):
         qgislayer = self.mainifacewidget.qgiscanvas.layers['edge']['layerqgis']
 
         if other_layer != None:
+            
+            other_layer.startEditing()
+            for field in other_layer.fields():
+                if 'score' in field.name():
+                    idx = other_layer.fields().indexFromName(field.name())
+                    split_word = 'score'
+                    new_name = split_word + field.name().partition(split_word)[2]
+                    other_layer.renameAttribute(idx, new_name)
+                elif 'result' in field.name():
+                    idx = other_layer.fields().indexFromName(field.name())
+                    split_word = 'result'
+                    new_name = split_word + field.name().partition(split_word)[2]
+                    other_layer.renameAttribute(idx, new_name)
+            other_layer.commitChanges()
+            
+            with open(os.path.join(self.filemanager.toolclass.confdatadirproject, self.filemanager.getCurrentText())) as json_file:
+                config = json.load(json_file)
+            result_folder = os.path.join(self.dbase.dbaseressourcesdirectory, 'result_computation')
+            date = QtCore.QDate().currentDate().toString('yyyy/MM/dd') # date forme us
+            date = date.replace(u"/", u"")
+            heure = QtCore.QTime().currentTime().toString('hh:mm:ss') # heure:minutes:secondes
+            heure = heure.replace(u":", u"")
+            writer = qgis.core.QgsVectorFileWriter.writeAsVectorFormat(other_layer, os.path.join(result_folder, name_itv), "utf-8", qgis.core.QgsCoordinateReferenceSystem(), "CSV")
             for join in qgislayer.vectorJoins():
                 qgislayer.removeJoin(join.joinLayerId())
             # join between itv result table and qgis edge layer
@@ -107,82 +132,31 @@ class RereauTool(AbstractLamiaTool):
             joinObject.setTargetFieldName("id_edge")
             joinObject.setJoinLayerId(other_layer.id())
             joinObject.setUsingMemoryCache(True)
+            joinObject.setPrefix("")
             joinObject.setJoinLayer(other_layer)
 
             self.mainifacewidget.qgiscanvas.layers['edge']['layerqgis'].addJoin(joinObject)
             qgis.core.QgsProject.instance().addMapLayer(other_layer)
 
-            date = QtCore.QDate().currentDate().toString('yyyy/MM/dd') # date forme us
-            date = date.replace(u"/", u"")
-            heure = QtCore.QTime().currentTime().toString('hh:mm:ss') # heure:minutes:secondes
-            heure = heure.replace(u":", u"")
-
-            result_folder = os.path.join(self.dbase.dbaseressourcesdirectory, 'result_computation')
-            print(result_folder)
-            print(os.path.join(result_folder, itv_name + "_" + date +"_"+ heure))
-            writer = qgis.core.QgsVectorFileWriter.writeAsVectorFormat(qgislayer, os.path.join(result_folder, itv_name + "_" + date +"_"+ heure), "utf-8")
             self.toolwidgetmain.comboBox_result.clear()
             result_list = [f for f in os.listdir(result_folder) if os.path.isfile(os.path.join(result_folder, f))]
             self.toolwidgetmain.comboBox_result.addItems(result_list)
-
-        try:
-            # fill categories
-            categories = []
-            color_scale = [[53, 129, 216], [40, 204, 45], [255, 225, 53], [216, 46, 63]]
-            for i, unique_value in enumerate([1., 2., 3., 4.]):
-                # initialize the default symbol for this geometry type
-                symbol = QgsSymbol.defaultSymbol(qgislayer.geometryType())
-
-                # configure a symbol layer
-                layer_style = {}
-                layer_style['color'] = '%d, %d, %d' % (color_scale[i][0], color_scale[i][1], color_scale[i][2])
-                layer_style['outline'] = '#000000'
-                symbol_layer = QgsSimpleFillSymbolLayer.create(layer_style)
-
-                # replace default symbol layer with the configured one
-                if symbol_layer is not None:
-                    symbol.changeSymbolLayer(0, symbol_layer)
-                    symbol.setWidth(2.0)
-
-                # create renderer object
-                category = QgsRendererCategory(unique_value, symbol, str(unique_value))
-                # entry for the list of category items
-                categories.append(category)
-
-            # create renderer object
-            renderer = QgsCategorizedSymbolRenderer("result_ITV_along_" + self.toolwidgetmain.comboBox_indicator.currentText(), categories)
-
-            # assign the created renderer to the layer
-            if renderer is not None:
-                other_layer.setRenderer(renderer)
-                return
-
-            other_layer.triggerRepaint()
-            return other_layer
-        except:
-            "impossible to change "
-            return None
+            
+            qgislayer.startEditing()
+            for field in qgislayer.fields():
+                if 'score' in field.name():
+                    idx = qgislayer.fields().indexFromName(field.name())
+                    split_word = 'score'
+                    new_name = split_word + field.name().partition(split_word)[2]
+                    qgislayer.renameAttribute(idx, new_name)
+                elif 'result' in field.name():
+                    idx = qgislayer.fields().indexFromName(field.name())
+                    split_word = 'result'
+                    new_name = split_word + field.name().partition(split_word)[2]
+                    qgislayer.renameAttribute(idx, new_name)
+            qgislayer.commitChanges()
         
-        # # le problème, on a que des 3, et on fait une rampe en disant qu'il y a 4 valeurs, il vaut mieux faire des catégories, mais je ne maitrise pas bien
-        # myRenderer = qgis.core.QgsGraduatedSymbolRenderer()
-        # if qgislayer.geometryType() == qgis.core.QgsWkbTypes.LineGeometry:
-        #     symbol = qgis.core.QgsLineSymbol()
-        #     symbol.setWidth(2.0)
-
-        # myRenderer.setSourceSymbol(symbol.clone())
-
-        # myStyle = qgis.core.QgsStyle().defaultStyle()
-        # defaultColorRampNames = myStyle.colorRampNames()
-        # ramp = myStyle.colorRamp("Spectral")
-        # ramp.invert()
-
-        # myRenderer.updateColorRamp(ramp)
-        # myRenderer.setClassAttribute(self.toolwidgetmain.comboBox_indicator.currentText())
-        # myRenderer.setClassificationMethod(qgis.core.QgsClassificationEqualInterval())
-        # myRenderer.updateClasses(qgislayer, 4)
-
-        # qgislayer.setRenderer(myRenderer)
-        # qgislayer.repaintRequested.emit()
+        self.indicator_changed(qgislayer)
 
     def initMainToolWidget(self):
 
@@ -213,8 +187,19 @@ class RereauTool(AbstractLamiaTool):
         result_list = [f for f in os.listdir(result_folder) if os.path.isfile(os.path.join(result_folder, f))]
         self.toolwidgetmain.comboBox_result.addItems(result_list)
 
+        self.toolwidgetmain.comboBox_indicator.currentIndexChanged.connect(self.indicator_changed)
+
         self.toolwidgetmain.pushButton_delete.clicked.connect(self.delete_result)
+        
         self.toolwidgetmain.pushButton_load.clicked.connect(self.load_result)
+
+        if len(result_list) == 0:
+            boolenabled = False
+        else:
+            boolenabled = True
+
+        self.toolwidgetmain.pushButton_delete.setEnabled(boolenabled)
+        self.toolwidgetmain.pushButton_load.setEnabled(boolenabled)
 
     def computeRereau(self):
         """
@@ -222,6 +207,12 @@ class RereauTool(AbstractLamiaTool):
         """
         with open(os.path.join(self.filemanager.toolclass.confdatadirproject, self.filemanager.getCurrentText())) as json_file:
             config = json.load(json_file)
+
+        result_folder = os.path.join(self.dbase.dbaseressourcesdirectory, 'result_computation')
+        date = QtCore.QDate().currentDate().toString('yyyy/MM/dd') # date forme us
+        date = date.replace(u"/", u"")
+        heure = QtCore.QTime().currentTime().toString('hh:mm:ss') # heure:minutes:secondes
+        heure = heure.replace(u":", u"")
 
         # itv path
         pks = self.choosertreewidget.getSelectedPks()
@@ -232,13 +223,27 @@ class RereauTool(AbstractLamiaTool):
             tempfiles = self.dbase.lamiaorm["itv"].read(itvpk)["file"].split(";")
             tempfiles = [self.dbase.completePathOfFile(fl.strip()) for fl in tempfiles]
             resfiles += tempfiles
-        temp_layer = self.itvcore.computeIndicators(resfiles, alpha=config["alpha"], P=config["P"], itv_name=name_itv + "_a_" + str(config["alpha"]) + "_P_" + str(config["P"]))
-        
-        layer_to_write = self._check_combobox_indicator(temp_layer, name_itv + "_a_" + str(config["alpha"]) + "_P_" + str(config["P"]))
+        name_itv = name_itv + "_a_" + str(config["alpha"]) + "_P_" + str(config["P"]) + "_" + date +"_"+ heure + ".csv"
+        temp_layer = self.itvcore.computeIndicators(resfiles, alpha=config["alpha"], P=config["P"], itv_name=name_itv)
+        layer = self.itvcore.getQgsLayer(resfiles)
+        project = qgis.core.QgsProject.instance()
+        root = project.layerTreeRoot()
+        project.addMapLayer(layer, True)
 
-        if layer_to_write != None:
-            output_path = "itv directory ?"
-            qgis.core.QgsVectorFileWriter(layer_to_write, output_path, "utf-8", None, "ESRI ShapeFile")
+        layer_to_write = self._check_combobox_indicator(temp_layer, name_itv)
+
+        result_folder = self.dbase.dbaseressourcesdirectory + '/result_computation'
+        result_list = [f for f in os.listdir(result_folder) if os.path.isfile(os.path.join(result_folder, f))]
+        self.toolwidgetmain.comboBox_result.clear()
+        self.toolwidgetmain.comboBox_result.addItems(result_list)
+
+        if len(result_list) == 0:
+            boolenabled = False
+        else:
+            boolenabled = True
+
+        self.toolwidgetmain.pushButton_delete.setEnabled(boolenabled)
+        self.toolwidgetmain.pushButton_load.setEnabled(boolenabled)
 
     def postToolTreeWidgetCurrentItemChanged(self):
         self.filemanager.reset()
@@ -255,7 +260,17 @@ class RereauTool(AbstractLamiaTool):
 
         self.toolwidgetmain.comboBox_result.clear()
         result_list = [f for f in os.listdir(result_folder) if os.path.isfile(os.path.join(result_folder, f))]
+        self.toolwidgetmain.comboBox_result.clear()
         self.toolwidgetmain.comboBox_result.addItems(result_list)
+
+        currentfilepath = os.path.join(result_folder, currentxt)
+        if len(result_list) == 0:
+            boolenabled = False
+        else:
+            boolenabled = True
+
+        self.toolwidgetmain.pushButton_delete.setEnabled(boolenabled)
+        self.toolwidgetmain.pushButton_load.setEnabled(boolenabled)
 
     def load_result(self):
         """
@@ -265,11 +280,81 @@ class RereauTool(AbstractLamiaTool):
         currentxt = self.toolwidgetmain.comboBox_result.currentText()
         currentfilepath = os.path.join(result_folder, currentxt)
 
-        vlayer = qgis.core.QgsVectorLayer(currentfilepath, currentxt[:-5], "ogr")
+        qgsproject = qgis.core.QgsProject.instance()
+
+        layers = qgsproject.mapLayers()
+        # print( [lay.name() for lay in layers] )
+        print(layers)
+
+
+        layerswithname = qgsproject.mapLayersByName(currentxt[:-5])
+        print(layerswithname)
+        if len(layerswithname) > 0:
+            print('found')
+            vlayer = layerswithname[0]
+        else :
+            vlayer = qgis.core.QgsVectorLayer(currentfilepath, currentxt[:-5], "ogr")
+            
         if not vlayer.isValid():
             print("Layer failed to load!")
         else:
+            # rename vlayer score and result
+            vlayer.startEditing()
+            for field in vlayer.fields():
+                if 'score' in field.name():
+                    idx = vlayer.fields().indexFromName(field.name())
+                    split_word = 'score'
+                    new_name = split_word + field.name().partition(split_word)[2]
+                    vlayer.renameAttribute(idx, new_name)
+                elif 'result' in field.name():
+                    idx = vlayer.fields().indexFromName(field.name())
+                    split_word = 'result'
+                    new_name = split_word + field.name().partition(split_word)[2]
+                    vlayer.renameAttribute(idx, new_name)
+            vlayer.commitChanges()
             qgis.core.QgsProject.instance().addMapLayer(vlayer)
+            qgislayer = self.mainifacewidget.qgiscanvas.layers['edge']['layerqgis']
+
+            for join in qgislayer.vectorJoins():
+                qgislayer.removeJoin(join.joinLayerId())
+            # join between itv result table and qgis edge layer
+            joinObject = qgis.core.QgsVectorLayerJoinInfo()
+            joinObject.setJoinFieldName("id_edge")
+            joinObject.setTargetFieldName("id_edge")
+            joinObject.setJoinLayerId(vlayer.id())
+            joinObject.setUsingMemoryCache(True)
+            joinObject.setPrefix("")
+            joinObject.setJoinLayer(vlayer)
+
+            self.mainifacewidget.qgiscanvas.layers['edge']['layerqgis'].addJoin(joinObject)
+
+            qgislayer.startEditing()
+            for field in qgislayer.fields():
+                if 'score' in field.name():
+                    idx = qgislayer.fields().indexFromName(field.name())
+                    split_word = 'score'
+                    new_name = split_word + field.name().partition(split_word)[2]
+                    qgislayer.renameAttribute(idx, new_name)
+                elif 'result' in field.name():
+                    idx = qgislayer.fields().indexFromName(field.name())
+                    split_word = 'result'
+                    new_name = split_word + field.name().partition(split_word)[2]
+                    qgislayer.renameAttribute(idx, new_name)
+            qgislayer.commitChanges()
+
+            self.indicator_changed(qgislayer)
+    
+    def indicator_changed(self, new_layer=None):
+        try:
+            path_file = os.path.join(os.path.dirname(Lamia.__file__), "config/base3_urbandrainage/lamiaITVimport/" + self.toolwidgetmain.comboBox_indicator.currentText() + "_style.qml")
+            if new_layer is None:
+                qgislayer = self.mainifacewidget.qgiscanvas.layers['edge']['layerqgis']
+                qgislayer.loadNamedStyle(path_file)
+            else:
+                new_layer.loadNamedStyle(path_file)
+        except:
+            print("change style failed")
+        self.mainifacewidget.qgiscanvas.layers["edge"]['layerqgis'].triggerRepaint()
 
 class UserUI(QWidget):
     def __init__(self, parent=None):
@@ -280,7 +365,6 @@ class UserUI(QWidget):
 
 class RereaufileManager(AbstractFileManager):
 
-    # def __init__(self,  mainwindows=None, parentwdg=None, fileext=None):
     def __init__(self, mainwindows=None, toolclass=None):
         super(RereaufileManager, self).__init__(mainwindows, toolclass)
         self.reset()
@@ -376,8 +460,6 @@ class Config_Manager(QDialog):
         return (None, None) if canceled,
         return (alpha, P) if validated.
         """
-        # combovarindex = self.comboBox_var.currentIndex()
-        # vardir = self.varlist[combovarindex][1]
 
         if self.result() == QDialog.Accepted:
             return (

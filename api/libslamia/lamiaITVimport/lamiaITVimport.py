@@ -1017,10 +1017,8 @@ class ITVImportCore(AbstractLibsLamia):
             # avancement = (((countline * 100) / total) * 0.9) + 10
             # self.dlg.progress.setProperty("value", avancement)
 
-        # change style TODO JB, relative path to .qml in config, urbanD ?
-        path_file = os.path.join(Path(__file__).parent.parent.parent.parent, "config/base3_urbandrainage/lamiaITVimport/Anomalies ITV.qml")
+        path_file = os.path.join(os.path.dirname(Lamia.__file__), "config/base3_urbandrainage/lamiaITVimport/Anomalies_ITV.qml")
         temp_layer.loadNamedStyle(path_file)
-        # Sortir du mode édition
         temp_layer.commitChanges()
 
         return temp_layer
@@ -1134,25 +1132,25 @@ class ITVImportCore(AbstractLibsLamia):
         indicators_list = []
         # result_df = pd.DataFrame(index=dataframe.index, columns=["id_edge"])
         for indicator in all_exfiltration_indicators.keys():
-            indicators_list.append(indicator)
+            indicators_list.append('score_' + indicator)
             indicators_list.append('result_' + indicator)
             # result_df[indicator] = np.nan
         for indicator in all_infiltration_indicators:
-            indicators_list.append(indicator)
+            indicators_list.append('score_' + indicator)
             indicators_list.append('result_' + indicator)
             # result_df[indicator] = np.nan
         for indicator in all_ensablement_indicators:
-            indicators_list.append(indicator)
+            indicators_list.append('score_' + indicator)
             indicators_list.append('result_' + indicator)
             # result_df[indicator] = np.nan
         for indicator in all_red_cap_hyfraulique_indicators:
-            indicators_list.append(indicator)
+            indicators_list.append('score_' + indicator)
             indicators_list.append('result_' + indicator)
             # result_df[indicator] = np.nan
 
         # create qgis layer to put ITV result
         temp_layer = qgis.core.QgsVectorLayer(
-            f"NoGeometry?crs=epsg:{self.dbase.crsnumber}", "result_" + itv_name, "memory"
+            f"NoGeometry?crs=epsg:{self.dbase.crsnumber}", itv_name, "memory"
         )
 
         pr = temp_layer.dataProvider()
@@ -1329,25 +1327,16 @@ class ITVImportCore(AbstractLibsLamia):
                             result_df[indicator][np.logical_and(under_limit <= result_df[indicator].values, result_df[indicator].values < treshold[0])] = result_df[indicator][np.logical_and(under_limit <= result_df[indicator].values, result_df[indicator].values < treshold[0])].values + result_df[col][np.logical_and(under_limit <= result_df[indicator].values, result_df[indicator].values < treshold[0])].values * (alpha ** treshold[1])
                             under_limit = treshold[0]
         # we divide total score by total length of the edge
-        result_df[indicator] = result_df[indicator] / result_df["length"]
-        result_df['result_' + indicator] = result_df[indicator]
-        # result_df[indicator] = result_df[indicator].fillna(np.inf)
+        result_df['score_' + indicator] = result_df[indicator] / result_df["length"]
+        result_df['result_' + indicator] = result_df[indicator] / result_df["length"]
         threshold_result = [1., 2., 3., 4.]
         if indicator in ["EXF4", "INF4"]:
-            # under_limit = 0.
-            for i, treshold in enumerate([0.5, 2., 7., np.inf]):
-                result_df.loc[result_df['result_' + indicator] >= treshold, indicator] = threshold_result[i]
-                # if 0 < len(result_df[indicator][np.logical_and(under_limit <= result_df[indicator].values, result_df[indicator].values < treshold)]):
-                    # result_df[indicator][np.logical_and(under_limit <= result_df[indicator].values, result_df[indicator].values < treshold)] = threshold_result[i]
-                # under_limit = treshold
+            for i, treshold in enumerate([0., 0.5, 2., 7.]):
+                result_df.loc[result_df['result_' + indicator] >= treshold, 'score_' + indicator] = threshold_result[i]
         elif indicator in ["HYD3", "ENS4"]:
-            # under_limit = 0.
-            for i, treshold in enumerate([1., 4., 14., np.inf]):
-                result_df.loc[result_df['result_' + indicator] >= treshold, indicator] = threshold_result[i]
-                # if 0 < len(result_df[indicator][np.logical_and(under_limit <= result_df[indicator].values, result_df[indicator].values < treshold)]):
-                #     result_df[indicator][np.logical_and(under_limit <= result_df[indicator].values, result_df[indicator].values < treshold)] = threshold_result[i]
-                # under_limit = treshold
-        # result_df[indicator][result_df[indicator] == np.inf] = None
+            for i, treshold in enumerate([0., 1., 4., 14.]):
+                result_df.loc[result_df['result_' + indicator] >= treshold, 'score_' + indicator] = threshold_result[i]
+        result_df.drop(indicator, axis='columns', inplace=True)
         return result_df
 
     def computeIndicators(self, pks, alpha=2, P=5, itv_name="ITV"):
@@ -1365,7 +1354,6 @@ class ITVImportCore(AbstractLibsLamia):
         nodes = self.getAllPoints()
         # ETL for itv
         dataframe = self.getUniquesValuesbyEdge(pks)
-        # dataframe["length"] = 0
         dataframe["k_reg_1"] = ""
         dataframe["k_reg_2"] = ""
         dataframe["X1"] = np.nan
@@ -1396,5 +1384,4 @@ class ITVImportCore(AbstractLibsLamia):
             dataframe = self.computeOneIndicator(dataframe, indicator, alpha, P, all_ensablement_indicators)
         for indicator in all_red_cap_hyfraulique_indicators:
             dataframe = self.computeOneIndicator(dataframe, indicator, alpha, P, all_red_cap_hyfraulique_indicators)
-        self.getQgsLayer(pks)
         return self.setQgsEgde(dataframe, itv_name)

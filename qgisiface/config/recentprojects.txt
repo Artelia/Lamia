@@ -1,11 +1,1 @@
-C:\01_WORKINGDIR\aaaa\variante_lamia.sqlite
-c:\111_GitProjects\Lamia\testfiles\offlinemodedbase\parentdb\parenttestoffline.sqlite
-c:\111_GitProjects\Lamia\testfiles\offlinemodedbase\childdb\childtestoffline.sqlite
-C:\111_GitProjects\Lamia\testfiles\offlinemodedbase\childdb\childtestoffline.sqlite
-C:\111_GitProjects\Lamia\testfiles\offlinemodedbase\parentdb\parenttestoffline.sqlite
-C:\01_WORKINGDIR\fauna\test.sqlite
-C:\01_WORKINGDIR\Landy_new\LANDY-09-2020.sqlite
-C:\01_WORKINGDIR\00_test\Spatialite_Test.sqlite
-C:\01_WORKINGDIR\bm\BD_totale_ind15.sqlite
-C:\01_WORKINGDIR\BACALAN\GPMB_Bacalan.sqlite
-C:\Users\Public\Documents\lamia\spatialite2743_NewVersion_offline\spatialite2743_NewVersion_offline.sqlite
+/usr/src/Lamia/work_jb/GPMB_Bacalan.sqlite

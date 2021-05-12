@@ -95,7 +95,7 @@ def launchIface():
     # SLFILE = r"C:\01_WORKINGDIR\reims\testast\mergeddbase.sqlite"
     # SLFILE = r"C:\01_WORKINGDIR\alban\lamia\test_alban.sqlite"
     # SLFILE = r"C:\01_WORKINGDIR\sebastien\VTA_2020_Noailles.sqlite"
-    SLFILE = r"C:\01_WORKINGDIR\bm\BD_totale_ind15.sqlite"
+    # SLFILE = r"C:\01_WORKINGDIR\bm\BD_totale_ind15.sqlite"
     # SLFILE = r"C:\Users\Public\Documents\lamia\BD_totale_ind15\BD_totale_ind15.sqlite"
     # SLFILE = r"C:\01_WORKINGDIR\sebastien\VTA_2020_Noailles.sqlite"
     # SLFILE = r"C:\01_WORKINGDIR\herve\fusion\mergeddbase.sqlite"

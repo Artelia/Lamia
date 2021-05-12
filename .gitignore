@@ -48,3 +48,4 @@ autre_dossier/GPMB_Bacalan.sqlite
 .devcontainer/devcontainer.json
 .vscode/settings.json
 utils/pydbasedisplay/pydisplaydbase.py
+qgisiface/config/recentprojects.txt
