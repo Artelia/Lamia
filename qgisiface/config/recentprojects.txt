@@ -1,1 +1,1 @@
-/usr/src/Lamia/work_jb/GPMB_Bacalan.sqlite
+C:\01_WORKINGDIR\BACALAN\GPMB_Bacalan.sqlite

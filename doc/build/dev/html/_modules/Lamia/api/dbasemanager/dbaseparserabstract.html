@@ -381,6 +381,8 @@
 
         <span class="c1">#:the dictionnary of dbase (cf DBconfigReader)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">dbasetables</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="c1"># dict storing column name request : {...tablename: [column names],...}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">columnsnames</span> <span class="o">=</span> <span class="p">{}</span>
 
         <span class="k">if</span> <span class="n">messageinstance</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">messageinstance</span> <span class="o">=</span> <span class="n">LamiaIFaceAbstractConnectors</span><span class="p">()</span>
@@ -633,9 +635,9 @@
         <span class="p">][</span><span class="mi">0</span><span class="p">]</span>
 
         <span class="k">if</span> <span class="n">resdir</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;.&quot;</span> <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;spatialitefile&quot;</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">dbaseressourcesdirectory</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dbaseressourcesdirectory</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
                 <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">spatialitefile</span><span class="p">),</span> <span class="n">resdir</span>
-            <span class="p">)</span>
+            <span class="p">))</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">dbaseressourcesdirectory</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="n">resdir</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">crsnumber</span> <span class="o">=</span> <span class="n">crs</span>
@@ -651,6 +653,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">baseversion</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">dbconfigreader</span><span class="o">.</span><span class="n">maxbaseversion</span>
             <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">workversion</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">dbconfigreader</span><span class="o">.</span><span class="n">maxworkversion</span>
         <span class="p">):</span>
+            <span class="c1"># pass</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">updateDBaseVersion</span><span class="p">()</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">TYPE</span> <span class="o">==</span> <span class="s2">&quot;spatialite&quot;</span> <span class="ow">and</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span>
@@ -835,16 +838,19 @@
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">sql</span> <span class="o">=</span> <span class="s2">&quot;ALTER TABLE &quot;</span> <span class="o">+</span> <span class="n">table</span> <span class="o">+</span> <span class="s2">&quot; ADD COLUMN &quot;</span> <span class="o">+</span> <span class="n">field</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span>
 
-                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;SpatialiteDBaseParser&quot;</span><span class="p">:</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="n">TYPE</span> <span class="o">==</span> <span class="s2">&quot;spatialite&quot;</span><span class="p">:</span>
                     <span class="k">if</span> <span class="s2">&quot;VARCHAR&quot;</span> <span class="ow">in</span> <span class="n">dictnew</span><span class="p">[</span><span class="n">table</span><span class="p">][</span><span class="s2">&quot;fields&quot;</span><span class="p">][</span><span class="n">field</span><span class="p">][</span><span class="s2">&quot;PGtype&quot;</span><span class="p">]:</span>
                         <span class="n">sql</span> <span class="o">+=</span> <span class="s2">&quot; TEXT &quot;</span>
                     <span class="k">else</span><span class="p">:</span>
                         <span class="n">sql</span> <span class="o">+=</span> <span class="n">PGTYPE_TO_SLTYPE</span><span class="p">[</span>
                             <span class="n">dictnew</span><span class="p">[</span><span class="n">table</span><span class="p">][</span><span class="s2">&quot;fields&quot;</span><span class="p">][</span><span class="n">field</span><span class="p">][</span><span class="s2">&quot;PGtype&quot;</span><span class="p">]</span>
                         <span class="p">]</span>
-                <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;PostGisDBaseParser&quot;</span><span class="p">:</span>
+                <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="n">TYPE</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;django&quot;</span><span class="p">,</span> <span class="s2">&quot;postgis&quot;</span><span class="p">]:</span>
                     <span class="n">sql</span> <span class="o">+=</span> <span class="n">dictnew</span><span class="p">[</span><span class="n">table</span><span class="p">][</span><span class="s2">&quot;fields&quot;</span><span class="p">][</span><span class="n">field</span><span class="p">][</span><span class="s2">&quot;PGtype&quot;</span><span class="p">]</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">sql</span><span class="p">)</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">sql</span><span class="p">)</span>
+                <span class="k">except</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
 
         <span class="c1"># * read potential python file</span>
         <span class="n">pythonfile</span><span class="p">,</span> <span class="n">ext</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">pythonupdatefile</span><span class="p">)</span>

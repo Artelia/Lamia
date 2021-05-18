@@ -100,7 +100,7 @@ def launchIface():
     # SLFILE = r"C:\01_WORKINGDIR\sebastien\VTA_2020_Noailles.sqlite"
     # SLFILE = r"C:\01_WORKINGDIR\herve\fusion\mergeddbase.sqlite"
     # SLFILE = r"C:\01_WORKINGDIR\aaa\testconstruction.sqlite"
-    # SLFILE = r"C:\01_WORKINGDIR\BACALAN\GPMB_Bacalan.sqlite"
+    SLFILE = r"C:\01_WORKINGDIR\BACALAN\GPMB_Bacalan.sqlite"
     # SLFILE = r"C:\Users\Public\Documents\lamia\GPMB Bacalan\GPMB Bacalan.sqlite"
 
     # SLFILE = r"C:\111_GitProjects\Lamia\testfiles\offlinemodedbase\parentdb\parenttestoffline.sqlite"
