@@ -58,7 +58,7 @@ from Lamia.api.libslamia.lamiaITVimport.infiltration_indicators import all_infil
 from Lamia.api.libslamia.lamiaITVimport.ensablement_indicators import all_ensablement_indicators
 # from Lamia.api.libslamia.lamiaITVimport.effondrement_indicators import all_effondrement_indicators
 # from Lamia.api.libslamia.lamiaITVimport.bouchage_indicators import all_bouchage_indicators
-from Lamia.api.libslamia.lamiaITVimport.red_cap_hydraulique_indicators import all_red_cap_hyfraulique_indicators
+from Lamia.api.libslamia.lamiaITVimport.red_cap_hydraulique_indicators import all_red_cap_hydraulique_indicators
 
 
 # ********************************************************************************************************************
@@ -104,14 +104,14 @@ class RereauTool(AbstractLamiaTool):
             
             other_layer.startEditing()
             for field in other_layer.fields():
-                if 'score' in field.name():
+                if 'etat' in field.name():
                     idx = other_layer.fields().indexFromName(field.name())
-                    split_word = 'score'
+                    split_word = 'etat'
                     new_name = split_word + field.name().partition(split_word)[2]
                     other_layer.renameAttribute(idx, new_name)
-                elif 'result' in field.name():
+                elif 'note' in field.name():
                     idx = other_layer.fields().indexFromName(field.name())
-                    split_word = 'result'
+                    split_word = 'note'
                     new_name = split_word + field.name().partition(split_word)[2]
                     other_layer.renameAttribute(idx, new_name)
             other_layer.commitChanges()
@@ -144,19 +144,19 @@ class RereauTool(AbstractLamiaTool):
             
             qgislayer.startEditing()
             for field in qgislayer.fields():
-                if 'score' in field.name():
+                if 'etat' in field.name():
                     idx = qgislayer.fields().indexFromName(field.name())
-                    split_word = 'score'
+                    split_word = 'etat'
                     new_name = split_word + field.name().partition(split_word)[2]
                     qgislayer.renameAttribute(idx, new_name)
-                elif 'result' in field.name():
+                elif 'note' in field.name():
                     idx = qgislayer.fields().indexFromName(field.name())
-                    split_word = 'result'
+                    split_word = 'note'
                     new_name = split_word + field.name().partition(split_word)[2]
                     qgislayer.renameAttribute(idx, new_name)
             qgislayer.commitChanges()
         
-        self.indicator_changed(qgislayer)
+        self.indicator_changed()
 
     def initMainToolWidget(self):
 
@@ -178,7 +178,7 @@ class RereauTool(AbstractLamiaTool):
             indicator_list.append(indicator)
         for indicator in all_ensablement_indicators.keys():
             indicator_list.append(indicator)
-        for indicator in all_red_cap_hyfraulique_indicators.keys():
+        for indicator in all_red_cap_hydraulique_indicators.keys():
             indicator_list.append(indicator)
         # fill comboBox with available indicator
         self.toolwidgetmain.comboBox_indicator.addItems(indicator_list)
@@ -301,14 +301,14 @@ class RereauTool(AbstractLamiaTool):
             # rename vlayer score and result
             vlayer.startEditing()
             for field in vlayer.fields():
-                if 'score' in field.name():
+                if 'etat' in field.name():
                     idx = vlayer.fields().indexFromName(field.name())
-                    split_word = 'score'
+                    split_word = 'etat'
                     new_name = split_word + field.name().partition(split_word)[2]
                     vlayer.renameAttribute(idx, new_name)
-                elif 'result' in field.name():
+                elif 'note' in field.name():
                     idx = vlayer.fields().indexFromName(field.name())
-                    split_word = 'result'
+                    split_word = 'note'
                     new_name = split_word + field.name().partition(split_word)[2]
                     vlayer.renameAttribute(idx, new_name)
             vlayer.commitChanges()
@@ -330,28 +330,25 @@ class RereauTool(AbstractLamiaTool):
 
             qgislayer.startEditing()
             for field in qgislayer.fields():
-                if 'score' in field.name():
+                if 'etat' in field.name():
                     idx = qgislayer.fields().indexFromName(field.name())
-                    split_word = 'score'
+                    split_word = 'etat'
                     new_name = split_word + field.name().partition(split_word)[2]
                     qgislayer.renameAttribute(idx, new_name)
-                elif 'result' in field.name():
+                elif 'note' in field.name():
                     idx = qgislayer.fields().indexFromName(field.name())
-                    split_word = 'result'
+                    split_word = 'note'
                     new_name = split_word + field.name().partition(split_word)[2]
                     qgislayer.renameAttribute(idx, new_name)
             qgislayer.commitChanges()
 
-            self.indicator_changed(qgislayer)
+            self.indicator_changed()
     
-    def indicator_changed(self, new_layer=None):
+    def indicator_changed(self):
+        path_file = os.path.join(os.path.dirname(Lamia.__file__), "config/base3_urbandrainage/lamiaITVimport/" + self.toolwidgetmain.comboBox_indicator.currentText() + "_style.qml")
+        layer_to_change = self.mainifacewidget.qgiscanvas.layers['edge']['layerqgis']
         try:
-            path_file = os.path.join(os.path.dirname(Lamia.__file__), "config/base3_urbandrainage/lamiaITVimport/" + self.toolwidgetmain.comboBox_indicator.currentText() + "_style.qml")
-            if new_layer is None:
-                qgislayer = self.mainifacewidget.qgiscanvas.layers['edge']['layerqgis']
-                qgislayer.loadNamedStyle(path_file)
-            else:
-                new_layer.loadNamedStyle(path_file)
+            layer_to_change.loadNamedStyle(path_file)
         except:
             print("change style failed")
         self.mainifacewidget.qgiscanvas.layers["edge"]['layerqgis'].triggerRepaint()

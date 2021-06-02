@@ -7,10 +7,10 @@
   </flags>
   <renderer-v2 symbollevels="0" forceraster="0" enableorderby="0" type="RuleRenderer">
     <rules key="{8d5e310e-9312-442e-8f40-0648b5891277}">
-      <rule symbol="0" key="{6619d579-e78f-4493-9d1c-c4d5a43823de}" filter="1 &lt;= &quot;score_EXF4&quot; &lt;= 4">
-        <rule symbol="1" key="{acfe3251-6daa-440d-8678-d64aee2a47d1}" filter="&quot;score_EXF4&quot; = 2"/>
-        <rule symbol="2" key="{a8600e52-4d4a-4351-8ced-b657e05ab783}" filter="&quot;score_EXF4&quot; = 3"/>
-        <rule symbol="3" key="{ec7c07db-0f11-47be-bdb6-c1b2a0f3a72d}" filter="&quot;score_EXF4&quot; = 4"/>
+      <rule symbol="0" key="{6619d579-e78f-4493-9d1c-c4d5a43823de}" filter="1 &lt;= &quot;etat_EXF4&quot; &lt;= 4">
+        <rule symbol="1" key="{acfe3251-6daa-440d-8678-d64aee2a47d1}" filter="&quot;etat_EXF4&quot; = 2"/>
+        <rule symbol="2" key="{a8600e52-4d4a-4351-8ced-b657e05ab783}" filter="&quot;etat_EXF4&quot; = 3"/>
+        <rule symbol="3" key="{ec7c07db-0f11-47be-bdb6-c1b2a0f3a72d}" filter="&quot;etat_EXF4&quot; = 4"/>
       </rule>
       <rule symbol="4" key="{15f0d5da-19bd-46d0-b49b-cc3a75f2b1fd}" filter="ELSE"/>
     </rules>
@@ -1213,56 +1213,56 @@
         </config>
       </editWidget>
     </field>
-    <field name="score_EXF4">
+    <field name="etat_EXF4">
       <editWidget type="TextEdit">
         <config>
           <Option/>
         </config>
       </editWidget>
     </field>
-    <field name="result_EXF4">
+    <field name="note_EXF4">
       <editWidget type="TextEdit">
         <config>
           <Option/>
         </config>
       </editWidget>
     </field>
-    <field name="score_INF4">
+    <field name="etat_INF4">
       <editWidget type="TextEdit">
         <config>
           <Option/>
         </config>
       </editWidget>
     </field>
-    <field name="result_INF4">
+    <field name="note_INF4">
       <editWidget type="TextEdit">
         <config>
           <Option/>
         </config>
       </editWidget>
     </field>
-    <field name="score_ENS4">
+    <field name="etat_ENS4">
       <editWidget type="TextEdit">
         <config>
           <Option/>
         </config>
       </editWidget>
     </field>
-    <field name="result_ENS4">
+    <field name="note_ENS4">
       <editWidget type="TextEdit">
         <config>
           <Option/>
         </config>
       </editWidget>
     </field>
-    <field name="score_HYD3">
+    <field name="etat_HYD3">
       <editWidget type="TextEdit">
         <config>
           <Option/>
         </config>
       </editWidget>
     </field>
-    <field name="result_HYD3">
+    <field name="note_HYD3">
       <editWidget type="TextEdit">
         <config>
           <Option/>
@@ -1357,14 +1357,14 @@
     <alias name="" index="83" field="importid"/>
     <alias name="" index="84" field="importtable"/>
     <alias name="" index="85" field="lid_actor"/>
-    <alias name="" index="86" field="score_EXF4"/>
-    <alias name="" index="87" field="result_EXF4"/>
-    <alias name="" index="88" field="score_INF4"/>
-    <alias name="" index="89" field="result_INF4"/>
-    <alias name="" index="90" field="score_ENS4"/>
-    <alias name="" index="91" field="result_ENS4"/>
-    <alias name="" index="92" field="score_HYD3"/>
-    <alias name="" index="93" field="result_HYD3"/>
+    <alias name="" index="86" field="etat_EXF4"/>
+    <alias name="" index="87" field="note_EXF4"/>
+    <alias name="" index="88" field="etat_INF4"/>
+    <alias name="" index="89" field="note_INF4"/>
+    <alias name="" index="90" field="etat_ENS4"/>
+    <alias name="" index="91" field="note_ENS4"/>
+    <alias name="" index="92" field="etat_HYD3"/>
+    <alias name="" index="93" field="note_HYD3"/>
   </aliases>
   <excludeAttributesWMS/>
   <excludeAttributesWFS/>
@@ -1455,14 +1455,14 @@
     <default expression="" field="importid" applyOnUpdate="0"/>
     <default expression="" field="importtable" applyOnUpdate="0"/>
     <default expression="" field="lid_actor" applyOnUpdate="0"/>
-    <default expression="" field="score_EXF4" applyOnUpdate="0"/>
-    <default expression="" field="result_EXF4" applyOnUpdate="0"/>
-    <default expression="" field="score_INF4" applyOnUpdate="0"/>
-    <default expression="" field="result_INF4" applyOnUpdate="0"/>
-    <default expression="" field="score_ENS4" applyOnUpdate="0"/>
-    <default expression="" field="result_ENS4" applyOnUpdate="0"/>
-    <default expression="" field="score_HYD3" applyOnUpdate="0"/>
-    <default expression="" field="result_HYD3" applyOnUpdate="0"/>
+    <default expression="" field="etat_EXF4" applyOnUpdate="0"/>
+    <default expression="" field="note_EXF4" applyOnUpdate="0"/>
+    <default expression="" field="etat_INF4" applyOnUpdate="0"/>
+    <default expression="" field="note_INF4" applyOnUpdate="0"/>
+    <default expression="" field="etat_ENS4" applyOnUpdate="0"/>
+    <default expression="" field="note_ENS4" applyOnUpdate="0"/>
+    <default expression="" field="etat_HYD3" applyOnUpdate="0"/>
+    <default expression="" field="note_HYD3" applyOnUpdate="0"/>
   </defaults>
   <constraints>
     <constraint unique_strength="0" constraints="0" notnull_strength="0" field="pk_edge" exp_strength="0"/>
@@ -1551,14 +1551,14 @@
     <constraint unique_strength="0" constraints="0" notnull_strength="0" field="importid" exp_strength="0"/>
     <constraint unique_strength="0" constraints="0" notnull_strength="0" field="importtable" exp_strength="0"/>
     <constraint unique_strength="0" constraints="0" notnull_strength="0" field="lid_actor" exp_strength="0"/>
-    <constraint unique_strength="0" constraints="0" notnull_strength="0" field="score_EXF4" exp_strength="0"/>
-    <constraint unique_strength="0" constraints="0" notnull_strength="0" field="result_EXF4" exp_strength="0"/>
-    <constraint unique_strength="0" constraints="0" notnull_strength="0" field="score_INF4" exp_strength="0"/>
-    <constraint unique_strength="0" constraints="0" notnull_strength="0" field="result_INF4" exp_strength="0"/>
-    <constraint unique_strength="0" constraints="0" notnull_strength="0" field="score_ENS4" exp_strength="0"/>
-    <constraint unique_strength="0" constraints="0" notnull_strength="0" field="result_ENS4" exp_strength="0"/>
-    <constraint unique_strength="0" constraints="0" notnull_strength="0" field="score_HYD3" exp_strength="0"/>
-    <constraint unique_strength="0" constraints="0" notnull_strength="0" field="result_HYD3" exp_strength="0"/>
+    <constraint unique_strength="0" constraints="0" notnull_strength="0" field="etat_EXF4" exp_strength="0"/>
+    <constraint unique_strength="0" constraints="0" notnull_strength="0" field="note_EXF4" exp_strength="0"/>
+    <constraint unique_strength="0" constraints="0" notnull_strength="0" field="etat_INF4" exp_strength="0"/>
+    <constraint unique_strength="0" constraints="0" notnull_strength="0" field="note_INF4" exp_strength="0"/>
+    <constraint unique_strength="0" constraints="0" notnull_strength="0" field="etat_ENS4" exp_strength="0"/>
+    <constraint unique_strength="0" constraints="0" notnull_strength="0" field="note_ENS4" exp_strength="0"/>
+    <constraint unique_strength="0" constraints="0" notnull_strength="0" field="etat_HYD3" exp_strength="0"/>
+    <constraint unique_strength="0" constraints="0" notnull_strength="0" field="note_HYD3" exp_strength="0"/>
   </constraints>
   <constraintExpressions>
     <constraint exp="" desc="" field="pk_edge"/>
@@ -1647,14 +1647,14 @@
     <constraint exp="" desc="" field="importid"/>
     <constraint exp="" desc="" field="importtable"/>
     <constraint exp="" desc="" field="lid_actor"/>
-    <constraint exp="" desc="" field="score_EXF4"/>
-    <constraint exp="" desc="" field="result_EXF4"/>
-    <constraint exp="" desc="" field="score_INF4"/>
-    <constraint exp="" desc="" field="result_INF4"/>
-    <constraint exp="" desc="" field="score_ENS4"/>
-    <constraint exp="" desc="" field="result_ENS4"/>
-    <constraint exp="" desc="" field="score_HYD3"/>
-    <constraint exp="" desc="" field="result_HYD3"/>
+    <constraint exp="" desc="" field="etat_EXF4"/>
+    <constraint exp="" desc="" field="note_EXF4"/>
+    <constraint exp="" desc="" field="etat_INF4"/>
+    <constraint exp="" desc="" field="note_INF4"/>
+    <constraint exp="" desc="" field="etat_ENS4"/>
+    <constraint exp="" desc="" field="note_ENS4"/>
+    <constraint exp="" desc="" field="etat_HYD3"/>
+    <constraint exp="" desc="" field="note_HYD3"/>
   </constraintExpressions>
   <expressionfields/>
   <attributeactions>
@@ -1749,14 +1749,14 @@
       <column name="comment" width="-1" hidden="0" type="field"/>
       <column name="name" width="-1" hidden="0" type="field"/>
       <column name="lid_actor" width="-1" hidden="0" type="field"/>
-      <column name="score_EXF4" width="-1" hidden="0" type="field"/>
-      <column name="result_EXF4" width="-1" hidden="0" type="field"/>
-      <column name="score_INF4" width="-1" hidden="0" type="field"/>
-      <column name="result_INF4" width="-1" hidden="0" type="field"/>
-      <column name="score_ENS4" width="-1" hidden="0" type="field"/>
-      <column name="result_ENS4" width="-1" hidden="0" type="field"/>
-      <column name="score_HYD3" width="-1" hidden="0" type="field"/>
-      <column name="result_HYD3" width="-1" hidden="0" type="field"/>
+      <column name="etat_EXF4" width="-1" hidden="0" type="field"/>
+      <column name="note_EXF4" width="-1" hidden="0" type="field"/>
+      <column name="etat_INF4" width="-1" hidden="0" type="field"/>
+      <column name="note_INF4" width="-1" hidden="0" type="field"/>
+      <column name="etat_ENS4" width="-1" hidden="0" type="field"/>
+      <column name="note_ENS4" width="-1" hidden="0" type="field"/>
+      <column name="etat_HYD3" width="-1" hidden="0" type="field"/>
+      <column name="note_HYD3" width="-1" hidden="0" type="field"/>
     </columns>
   </attributetableconfig>
   <conditionalstyles>
@@ -1905,18 +1905,18 @@ def my_form_open(dialog, layer, feature):
     <field name="profaval" editable="1"/>
     <field name="qualiteGeolocZ" editable="1"/>
     <field name="qualitegeolocXY" editable="1"/>
-    <field name="result_ENS4" editable="0"/>
-    <field name="result_EXF4" editable="0"/>
-    <field name="result_HYD3" editable="0"/>
-    <field name="result_INF4" editable="0"/>
+    <field name="note_ENS4" editable="0"/>
+    <field name="note_EXF4" editable="0"/>
+    <field name="note_HYD3" editable="0"/>
+    <field name="note_INF4" editable="0"/>
     <field name="rue_complement" editable="1"/>
     <field name="rue_libdebut" editable="1"/>
     <field name="rue_libelle" editable="1"/>
     <field name="rue_libfin" editable="1"/>
-    <field name="score_ENS4" editable="0"/>
-    <field name="score_EXF4" editable="0"/>
-    <field name="score_HYD3" editable="0"/>
-    <field name="score_INF4" editable="0"/>
+    <field name="etat_ENS4" editable="0"/>
+    <field name="etat_EXF4" editable="0"/>
+    <field name="etat_HYD3" editable="0"/>
+    <field name="etat_INF4" editable="0"/>
     <field name="soilmoisture" editable="1"/>
     <field name="soiltype" editable="1"/>
     <field name="sourceGeoloc" editable="1"/>
@@ -2046,18 +2046,18 @@ def my_form_open(dialog, layer, feature):
     <field name="profaval" labelOnTop="0"/>
     <field name="qualiteGeolocZ" labelOnTop="0"/>
     <field name="qualitegeolocXY" labelOnTop="0"/>
-    <field name="result_ENS4" labelOnTop="0"/>
-    <field name="result_EXF4" labelOnTop="0"/>
-    <field name="result_HYD3" labelOnTop="0"/>
-    <field name="result_INF4" labelOnTop="0"/>
+    <field name="note_ENS4" labelOnTop="0"/>
+    <field name="note_EXF4" labelOnTop="0"/>
+    <field name="note_HYD3" labelOnTop="0"/>
+    <field name="note_INF4" labelOnTop="0"/>
     <field name="rue_complement" labelOnTop="0"/>
     <field name="rue_libdebut" labelOnTop="0"/>
     <field name="rue_libelle" labelOnTop="0"/>
     <field name="rue_libfin" labelOnTop="0"/>
-    <field name="score_ENS4" labelOnTop="0"/>
-    <field name="score_EXF4" labelOnTop="0"/>
-    <field name="score_HYD3" labelOnTop="0"/>
-    <field name="score_INF4" labelOnTop="0"/>
+    <field name="etat_ENS4" labelOnTop="0"/>
+    <field name="etat_EXF4" labelOnTop="0"/>
+    <field name="etat_HYD3" labelOnTop="0"/>
+    <field name="etat_INF4" labelOnTop="0"/>
     <field name="soilmoisture" labelOnTop="0"/>
     <field name="soiltype" labelOnTop="0"/>
     <field name="sourceGeoloc" labelOnTop="0"/>

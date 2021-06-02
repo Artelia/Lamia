@@ -22,7 +22,7 @@ import test_c_reporttool
 
 import test_c_costtool
 
-# import test_c_rereau
+import test_c_rereau
 
 
 def suite():
@@ -61,6 +61,10 @@ def suite():
     # * test_c_costtool
     if "test_c_costtool" in globals().keys():
         suite.addTest(test_c_costtool.DBaseTest("test_a_generateCost"))
+
+# TODO JB ici
+    if "test_c_rereau" in globals().keys():
+        suite.addTest(test_c_rereau.TestRereau)
 
     return suite
 

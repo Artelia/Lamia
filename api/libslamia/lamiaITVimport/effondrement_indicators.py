@@ -44,49 +44,17 @@ import numpy as np
 all_exfiltration_indicators = {
     "EFF4":
     {
-        "BAA"   :[1, "P"], # deformation
-        "BAABAA":[1, "P"], # j'ai un doute sur le code, BAA ou BAABAA ?
-        "BABB"  :[0, "L"], # fissure
-        "BABC"  :[2, "L"],
-        "BACA"  :[2, "P"], # rupture/effondrement
-        "BACB"  :[3, "P"],
-        "BACC"  :[3, "P"],
-        "BADA"  :[1, "P"], # briquetage ou elements de maconnerie defectueux
-        "BADB"  :[2, "P"],
-        "BADC"  :[2, "P"],
-        "BADD"  :[3, "P"],
-        "BAE"   :[1, "P"], # mortier manquant
-        "BAEBAE":[1, "P"], # doute
-        "BAFA"  :[0, "L"], # degradation de surface
-        "BAFC"  :[0, "L"],
-        "BAFD"  :[0, "L"],
-        "BAFE"  :[0, "L"],
-        "BAFF"  :[0, "L"],
-        "BAFG"  :[0, "L"],
-        "BAFH"  :[0, "L"],
-        "BAFB"  :[2, "L"],
-        "BAFI"  :[3, "L"],
-        "BAFZ"  :[3, "L"],
-        "BAHB"  :[2, "P"], # raccordement defectueux
-        "BAHC"  :[2, "P"],
-        "BAHD"  :[2, "P"],
-        "BAIZ"  :[0, "P"], # raccordement deffectueux
-        "BAIA"  :[2, "P"],
-        "BAI#"  :[2, "P"], # pas compris le #
-        "BAJ"   :[2, "P"], # deplacement d'assemblage
-        "BAJBAJ":[2, "P"], # doute
-        "BAN"   :[0, "L"], # conduite poreuse
-        "BANBAN":[0, "L"],
-        "BAO"   :[3, "P"], # sol visible par le defaut
-        "BAOBAO":[3, "P"], # doute
-        "BAP"   :[3, "P"], # vide visible par le defaut
-        "BAPBAP":[3, "P"], # doute
-        "BBA"   :[2, "P"], # racines
-        "BBABBA":[2, "P"], # doute
-        "BBBA"  :[2, "P"], # depots adherents
-        "BBFA"  :[2, "P"], # infiltration
-        "BBFB"  :[2, "P"],
-        "BBFC"  :[3, "P"],
-        "BBFD"  :[3, "P"],
+        "BABA"	:[1, "L"],	# MICRO-FISSURE
+        "BABB"	:[1, "L"],	# FISSURE FERMEE
+        "BABBA"	:[1, "L"],	# FISSURE FERMEE LONGITUDINALE
+        "BABBB"	:[1, "L"],	# FISSURE FERMEE CIRCONFERENTIELLE
+        "BABBC"	:[1, "L"],	# FISSURE - FERMEE - COMPLEXE 
+        "BABBD"	:[2, "L"],	# FISSURE FERMEE HELICOIDALE
+        "BABC"	:[2, "L"],	# FISSURE OUVERTE
+        "BABCA"	:[2, "L"],	# FISSURE - OUVERTE - LONGITUDINALE
+        "BABCB"	:[2, "L"],	# FISSURE OUVERTE CIRCONFERENTIELLE
+        "BABCC"	:[2, "L"],	# FISSURE - OUVERTE - COMPLEXE
+        "BABCD"	:[2, "L"],	# FISSURE OUVERTE HELICOIDALE
+        "BACA"	:[2, "P"],	# RUPTURE / EFFONDREMENT - RUPTURE
     },
 }

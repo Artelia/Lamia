@@ -40,7 +40,7 @@ from .infiltration_indicators import all_infiltration_indicators
 from .ensablement_indicators import all_ensablement_indicators
 # from .effondrement_indicators import all_effondrement_indicators
 # from .bouchage_indicators import all_bouchage_indicators
-from .red_cap_hydraulique_indicators import all_red_cap_hyfraulique_indicators
+from .red_cap_hydraulique_indicators import all_red_cap_hydraulique_indicators
 
 import pandas as pd
 import numpy as np
@@ -1132,21 +1132,17 @@ class ITVImportCore(AbstractLibsLamia):
         indicators_list = []
         # result_df = pd.DataFrame(index=dataframe.index, columns=["id_edge"])
         for indicator in all_exfiltration_indicators.keys():
-            indicators_list.append('score_' + indicator)
-            indicators_list.append('result_' + indicator)
-            # result_df[indicator] = np.nan
+            indicators_list.append('etat_' + indicator)
+            indicators_list.append('note_' + indicator)
         for indicator in all_infiltration_indicators:
-            indicators_list.append('score_' + indicator)
-            indicators_list.append('result_' + indicator)
-            # result_df[indicator] = np.nan
+            indicators_list.append('etat_' + indicator)
+            indicators_list.append('note_' + indicator)
         for indicator in all_ensablement_indicators:
-            indicators_list.append('score_' + indicator)
-            indicators_list.append('result_' + indicator)
-            # result_df[indicator] = np.nan
-        for indicator in all_red_cap_hyfraulique_indicators:
-            indicators_list.append('score_' + indicator)
-            indicators_list.append('result_' + indicator)
-            # result_df[indicator] = np.nan
+            indicators_list.append('etat_' + indicator)
+            indicators_list.append('note_' + indicator)
+        for indicator in all_red_cap_hydraulique_indicators:
+            indicators_list.append('etat_' + indicator)
+            indicators_list.append('note_' + indicator)
 
         # create qgis layer to put ITV result
         temp_layer = qgis.core.QgsVectorLayer(
@@ -1169,32 +1165,35 @@ class ITVImportCore(AbstractLibsLamia):
         edges = self.getAllEdges()
         # for each edges in dataframe,
         for i, row in dataframe.iterrows():
+            print(row)
             edge_is_find = 0
             insert_feat = qgis.core.QgsFeature(qgsfields)
             element_list = []
             # we look for asociated points,
             for id_edge, id_reg_1, id_reg_2 in edges:
-
                 # if we find the edge, we add informations
-                if (str(row["k_reg_1"]) == id_reg_1 and str(row["k_reg_2"]) == id_reg_2) or (str(row["k_reg_1"]) == id_reg_2 and str(row["k_reg_2"]) == id_reg_1):
+                if ((str(row["k_reg_1"]) == id_reg_1 and str(row["k_reg_2"]) == id_reg_2) or (str(row["k_reg_1"]) == id_reg_2 and str(row["k_reg_2"]) == id_reg_1)):
                     element_list.append(id_edge)
                     edge_is_find = 1
-                    for ind in indicators_list:
-                        ind_value = row[ind]
-                        if row["length"] > 0:
+                    # for each element of indicators_list
+                    if row["length"] > 0:
+                        print("length > 0")
+                        for ind in indicators_list:
+                            ind_value = row[ind] + 0
+                            # if the length of is > 0 we add the value
                             element_list.append(ind_value)
-                        else:
+                        insert_feat.setAttributes(element_list)
+                        pr.addFeatures([insert_feat])
+                        break
+                    else:
+                        print("length = 0")
+                        for ind in indicators_list:
                             element_list.append(float(None))
-                            self.dbase.lamiaorm['edge'].update(
-                                pkedge,
-                                {
-                                    ind:ind_value
-                                }
-                            )
-                    insert_feat.setAttributes(element_list)
-                    pr.addFeatures([insert_feat])
-                    break
-            if edge_is_find == 0 and row["k_reg_1"] != np.nan and row["k_reg_2"] != np.nan:
+                        insert_feat.setAttributes(element_list)
+                        pr.addFeatures([insert_feat])
+                        break
+            if edge_is_find == 0 and row["k_reg_1"] != "" and row["k_reg_2"] != "" and row["length"] > 0:
+                print("to create")
                 X1 = row["X1"]
                 Y1 = row["Y1"]
                 X2 = row["X2"]
@@ -1300,45 +1299,6 @@ class ITVImportCore(AbstractLibsLamia):
         edges = self.dbase.query('SELECT id_edge, lid_descriptionsystem_1, lid_descriptionsystem_2 FROM edge_qgis WHERE lpk_revision_end IS NULL')
         return edges
 
-    def computeOneIndicator(self, result_df, indicator, alpha, P, dict_of_indictors):
-        """return result_df with a new column indicator, with the grade of the edge for that indicator
-        """
-        result_df[indicator] = 0.
-        for col in result_df.columns:
-            # if a defaut is in this indicator and in this edge:
-            if col in dict_of_indictors[indicator].keys():
-                # if it depends of P:
-                if dict_of_indictors[indicator][col][1] is "P":
-                    # if it is not a treshold
-                    if type(dict_of_indictors[indicator][col][0]) == type(1):
-                        result_df[indicator] = result_df[indicator].values + result_df[col].values * (alpha ** dict_of_indictors[indicator][col][0]) * P
-                    else:
-                        under_limit = 0.
-                        for treshold in dict_of_indictors[indicator][col][0]:
-                            result_df[indicator][np.logical_and(under_limit <= result_df[indicator].values, result_df[indicator].values < treshold[0])] = result_df[indicator][np.logical_and(under_limit <= result_df[indicator].values, result_df[indicator].values < treshold[0])].values + result_df[col][np.logical_and(under_limit <= result_df[indicator].values, result_df[indicator].values < treshold[0])].values * (alpha ** treshold[1]) * P
-                            under_limit = treshold[0]
-                # if depend of observated length:
-                elif dict_of_indictors[indicator][col][1] is "L":
-                    if type(dict_of_indictors[indicator][col][0]) == type(1):
-                        result_df[indicator] = result_df[indicator].values + result_df[col].values * (alpha ** dict_of_indictors[indicator][col][0])
-                    else:
-                        under_limit = 0.
-                        for treshold in dict_of_indictors[indicator][col][0]:
-                            result_df[indicator][np.logical_and(under_limit <= result_df[indicator].values, result_df[indicator].values < treshold[0])] = result_df[indicator][np.logical_and(under_limit <= result_df[indicator].values, result_df[indicator].values < treshold[0])].values + result_df[col][np.logical_and(under_limit <= result_df[indicator].values, result_df[indicator].values < treshold[0])].values * (alpha ** treshold[1])
-                            under_limit = treshold[0]
-        # we divide total score by total length of the edge
-        result_df['score_' + indicator] = result_df[indicator] / result_df["length"]
-        result_df['result_' + indicator] = result_df[indicator] / result_df["length"]
-        threshold_result = [1., 2., 3., 4.]
-        if indicator in ["EXF4", "INF4"]:
-            for i, treshold in enumerate([0., 0.5, 2., 7.]):
-                result_df.loc[result_df['result_' + indicator] >= treshold, 'score_' + indicator] = threshold_result[i]
-        elif indicator in ["HYD3", "ENS4"]:
-            for i, treshold in enumerate([0., 1., 4., 14.]):
-                result_df.loc[result_df['result_' + indicator] >= treshold, 'score_' + indicator] = threshold_result[i]
-        result_df.drop(indicator, axis='columns', inplace=True)
-        return result_df
-
     def computeIndicators(self, pks, alpha=2, P=5, itv_name="ITV"):
         """compute all available indicators on those edge
 
@@ -1377,11 +1337,50 @@ class ITVImportCore(AbstractLibsLamia):
         dataframe = dataframe.fillna(0)
         # add one column for each indicator
         for indicator in all_exfiltration_indicators.keys():
-            dataframe = self.computeOneIndicator(dataframe, indicator, alpha, P, all_exfiltration_indicators)
+            dataframe = computeOneIndicator(dataframe, indicator, alpha, P, all_exfiltration_indicators)
         for indicator in all_infiltration_indicators:
-            dataframe = self.computeOneIndicator(dataframe, indicator, alpha, P, all_infiltration_indicators)
+            dataframe = computeOneIndicator(dataframe, indicator, alpha, P, all_infiltration_indicators)
         for indicator in all_ensablement_indicators:
-            dataframe = self.computeOneIndicator(dataframe, indicator, alpha, P, all_ensablement_indicators)
-        for indicator in all_red_cap_hyfraulique_indicators:
-            dataframe = self.computeOneIndicator(dataframe, indicator, alpha, P, all_red_cap_hyfraulique_indicators)
+            dataframe = computeOneIndicator(dataframe, indicator, alpha, P, all_ensablement_indicators)
+        for indicator in all_red_cap_hydraulique_indicators:
+            dataframe = computeOneIndicator(dataframe, indicator, alpha, P, all_red_cap_hydraulique_indicators)
         return self.setQgsEgde(dataframe, itv_name)
+
+def computeOneIndicator(result_df, indicator, alpha, P, dict_of_indictors):
+    """return result_df with a new column indicator, with the grade of the edge for that indicator
+    """
+    result_df[indicator] = 0.
+    for col in result_df.columns:
+        # if a defaut is in this indicator and in this edge:
+        if col in dict_of_indictors[indicator].keys():
+            # if it depends of P:
+            if dict_of_indictors[indicator][col][1] is "P":
+                # if it is not a treshold
+                if type(dict_of_indictors[indicator][col][0]) == type(1):
+                    result_df[indicator] = result_df[indicator].values + result_df[col].values * (alpha ** dict_of_indictors[indicator][col][0]) * P
+                else:
+                    under_limit = 0.
+                    for treshold in dict_of_indictors[indicator][col][0]:
+                        result_df[indicator][np.logical_and(under_limit <= result_df[indicator].values, result_df[indicator].values < treshold[0])] = result_df[indicator][np.logical_and(under_limit <= result_df[indicator].values, result_df[indicator].values < treshold[0])].values + result_df[col][np.logical_and(under_limit <= result_df[indicator].values, result_df[indicator].values < treshold[0])].values * (alpha ** treshold[1]) * P
+                        under_limit = treshold[0]
+            # if depend of observated length:
+            elif dict_of_indictors[indicator][col][1] is "L":
+                if type(dict_of_indictors[indicator][col][0]) == type(1):
+                    result_df[indicator] = result_df[indicator].values + result_df[col].values * (alpha ** dict_of_indictors[indicator][col][0])
+                else:
+                    under_limit = 0.
+                    for treshold in dict_of_indictors[indicator][col][0]:
+                        result_df[indicator][np.logical_and(under_limit <= result_df[indicator].values, result_df[indicator].values < treshold[0])] = result_df[indicator][np.logical_and(under_limit <= result_df[indicator].values, result_df[indicator].values < treshold[0])].values + result_df[col][np.logical_and(under_limit <= result_df[indicator].values, result_df[indicator].values < treshold[0])].values * (alpha ** treshold[1])
+                        under_limit = treshold[0]
+    # we divide total score by total length of the edge
+    result_df['etat_' + indicator] = result_df[indicator] / result_df["length"]
+    result_df['note_' + indicator] = result_df[indicator] / result_df["length"]
+    threshold_result = [1., 2., 3., 4.]
+    if indicator in ["EXF4", "INF4"]:
+        for i, treshold in enumerate([0., 0.5, 2., 7.]):
+            result_df.loc[result_df['note_' + indicator] >= treshold, 'etat_' + indicator] = threshold_result[i]
+    elif indicator in ["HYD3", "ENS4"]:
+        for i, treshold in enumerate([0., 1., 4., 14.]):
+            result_df.loc[result_df['note_' + indicator] >= treshold, 'etat_' + indicator] = threshold_result[i]
+    result_df.drop(indicator, axis='columns', inplace=True)
+    return result_df
