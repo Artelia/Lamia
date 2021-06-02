@@ -327,7 +327,7 @@
 <span class="kn">import</span> <span class="nn">qgis</span>
 <span class="kn">import</span> <span class="nn">qgis.utils</span>
 <span class="kn">from</span> <span class="nn">qgis.PyQt</span> <span class="kn">import</span> <span class="n">uic</span><span class="p">,</span> <span class="n">QtCore</span><span class="p">,</span> <span class="n">QtGui</span>
-
+<span class="kn">import</span> <span class="nn">logging</span>
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">try:</span>
 <span class="sd">    from qgis.PyQt.QtGui import (QWidget, QTreeWidgetItem, QMessageBox, QFileDialog, QTableWidget,</span>
@@ -679,7 +679,7 @@
                 <span class="s2">&quot;tablename : </span><span class="si">%s</span><span class="s2">, kwargs : </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">DBASETABLENAME</span><span class="p">,</span> <span class="n">kwargs</span>
             <span class="p">)</span>
 
-        <span class="k">if</span> <span class="p">(</span>
+        <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mainifacewidget</span><span class="o">.</span><span class="n">currenttoolwidget</span> <span class="ow">and</span> 
             <span class="bp">self</span><span class="o">.</span><span class="n">mainifacewidget</span><span class="o">.</span><span class="n">currenttoolwidget</span><span class="o">.</span><span class="n">DBASETABLENAME</span>
             <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">mainifacewidget</span><span class="o">.</span><span class="n">qgiscanvas</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
         <span class="p">):</span>
@@ -1204,46 +1204,38 @@
 
         <span class="n">pointsmapcanvas</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">pointslayer</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        if self.capturetype is None:</span>
-<span class="sd">            type = self.dbasetable[&#39;layer&#39;].geometryType()</span>
-<span class="sd">        else:</span>
-<span class="sd">            type = self.capturetype</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="c1"># capturetype = self.dbasetable[&#39;layer&#39;].geometryType()</span>
+
+        <span class="c1">#* Define maptoolcapturetype : the geomtypecaptured &amp; capturetype : geomtype of layer</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">maptoolcapturetype</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sender</span><span class="p">()</span><span class="o">.</span><span class="n">mode</span><span class="p">())</span>     <span class="c1">#1 point 2 line 3 polygon</span>
+        <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>  <span class="c1">#no sender - debug mode</span>
+            <span class="n">maptoolcapturetype</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mainifacewidget</span><span class="o">.</span><span class="n">qgiscanvas</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">DBASETABLENAME</span><span class="p">][</span><span class="s2">&quot;layer&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">geometryType</span><span class="p">()</span>
+            <span class="c1"># logging.getLogger(&quot;Lamiaoffline&quot;).debug(maptoolcapturetypestring)</span>
+
         <span class="n">capturetype</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mainifacewidget</span><span class="o">.</span><span class="n">qgiscanvas</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">DBASETABLENAME</span><span class="p">][</span>
             <span class="s2">&quot;layer&quot;</span>
-        <span class="p">]</span><span class="o">.</span><span class="n">geometryType</span><span class="p">()</span>
+        <span class="p">]</span><span class="o">.</span><span class="n">geometryType</span><span class="p">()</span>        <span class="c1"># 0 point 1 line 2 polygone 3 unknow 4 null geom</span>
 
-        <span class="c1"># case point in line layer</span>
-        <span class="n">dbasetable</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dbase</span><span class="o">.</span><span class="n">dbasetables</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">DBASETABLENAME</span><span class="p">]</span>
 
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">points</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span> <span class="ow">and</span> <span class="n">points</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">points</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
-            <span class="c1"># self.rubberBand.reset(0)</span>
-            <span class="c1"># self.mainifacewidget.qgiscanvas.createorresetRubberband(0)</span>
-            <span class="n">capturetype</span> <span class="o">=</span> <span class="mf">0.5</span>
-        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">points</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">dbasetable</span><span class="p">[</span><span class="s2">&quot;geom&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;LINESTRING&quot;</span><span class="p">:</span>
+        <span class="c1">#* Modify captured geom to fit the layer geom</span>
+        <span class="k">if</span> <span class="n">maptoolcapturetype</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">capturetype</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
             <span class="n">points</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">points</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-            <span class="c1"># self.mainifacewidget.qgiscanvas.createorresetRubberband(0)</span>
-            <span class="n">capturetype</span> <span class="o">=</span> <span class="mf">0.5</span>
-        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">points</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">dbasetable</span><span class="p">[</span><span class="s2">&quot;geom&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;POLYGON&quot;</span><span class="p">:</span>
-            <span class="c1"># qgsgeompoint = qgis.core.QgsGeometry.fromPointXY(points[0])</span>
-            <span class="n">points</span> <span class="o">=</span> <span class="p">[</span>
-                <span class="n">qgis</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">QgsPointXY</span><span class="p">(</span><span class="n">points</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">x</span><span class="p">()</span> <span class="o">-</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">points</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">y</span><span class="p">()</span> <span class="o">-</span> <span class="mf">1.0</span><span class="p">),</span>
-                <span class="n">qgis</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">QgsPointXY</span><span class="p">(</span><span class="n">points</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">x</span><span class="p">()</span> <span class="o">-</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">points</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">y</span><span class="p">()</span> <span class="o">+</span> <span class="mf">1.0</span><span class="p">),</span>
-                <span class="n">qgis</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">QgsPointXY</span><span class="p">(</span><span class="n">points</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">x</span><span class="p">()</span> <span class="o">+</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">points</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">y</span><span class="p">()</span> <span class="o">+</span> <span class="mf">1.0</span><span class="p">),</span>
-                <span class="n">qgis</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">QgsPointXY</span><span class="p">(</span><span class="n">points</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">x</span><span class="p">()</span> <span class="o">+</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">points</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">y</span><span class="p">()</span> <span class="o">-</span> <span class="mf">1.0</span><span class="p">),</span>
-            <span class="p">]</span>
+        <span class="k">elif</span> <span class="n">maptoolcapturetype</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">capturetype</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="n">points</span> <span class="o">=</span> <span class="p">[</span>
+                    <span class="n">qgis</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">QgsPointXY</span><span class="p">(</span><span class="n">points</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">x</span><span class="p">()</span> <span class="o">-</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">points</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">y</span><span class="p">()</span> <span class="o">-</span> <span class="mf">1.0</span><span class="p">),</span>
+                    <span class="n">qgis</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">QgsPointXY</span><span class="p">(</span><span class="n">points</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">x</span><span class="p">()</span> <span class="o">-</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">points</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">y</span><span class="p">()</span> <span class="o">+</span> <span class="mf">1.0</span><span class="p">),</span>
+                    <span class="n">qgis</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">QgsPointXY</span><span class="p">(</span><span class="n">points</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">x</span><span class="p">()</span> <span class="o">+</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">points</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">y</span><span class="p">()</span> <span class="o">+</span> <span class="mf">1.0</span><span class="p">),</span>
+                    <span class="n">qgis</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">QgsPointXY</span><span class="p">(</span><span class="n">points</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">x</span><span class="p">()</span> <span class="o">+</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">points</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">y</span><span class="p">()</span> <span class="o">-</span> <span class="mf">1.0</span><span class="p">),</span>
+                <span class="p">]</span>
+        <span class="k">elif</span> <span class="n">maptoolcapturetype</span> <span class="o">==</span> <span class="mi">3</span> <span class="ow">and</span> <span class="n">capturetype</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">points</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">points</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
 
-            <span class="n">capturetype</span> <span class="o">=</span> <span class="mf">1.5</span>
-        <span class="c1"># else:</span>
-        <span class="c1">#    self.mainifacewidget.qgiscanvas.createorresetRubberband(capturetype)</span>
 
         <span class="k">if</span> <span class="n">debug</span><span class="p">:</span>
             <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;Lamia_unittest&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
                 <span class="s2">&quot;type/point : </span><span class="si">%s</span><span class="s2"> </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">capturetype</span><span class="p">),</span> <span class="n">points</span>
             <span class="p">)</span>
-
+        <span class="c1">#* crs transformation</span>
         <span class="k">if</span> <span class="n">comefromcanvas</span><span class="p">:</span>
             <span class="n">pointsmapcanvas</span> <span class="o">=</span> <span class="n">points</span>
             <span class="k">for</span> <span class="n">point</span> <span class="ow">in</span> <span class="n">points</span><span class="p">:</span>
@@ -1257,10 +1249,11 @@
                     <span class="bp">self</span><span class="o">.</span><span class="n">mainifacewidget</span><span class="o">.</span><span class="n">qgiscanvas</span><span class="o">.</span><span class="n">xform</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">point</span><span class="p">)</span>
                 <span class="p">)</span>
 
+        <span class="c1">#* process geom depending use : for rubberband or for layer storage</span>
         <span class="k">if</span> <span class="n">capturetype</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">geometryformap</span> <span class="o">=</span> <span class="n">qgis</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">QgsGeometry</span><span class="o">.</span><span class="n">fromPointXY</span><span class="p">(</span><span class="n">pointsmapcanvas</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
             <span class="n">geometryforlayer</span> <span class="o">=</span> <span class="n">qgis</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">QgsGeometry</span><span class="o">.</span><span class="n">fromPointXY</span><span class="p">(</span><span class="n">pointslayer</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-        <span class="k">elif</span> <span class="n">capturetype</span> <span class="o">==</span> <span class="mf">0.5</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="n">capturetype</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">maptoolcapturetype</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>   
             <span class="n">geometryformap</span> <span class="o">=</span> <span class="n">qgis</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">QgsGeometry</span><span class="o">.</span><span class="n">fromPointXY</span><span class="p">(</span><span class="n">pointsmapcanvas</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
             <span class="n">geometryforlayer</span> <span class="o">=</span> <span class="n">qgis</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">QgsGeometry</span><span class="o">.</span><span class="n">fromMultiPolylineXY</span><span class="p">([</span><span class="n">pointslayer</span><span class="p">])</span>
         <span class="k">elif</span> <span class="n">capturetype</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
@@ -1268,28 +1261,32 @@
                 <span class="p">[</span><span class="n">pointsmapcanvas</span><span class="p">]</span>
             <span class="p">)</span>
             <span class="n">geometryforlayer</span> <span class="o">=</span> <span class="n">qgis</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">QgsGeometry</span><span class="o">.</span><span class="n">fromMultiPolylineXY</span><span class="p">([</span><span class="n">pointslayer</span><span class="p">])</span>
-        <span class="k">elif</span> <span class="n">capturetype</span> <span class="ow">in</span> <span class="p">[</span><span class="mf">1.5</span><span class="p">,</span> <span class="mi">2</span><span class="p">]:</span>
+        <span class="k">elif</span> <span class="n">capturetype</span> <span class="o">==</span> <span class="mi">2</span> <span class="ow">and</span> <span class="n">maptoolcapturetype</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">]:</span>     
             <span class="n">geometryformap</span> <span class="o">=</span> <span class="n">qgis</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">QgsGeometry</span><span class="o">.</span><span class="n">fromPolygonXY</span><span class="p">([</span><span class="n">pointsmapcanvas</span><span class="p">])</span>
             <span class="n">geometryforlayer</span> <span class="o">=</span> <span class="n">qgis</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">QgsGeometry</span><span class="o">.</span><span class="n">fromPolygonXY</span><span class="p">([</span><span class="n">pointslayer</span><span class="p">])</span>
 
-        <span class="c1"># outside qgis bug</span>
+        <span class="c1">#* show geom in rubberband</span>
         <span class="k">if</span> <span class="n">showinrubberband</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">capturetype</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="n">capturetype</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">maptoolcapturetype</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>   
+                <span class="bp">self</span><span class="o">.</span><span class="n">mainifacewidget</span><span class="o">.</span><span class="n">qgiscanvas</span><span class="o">.</span><span class="n">createorresetRubberband</span><span class="p">(</span>
+                    <span class="mi">0</span><span class="p">,</span> <span class="n">rubtype</span><span class="o">=</span><span class="s2">&quot;capture&quot;</span>
+                <span class="p">)</span>
+            <span class="k">elif</span> <span class="n">capturetype</span>  <span class="ow">in</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">mainifacewidget</span><span class="o">.</span><span class="n">qgiscanvas</span><span class="o">.</span><span class="n">createorresetRubberband</span><span class="p">(</span>
                     <span class="n">capturetype</span><span class="p">,</span> <span class="n">rubtype</span><span class="o">=</span><span class="s2">&quot;capture&quot;</span>
                 <span class="p">)</span>
-            <span class="k">elif</span> <span class="n">capturetype</span> <span class="ow">in</span> <span class="p">[</span><span class="mf">1.5</span><span class="p">]:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">mainifacewidget</span><span class="o">.</span><span class="n">qgiscanvas</span><span class="o">.</span><span class="n">createorresetRubberband</span><span class="p">(</span>
-                    <span class="mi">2</span><span class="p">,</span> <span class="n">rubtype</span><span class="o">=</span><span class="s2">&quot;capture&quot;</span>
-                <span class="p">)</span>
+
             <span class="k">else</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">mainifacewidget</span><span class="o">.</span><span class="n">qgiscanvas</span><span class="o">.</span><span class="n">createorresetRubberband</span><span class="p">(</span>
                     <span class="mi">0</span><span class="p">,</span> <span class="n">rubtype</span><span class="o">=</span><span class="s2">&quot;capture&quot;</span>
                 <span class="p">)</span>
+
             <span class="bp">self</span><span class="o">.</span><span class="n">mainifacewidget</span><span class="o">.</span><span class="n">qgiscanvas</span><span class="o">.</span><span class="n">rubberbands</span><span class="p">[</span><span class="s2">&quot;capture&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">addGeometry</span><span class="p">(</span>
                 <span class="n">geometryformap</span><span class="p">,</span> <span class="kc">None</span>
             <span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">mainifacewidget</span><span class="o">.</span><span class="n">qgiscanvas</span><span class="o">.</span><span class="n">rubberbands</span><span class="p">[</span><span class="s2">&quot;capture&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+        <span class="c1">#* final : set self.tempgeometry</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tempgeometry</span> <span class="o">=</span> <span class="n">geometryforlayer</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">lamiageomChanged</span><span class="o">.</span><span class="n">emit</span><span class="p">()</span>
 
@@ -1301,10 +1298,6 @@
             <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;Lamia_unittest&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
                 <span class="s2">&quot;end canvas points : </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">pointsmapcanvas</span>
             <span class="p">)</span></div></div>
-        <span class="c1"># if debug: logging.getLogger(&quot;Lamia_unittest&quot;).debug(&#39;end tempgeom : %s&#39;, self.toWKT(self.tempgeometry))</span>
-
-        <span class="c1"># self.mtool = None</span>
-
 </pre></div>
 
            </div>

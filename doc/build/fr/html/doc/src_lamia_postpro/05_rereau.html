@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Import de données dans Lamia &mdash; Documentation LAMIA 1.0</title>
+  <title>Utilisation du module Rereau &mdash; Documentation LAMIA 1.0</title>
   
 
   
@@ -38,8 +38,7 @@
     
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Recherche" href="../../search.html" />
-    <link rel="next" title="Imports des photos" href="02_import_photos.html" />
-    <link rel="prev" title="Impression de rapports" href="01_impression_rapport.html" />
+    <link rel="prev" title="Utilisation du module de Topologie" href="04_topology.html" />
 
 <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css" />
 <!-- help for aos : https://michalsnik.github.io/aos/  -->
@@ -207,14 +206,14 @@
 </li>
 <li class="toctree-l3 current"><a class="reference internal" href="../03_05_description_modules_postpro.html">Description des modules de Post Traitement</a><ul class="current">
 <li class="toctree-l4"><a class="reference internal" href="01_impression_rapport.html">Impression de rapports</a></li>
-<li class="toctree-l4 current"><a class="current reference internal" href="#">Import de données dans Lamia</a></li>
+<li class="toctree-l4"><a class="reference internal" href="02_import.html">Import de données dans Lamia</a></li>
 <li class="toctree-l4"><a class="reference internal" href="02_import_photos.html">Imports des photos</a></li>
 <li class="toctree-l4"><a class="reference internal" href="03_export.html">Export de données dans Lamia</a></li>
 <li class="toctree-l4"><a class="reference internal" href="04_topology.html">Utilisation du module de Topologie</a></li>
 <li class="toctree-l4"><a class="reference internal" href="04_topology.html#analyse-du-chemin-le-plus-court">Analyse du chemin le plus court</a></li>
 <li class="toctree-l4"><a class="reference internal" href="04_topology.html#analyse-des-sous-domaines">Analyse des sous domaines</a></li>
 <li class="toctree-l4"><a class="reference internal" href="04_topology.html#correction-topologique">Correction topologique</a></li>
-<li class="toctree-l4"><a class="reference internal" href="05_rereau.html">Utilisation du module Rereau</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">Utilisation du module Rereau</a></li>
 </ul>
 </li>
 </ul>
@@ -273,7 +272,7 @@
         
           <li><a href="../03_05_description_modules_postpro.html">Description des modules de Post Traitement</a> &raquo;</li>
         
-      <li>Import de données dans Lamia</li>
+      <li>Utilisation du module Rereau</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -293,136 +292,23 @@
             
   <div class="toctree-wrapper compound">
 </div>
-<div class="section" id="import-de-donnees-dans-lamia">
-<h1>Import de données dans Lamia<a class="headerlink" href="#import-de-donnees-dans-lamia" title="Lien permanent vers ce titre">¶</a></h1>
-<div class="section" id="lancement-du-module">
-<h2>Lancement du module<a class="headerlink" href="#lancement-du-module" title="Lien permanent vers ce titre">¶</a></h2>
-<a class="reference internal image-reference" href="../../_images/mainmenu.png"><img alt="../../_images/mainmenu.png" class="align-center" src="../../_images/mainmenu.png" style="width: 400px;" /></a>
-<p>1 - Se rendre dans l’interface Post-traitement - onglet Import</p>
-<p>2 - Charger la table à importer dans QGIS</p>
-<p>Cliquer sur « MAJ » et le nom de la table à importer apparaît dans le menu déroulant. La selectionner.</p>
-<p>3 - Choisir vers quelle type de table lamia l’import doit être fait dans le menu déroulant « Type import »</p>
-<p>Choisir « edge » pour des tronçons, « node » pour des noeuds, etc..</p>
-<p>4 - Cliquer sur Lancer Flowchart pour faire appraître la fenetre d’import.</p>
+<div class="section" id="utilisation-du-module-rereau">
+<h1>Utilisation du module Rereau<a class="headerlink" href="#utilisation-du-module-rereau" title="Lien permanent vers ce titre">¶</a></h1>
+<p>Ce module permet d’appliquer la méthodologie Rereau à des ITVs.</p>
+<p>On y accède via la barre de menu Lamia/ Interface / post-traitement  – onglet “Rer’eau”</p>
+<a class="reference internal image-reference" href="../../_images/presentation1.png"><img alt="../../_images/presentation1.png" class="align-center" src="../../_images/presentation1.png" style="width: 300px;" /></a>
+<div class="section" id="configuration-des-parametres-utilises-pour-le-calcul">
+<h2>Configuration des paramètres utilisés pour le calcul<a class="headerlink" href="#configuration-des-parametres-utilises-pour-le-calcul" title="Lien permanent vers ce titre">¶</a></h2>
+<p>On peut changer les paramètres utilisés pour le calcul avec le menu déroulant. Les paramètres par défaut sont alpha = 2 et P = 5.</p>
+<p>Le bouton “NEW” permet d’ajouter une configuration au menu déroulant, définie par un alpha et un P.</p>
+<p>Le bouton “EDIT” permet de modifier les paramètres utilisés. On ne peut pas modifier les paramètres par défaut.</p>
+<p>Le bouton “DELETE” permet de supprimer une configuration. On ne peut pas supprimer la configuration par défaut.</p>
 </div>
-<div class="section" id="utilisation-de-la-passerelle-d-import">
-<h2>Utilisation de la passerelle d’import<a class="headerlink" href="#utilisation-de-la-passerelle-d-import" title="Lien permanent vers ce titre">¶</a></h2>
-<a class="reference internal image-reference" href="../../_images/flowchart_first.png"><img alt="../../_images/flowchart_first.png" class="align-center" src="../../_images/flowchart_first.png" style="width: 300px;" /></a>
-<p>Vous arrivez dans l’interface d’import. On y trouve :</p>
-<ul class="simple">
-<li><p>1: la barre permettant la sauvegarde d’une configuration(As..) et le chargement d’une configuration (Load…)</p></li>
-<li><p>2: Le rectangle représentant les colonnes de la table à importer</p></li>
-<li><p>3 : Le rectangle représentant les colonnes de la table de destination</p></li>
-<li><p>4 : le bouton pour réaliser l’import</p></li>
-</ul>
-<div class="section" id="principe">
-<h3>Principe<a class="headerlink" href="#principe" title="Lien permanent vers ce titre">¶</a></h3>
-<p>La logique générale est de cliquer sur une colonne de la table à importer et de la diriger vers une colonne
-de la table destination :</p>
-<a class="reference internal image-reference" href="../../_images/flowchart_second.png"><img alt="../../_images/flowchart_second.png" class="align-center" src="../../_images/flowchart_second.png" style="width: 300px;" /></a>
-<p>Cette action permet de remplir la colonne de la table de destination avec exactement
-les valeurs de la table d’origine.</p>
-</div>
-<div class="section" id="transformation-des-valeurs-de-la-colonne-d-origine">
-<h3>Transformation des valeurs de la colonne d’origine<a class="headerlink" href="#transformation-des-valeurs-de-la-colonne-d-origine" title="Lien permanent vers ce titre">¶</a></h3>
-<p>Néanmoins, bien souvent, les valeurs de la colonne de la table d’origine n’ont pas les valeurs voulues
-pour la table de destination :</p>
-<ul class="simple">
-<li><p>Chiffres avec la mauvaise unité (mm au lieu de m)</p></li>
-<li><p>Valeurs de champs ne correspondant pas au champs Lamia (par exemple le materiau “Beton armé”  de la table d’origine correspon au matériau “Béton” de la table destination)</p></li>
-<li><p>Valeur non renseignée dans la table d’origine mais à renseigner dans la table de destination</p></li>
-<li><p>Autres modifications …</p></li>
-</ul>
-<p>Nous allons donc utiliser des « noeuds » intermédiaires entre la colonne de la table d’origine et la colonne de la table
-de destination pour réaliser les transformations voulues</p>
-<div class="section" id="convertion-d-elements-numeriques">
-<h4>Convertion d’éléments numériques<a class="headerlink" href="#convertion-d-elements-numeriques" title="Lien permanent vers ce titre">¶</a></h4>
-<a class="reference internal image-reference" href="../../_images/flowchart_multiplier.png"><img alt="../../_images/flowchart_multiplier.png" class="align-center" src="../../_images/flowchart_multiplier.png" style="width: 400px;" /></a>
-<p>Les étapes sont les suivantes :</p>
-<ul class="simple">
-<li><p>1 : Ajouter le noeud « Mulltiplier »</p></li>
-</ul>
-<p>Faire un click droit dans l’espace des rectangles de table et choisir « Add Node » et « Multiplier »</p>
-<ul class="simple">
-<li><p>2 et 3 : Connecter le noeud Multiplier aux tables</p></li>
-</ul>
-<p>Connecter l’entrée du noeud à la colonne de la table d’origine et la sortie à la colonne de la table de destination</p>
-<ul class="simple">
-<li><p>4 : Choisir le coefficient multiplicateur</p></li>
-</ul>
-<p>Faire comme indiqué dans la figure ci dessus.</p>
-</div>
-<div class="section" id="convertion-des-valeurs-de-champs">
-<h4>Convertion des valeurs de champs<a class="headerlink" href="#convertion-des-valeurs-de-champs" title="Lien permanent vers ce titre">¶</a></h4>
-<a class="reference internal image-reference" href="../../_images/flowchart_attributereader.png"><img alt="../../_images/flowchart_attributereader.png" class="align-center" src="../../_images/flowchart_attributereader.png" style="width: 400px;" /></a>
-<p>Les étapes sont les suivantes :</p>
-<ul class="simple">
-<li><p>1 : Ajouter le noeud « AttributeReader »</p></li>
-</ul>
-<p>Faire un click droit dans l’espace des rectangles de table et choisir « Add Node » et « AttributeReader »</p>
-<ul class="simple">
-<li><p>2 : Connecter le noeud à la colonne de la table de destination</p></li>
-</ul>
-<p>Lors de la connection, l’entrée du noeud prend automatiquement les valeurs possibles de la colonne
-de la table de destination</p>
-<ul class="simple">
-<li><p>3 : Créer un nouveau noeud et connecter son entrée à la colonne de la table d’origine</p></li>
-</ul>
-<p>Lors de la connection, la sortie du noeud prend automatiquement les valeurs lues dans la colonne
-de la table d’origine</p>
-<ul class="simple">
-<li><p>4 : Connecter les 2 noeuds « AttributeReader » selon les convertions voulues</p></li>
-</ul>
-</div>
-<div class="section" id="ajout-d-une-valeur-constante">
-<h4>Ajout d’une valeur constante<a class="headerlink" href="#ajout-d-une-valeur-constante" title="Lien permanent vers ce titre">¶</a></h4>
-<a class="reference internal image-reference" href="../../_images/flowchart_constant.png"><img alt="../../_images/flowchart_constant.png" class="align-center" src="../../_images/flowchart_constant.png" style="width: 400px;" /></a>
-<p>Les étapes sont les suivantes :</p>
-<ul class="simple">
-<li><p>1 : Ajouter le noeud « ConstantNode »</p></li>
-</ul>
-<p>Faire un click droit dans l’espace des rectangles de table et choisir « Add Node » et « ConstantNode »</p>
-<ul class="simple">
-<li><p>2 : Connecter le noeud au noeud AttributeReader</p></li>
-<li><p>3 : (Facultatif) : Réaliser des exceptions</p></li>
-</ul>
-<p>Dans le cas de la figure ci dessus, toutes les valeurs seront « eaux usées », sauf dans
-le cas où la valeur dans la table d’origine est « Unitaire »</p>
-</div>
-</div>
-<div class="section" id="transformation-autre">
-<h3>Transformation autre<a class="headerlink" href="#transformation-autre" title="Lien permanent vers ce titre">¶</a></h3>
-<a class="reference internal image-reference" href="../../_images/flowchart_python.png"><img alt="../../_images/flowchart_python.png" class="align-center" src="../../_images/flowchart_python.png" style="width: 400px;" /></a>
-<p>Il est possible de coder la transformation en python. Pour cela , créer un noeud « Pythoneval ».</p>
-<p>Le code est à mettre dans la zone de saisie du noeud à gauche.</p>
-<p>Pour coder, il faut savoir :</p>
-<ul class="simple">
-<li><p>que les données d’entrées sont accessibles via la variable args[“nom_de_la_connection_d_entree”].</p></li>
-</ul>
-<p>Dans la figure , on accede aux valeurs de de l’entrée “input” via la variable args[“input”]
-On peut créer autant d’entrée que l’on veut dans le noeud Python eval.</p>
-<ul class="simple">
-<li><p>que les données de sortie doivent être retournée dans un dictionnaire dont la clé correspond au nom de la sortie et les valeurs sont les valeurs calculées.</p></li>
-</ul>
-<p>Ainsi, un code minimal de transformation (par exemple multiplier les valeurs d’entrée) est :</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">outputkey</span> <span class="o">=</span> <span class="s1">&#39;output&#39;</span>
-<span class="n">outputvals</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">args</span><span class="p">[</span><span class="s1">&#39;input&#39;</span><span class="p">]:</span>
-    <span class="n">outputvals</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">element</span><span class="o">*</span><span class="mi">100</span><span class="p">)</span>
-
-<span class="k">return</span> <span class="p">{</span><span class="n">outputkey</span><span class="p">:</span> <span class="n">outputvals</span><span class="p">}</span>
-</pre></div>
-</div>
-<p>ou pour modifier un texte :</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">outputkey</span> <span class="o">=</span> <span class="s1">&#39;output&#39;</span>
-<span class="n">outputvals</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">args</span><span class="p">[</span><span class="s1">&#39;input&#39;</span><span class="p">]:</span>
-    <span class="n">outputvals</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">element</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;_test&#39;</span><span class="p">)</span>
-
-<span class="k">return</span> <span class="p">{</span><span class="n">outputkey</span><span class="p">:</span> <span class="n">outputvals</span><span class="p">}</span>
-</pre></div>
-</div>
-</div>
+<div class="section" id="calculer-les-indicateurs-rereau-et-gerer-les-resultats">
+<h2>Calculer les indicateurs Rereau et gérer les résultats<a class="headerlink" href="#calculer-les-indicateurs-rereau-et-gerer-les-resultats" title="Lien permanent vers ce titre">¶</a></h2>
+<p>En cliquant sur “Compute” on lance le calcul des indicateurs.</p>
+<p>Le menu déroulant “Colour depends on :” permet de changer l’indicateur d’après lequel les couleurs des tronçons sont choisies. Les tronçons avec un score de 1 sont verts, 2 sont jaunes, 3 sont oranges, 4 sont rouges.</p>
+<p>Le menu déroulant “Select a result :” permet de choisir un résultat déjà calculer et de le charger (bouton “Load”) ou de le supprimer (bouton “Delete result”).</p>
 </div>
 </div>
 
@@ -443,10 +329,8 @@ On peut créer autant d’entrée que l’on veut dans le noeud Python eval.</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="02_import_photos.html" class="btn btn-neutral float-right" title="Imports des photos" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
-      
-        <a href="01_impression_rapport.html" class="btn btn-neutral float-left" title="Impression de rapports" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="04_topology.html" class="btn btn-neutral float-left" title="Utilisation du module de Topologie" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

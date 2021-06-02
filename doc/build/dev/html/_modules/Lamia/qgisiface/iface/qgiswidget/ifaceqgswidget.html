@@ -410,6 +410,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">closingPlugin</span> <span class="o">=</span> <span class="n">pyqtSignal</span><span class="p">()</span>
+    <span class="n">closingProject</span> <span class="o">=</span> <span class="n">pyqtSignal</span><span class="p">()</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">canvas</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dockwgt</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -733,6 +734,8 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="p">():</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="p">()</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Lamia&quot;</span><span class="p">)</span>
 
+        <span class="bp">self</span><span class="o">.</span><span class="n">closingProject</span><span class="o">.</span><span class="n">emit</span><span class="p">()</span>
+
         <span class="n">QApplication</span><span class="o">.</span><span class="n">processEvents</span><span class="p">()</span>
 
     <span class="k">def</span> <span class="nf">SynchronizeDB</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -962,11 +965,14 @@
             <span class="k">pass</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">comboBox_style</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
 
-        <span class="n">stylepath</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">qgiscanvas</span><span class="o">.</span><span class="n">_getStyleDirectory</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dbase</span><span class="o">.</span><span class="n">worktype</span><span class="p">)</span>
+        <span class="c1"># stylepath = self.qgiscanvas._getStyleDirectory(self.dbase.worktype)</span>
+        <span class="c1"># stylepath = self.qgiscanvas._getStyleDirectory(self.dbase)</span>
+        <span class="n">stylesdict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">qgiscanvas</span><span class="o">.</span><span class="n">_getStyleDirectory</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dbase</span><span class="p">)</span>
+        <span class="c1"># styledirs = [x[1] for x in os.walk(stylepath) if len(x[1]) &gt; 0]</span>
+        <span class="n">styledirs</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">stylesdict</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
 
-        <span class="n">styledirs</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">walk</span><span class="p">(</span><span class="n">stylepath</span><span class="p">)</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">]</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">styledirs</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="n">styledirs</span> <span class="o">=</span> <span class="n">styledirs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="c1"># styledirs = styledirs[0]</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">comboBox_style</span><span class="o">.</span><span class="n">addItems</span><span class="p">(</span><span class="n">styledirs</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">comboBox_style</span><span class="o">.</span><span class="n">currentIndexChanged</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">comboStyleChanged</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">comboBox_style</span><span class="o">.</span><span class="n">currentIndexChanged</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
@@ -979,7 +985,8 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">styledir</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">comboBox_style</span><span class="o">.</span><span class="n">currentText</span><span class="p">()</span>
         <span class="c1"># stylerep = os.path.join(os.path.dirname(Lamia.__file__), &#39;DBASE&#39;, &#39;style&#39;, self.dbase.worktype, styledir )</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">qgiscanvas</span><span class="o">.</span><span class="n">applyStyle</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dbase</span><span class="o">.</span><span class="n">worktype</span><span class="p">,</span> <span class="n">styledir</span><span class="p">)</span></div>
+        <span class="c1"># self.qgiscanvas.applyStyle(self.dbase.worktype, styledir)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">qgiscanvas</span><span class="o">.</span><span class="n">applyStyle</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dbase</span><span class="p">,</span> <span class="n">styledir</span><span class="p">)</span></div>
 
     <span class="c1"># ***********************************************************</span>
     <span class="c1"># **************** Interface mode actions ***********************</span>
