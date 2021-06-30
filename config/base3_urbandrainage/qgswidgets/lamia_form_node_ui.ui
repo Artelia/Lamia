@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>607</width>
-    <height>334</height>
+    <width>736</width>
+    <height>412</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -1521,6 +1521,12 @@
         </spacer>
        </item>
       </layout>
+     </widget>
+     <widget class="QWidget" name="tab_others">
+      <attribute name="title">
+       <string>Others</string>
+      </attribute>
+      <layout class="QFormLayout" name="formLayout"/>
      </widget>
     </widget>
    </item>

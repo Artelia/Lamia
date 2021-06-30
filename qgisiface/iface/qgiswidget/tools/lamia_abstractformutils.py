@@ -622,6 +622,8 @@ class FormToolUtils(QtCore.QObject):
 
         """
 
+        # print('**', self.formtoolwidget.tempgeometry.asWkt())
+
         rawgeom = self.formtoolwidget.tempgeometry
         if rawgeom is None:  # geom no modified
             return

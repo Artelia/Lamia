@@ -171,7 +171,7 @@ class SpatialiteDBaseParser(AbstractDBaseParser):
         if self.SLITEcursor is None:
             self.SLITEcursor = self.connSLITE.cursor()
         try:
-            if self.printsql:
+            if self.printsql and sql.split(' ')[0].lower() == 'update':
                 logging.getLogger("Lamia_unittest").debug("%s - %s ", docommit, sql)
                 # if sql.split(' ')[0].lower() in ['update', 'delete','insert']:
                 #     #logging.getLogger('Lamia').debug('%s - %s %.3f', docommit, sql,  self.getTimeNow() - timestart)

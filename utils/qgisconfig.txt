@@ -1,4 +1,4 @@
-OSGEOPATH=C:\OSGeo4W64
-QGISPATH=C:\OSGeo4W64\apps\qgis
+OSGEOPATH=C:\Program Files\QGIS.3.16.7
+QGISPATH=C:\Program Files\QGIS.3.16.7\apps\qgis-ltr
 #QGISPATH=/usr/....
 QGISPATHLINUX=/usr/lib

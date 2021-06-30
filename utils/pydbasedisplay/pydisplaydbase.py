@@ -58,7 +58,7 @@ numpy.seterr(all="ignore")
 from Lamia.qgisiface.iface.qgsconnector.ifaceloggingconnector import LoggingConnector
 from Lamia.qgisiface.iface.qgscanvas.ifaceqgiscanvas import QgisCanvas
 
-INTERFACEINDEX = 4
+INTERFACEINDEX = 1
 PROFILING = False
 
 
@@ -101,6 +101,7 @@ def launchIface():
     # SLFILE = r"C:\01_WORKINGDIR\herve\fusion\mergeddbase.sqlite"
     # SLFILE = r"C:\01_WORKINGDIR\aaa\testconstruction.sqlite"
     SLFILE = r"C:\01_WORKINGDIR\BACALAN\GPMB_Bacalan.sqlite"
+
     # SLFILE = r"C:\Users\Public\Documents\lamia\GPMB Bacalan\GPMB Bacalan.sqlite"
 
     # SLFILE = r"C:\111_GitProjects\Lamia\testfiles\offlinemodedbase\parentdb\parenttestoffline.sqlite"
@@ -118,6 +119,7 @@ def launchIface():
     # SLFILE = r"C:\Users\Public\Documents\lamia\GPMB_Bacalan_offline\GPMB_Bacalan_offline.sqlite"
     # SLFILE = r"C:\01_WORKINGDIR\fauna\test.sqlite"
     # SLFILE = r"C:\01_WORKINGDIR\aaaa\test6.sqlite"
+    SLFILE = r"C:\01_WORKINGDIR\00_test\tetete.sqlite"
 
     print(f"{bcolors.OKGREEN}Opening: {os.path.abspath(SLFILE)} {bcolors.ENDC}")
 
@@ -173,15 +175,15 @@ def launchIface():
         sys.exit()
 
     lamiawidget.setVisualMode(visualmode=INTERFACEINDEX)
-    lamiawidget.dbase.raiseexceptions = False  # False True
+    lamiawidget.dbase.raiseexceptions = True  # False True
     lamiawidget.dbase.printsql = True  # False True
     lamiawidget.dbase.printorm = True  # False True
 
     if PROFILING:
         pr.enable()
     #   toolpostpro     toolprepro
-    wdg = lamiawidget.toolwidgets["lamiaITVimport"]
-    wdg.tooltreewidget.currentItemChanged.emit(wdg.qtreewidgetitem, None)
+    # wdg = lamiawidget.toolwidgets["lamiaITVimport"]
+    # wdg.tooltreewidget.currentItemChanged.emit(wdg.qtreewidgetitem, None)
     # wdg.toolwidgetmain.pushButton_analysis.clicked.emit()
 
     # wdg.editAMC()

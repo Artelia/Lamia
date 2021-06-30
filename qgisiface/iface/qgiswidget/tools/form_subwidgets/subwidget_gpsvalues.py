@@ -99,9 +99,11 @@ class GpsValuesWidget(AbstractSubWidget):
         """
 
         for key in self.gpswidget.keys():
+            # print('**', key, dictgga)
             if (
                 "gga" in self.gpswidget[key].keys()
                 and self.gpswidget[key]["widget"] is not None
+                and dictgga
             ):
                 if dictgga[self.gpswidget[key]["gga"]] is not None:
                     try:

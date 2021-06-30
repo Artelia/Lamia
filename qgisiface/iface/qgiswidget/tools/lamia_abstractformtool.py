@@ -247,9 +247,11 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
             if self.toolwidgetmain is None:  # first loading
                 # former initFieldUI
                 self.initMainToolWidget()
+                
                 if self.toolwidgetmain:
                     self.toolwidget = self.toolwidgetmain
                     self.formtoolwidgetconfdict = self.formtoolwidgetconfdictmain
+                    self.initOthersTab()
                     self.formutils.initWidgetBehaviour()
                     self.formutils.connectSubWidgetModifications()
             if self.toolwidgetmain is not None:  # non first loading
@@ -263,9 +265,11 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
             if self.toolwidgetadvanced is None:  # first loading
                 # former self.initDesktopUI()
                 self.initAdvancedToolWidget()
+                
                 if self.toolwidgetadvanced:
                     self.toolwidget = self.toolwidgetadvanced
                     self.formtoolwidgetconfdict = self.formtoolwidgetconfdictadvanced
+                    self.initOthersTab()
                     self.formutils.initWidgetBehaviour()
                 else:
                     self.toolwidgetadvanced = self.toolwidgetmain
@@ -514,6 +518,32 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
     def initMainToolWidget(self):
         pass
 
+    def initOthersTab(self):
+        if (hasattr(self.toolwidget,"tab_others") 
+                and self.toolwidget.tab_others.layout().count() == 0
+                and 'descriptionsystem' in self.dbase.getParentTable(self.DBASETABLENAME)):
+
+            formlay = self.toolwidget.tab_others.layout()
+            for fieldname, fieldvalue in self.dbase.dbasetables['descriptionsystem']['fields'].items():
+
+                if fieldname.startswith("string") and fieldvalue['description'] and not 'Cst' in fieldvalue:
+                    linewdg = QLineEdit()
+                    linewdg.setObjectName(fieldname)
+                    formlay.addRow(QLabel(fieldvalue['description']),linewdg )
+                    self.formtoolwidgetconfdict['descriptionsystem']['widgets'][fieldname] = linewdg
+                elif fieldname.startswith("string") and fieldvalue['description'] and  'Cst' in fieldvalue:
+                    combowdg = QComboBox()
+                    combowdg.setObjectName(fieldname)
+                    formlay.addRow(QLabel(fieldvalue['description']),combowdg )
+                    self.formtoolwidgetconfdict['descriptionsystem']['widgets'][fieldname] = combowdg
+                elif fieldname.startswith("float") and fieldvalue['description']:
+                    dblespinwdg = QDoubleSpinBox()
+                    dblespinwdg.setObjectName(fieldname)
+                    formlay.addRow(QLabel(fieldvalue['description']),dblespinwdg )
+                    self.formtoolwidgetconfdict['descriptionsystem']['widgets'][fieldname] = dblespinwdg
+
+
+
     def initAdvancedToolWidget(self):
         pass
 
@@ -676,6 +706,18 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
             self.setTempGeometry([layerpoint], False)
 
         elif geomtype == 1:  # LINE
+            geom = None
+            geompoly = self._getCurrentGeomasList()
+            if not geompoly:
+                self.setTempGeometry([layerpoint, layerpoint], False)
+            else:
+                # geompoly = self.tempgeometry.asMultiPolyline()[0]
+                if geompoly[0] == geompoly[1]:
+                    del geompoly[0]
+                geompoly.append(layerpoint)
+                self.setTempGeometry(geompoly, False)
+
+        elif geomtype == 2:  # POLYGON
             geom = None
             geompoly = self._getCurrentGeomasList()
             if not geompoly:
@@ -896,7 +938,7 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
         :param showinrubberband: True if the temp geometry will be visible with the rubberband
 
         """
-        debug = False
+        debug = True
 
         if debug:
             logging.getLogger("Lamia_unittest").debug(
@@ -910,19 +952,26 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
         #* Define maptoolcapturetype : the geomtypecaptured & capturetype : geomtype of layer
         try:
             maptoolcapturetype = int(self.sender().mode())     #1 point 2 line 3 polygon
-        except AttributeError:  #no sender - debug mode
-            maptoolcapturetype = self.mainifacewidget.qgiscanvas.layers[self.DBASETABLENAME]["layer"].geometryType()
+        except AttributeError:  #no sender - debug mode or from gps
+            maptoolcapturetype = self.mainifacewidget.qgiscanvas.layers[self.DBASETABLENAME]["layer"].geometryType() + 1
             # logging.getLogger("Lamiaoffline").debug(maptoolcapturetypestring)
 
         capturetype = self.mainifacewidget.qgiscanvas.layers[self.DBASETABLENAME][
             "layer"
         ].geometryType()        # 0 point 1 line 2 polygone 3 unknow 4 null geom
 
-
+        # print('**','setTempGeometry', maptoolcapturetype, capturetype )
         #* Modify captured geom to fit the layer geom
         if maptoolcapturetype == 1 and capturetype == 1:
             points.append(points[0])
         elif maptoolcapturetype == 1 and capturetype == 2:
+                points = [
+                    qgis.core.QgsPointXY(points[0].x() - 1.0, points[0].y() - 1.0),
+                    qgis.core.QgsPointXY(points[0].x() - 1.0, points[0].y() + 1.0),
+                    qgis.core.QgsPointXY(points[0].x() + 1.0, points[0].y() + 1.0),
+                    qgis.core.QgsPointXY(points[0].x() + 1.0, points[0].y() - 1.0),
+                ]
+        elif maptoolcapturetype == 3 and capturetype == 2 and points[0] == points[-1]:  #point from gps for polygon layer
                 points = [
                     qgis.core.QgsPointXY(points[0].x() - 1.0, points[0].y() - 1.0),
                     qgis.core.QgsPointXY(points[0].x() - 1.0, points[0].y() + 1.0),

@@ -328,6 +328,21 @@ class DBconfigReader:
         return dict(self.dbasetables)
 
     def readOdsDictionnaryBase3(self, dictfile=None, vartoread=None):
+        """[summary]
+
+        :param dictfile: [description], defaults to None
+        :type dictfile: [type], optional
+        :param vartoread: [description], defaults to None
+        :type vartoread: [type], optional
+        :return: [description]
+        :rtype: [type]
+
+
+        cstcolumntoread : column of the proper variante to read, where raw data are written
+        colindexlocalvalue: column of the proper variante to read, where displayed data are written - locale dependant
+        colindexdescription : col of description of field -  - locale dependant
+
+        """
         debug = False
 
         if dictfile is None or not os.path.isfile(dictfile):
@@ -343,6 +358,7 @@ class DBconfigReader:
             cstcolumntoread = None
             colindexlocalvalue = None
             order = None
+            colidxdescription, colidxvariante, colidxdisplayedvalue = None, None, None
 
             if len(tablename) == 1:  # non table file
                 continue
@@ -446,6 +462,9 @@ class DBconfigReader:
                                     )
                     elif firstcol.strip() == "#field_name":
                         self.dbasetables[tablename]["row_locale"] = row
+                        # coldescr, colcst = self._getLocaleColumn(sheetdatas[row])
+                        #localize variante, descrption and displayvaklue
+
 
                     else:
                         continue
@@ -479,12 +498,29 @@ class DBconfigReader:
                             self.dbasetables[tablename]["fields"][fieldname][
                                 "ParFldCst"
                             ] = sheetdatas[row][3].strip()
+                            
+                        # print('***', tablename,fieldname,row)
+                        colidxdescription, colidxvariante, colidxdisplayedvalue = self._getLocaleColIndex(tablename,fieldname, sheetdatas, row)
+                        # print('**',tablename,fieldname,colidxdescription, colidxvariante, colidxdisplayedvalue  )
+                        
+                        self.dbasetables[tablename]["fields"][fieldname][
+                                    "description"
+                                ] = sheetdatas[row][colidxdescription].strip() if (colidxdescription and sheetdatas[row][colidxdescription])  else ''
 
-                        (
-                            cstcolumntoread,
-                            colindexlocalvalue,
-                        ) = self.readOdsConstraintsBase3(
-                            tablename, fieldname, sheetdatas, row
+
+                        # (
+                        #     cstcolumntoread,
+                        #     colindexlocalvalue,
+                        # ) = self.readOdsConstraintsBase3(
+                        #     tablename, fieldname, sheetdatas, row
+                        # )
+                        self.readOdsConstraintsBase3(
+                            tablename,
+                            fieldname,
+                            sheetdatas,
+                            row,
+                            colidxvariante,
+                            colidxdisplayedvalue,
                         )
 
                     else:
@@ -494,8 +530,8 @@ class DBconfigReader:
                                 fieldname,
                                 sheetdatas,
                                 row,
-                                cstcolumntoread,
-                                colindexlocalvalue,
+                                colidxvariante,
+                                colidxdisplayedvalue,
                             )
 
             if debug and self.dbasetables[tablename]["order"] <= 4:
@@ -506,6 +542,15 @@ class DBconfigReader:
             self.revisionwork = True
 
         return dict(self.dbasetables)
+
+    def _getLocaleColIndex(self,tablename, fieldname, sheetdatas, xlrow ):
+        # colidxdescription, colidxvariante, colidxdisplayedvalue
+        colidxvariante = self._getColVariante(tablename, sheetdatas, xlrow)
+        colidxdisplayedvalue = self._getLocaleColumn(sheetdatas,xlrow, colidxvariante, fieldname,tablename )
+        colidxdescription = self._getDescriptionColumn(sheetdatas,xlrow,tablename)
+
+        return colidxdescription, colidxvariante, colidxdisplayedvalue
+
 
     def readXlsDbDictionnary(self, dictfile=None, vartoread=None):
         """
@@ -736,86 +781,89 @@ class DBconfigReader:
         fieldname,
         sheetdatas,
         xlrow,
-        cstcolumntoread=None,
-        cstlocalvaluecolumntoread=None,
+        colidxvariante=None,
+        colidxdisplayedvalue=None,
     ):
         # dbasefield self.dbasetables[tablename]['fields'][fieldname]
         # print('readConstraints',tablename,fieldname  ,sheet, xlrow)
-        rowvariantes = self.dbasetables[tablename]["row_variantes"]
-        rowlocale = self.dbasetables[tablename]["row_locale"]
-        colindexvariante = cstcolumntoread
-        colindexlocalvalue = cstlocalvaluecolumntoread
+        # rowvariantes = self.dbasetables[tablename]["row_variantes"]
+        # rowlocale = self.dbasetables[tablename]["row_locale"]
+        # colindexvariante = cstcolumntoread
+        # colindexlocalvalue = cstlocalvaluecolumntoread
         dbasefield = self.dbasetables[tablename]["fields"][fieldname]
-        loclanguage = self.dbase.locale
+        # loclanguage = self.dbase.locale
 
-        if colindexvariante is None:
-            colindexvariante = None
-            if self.dbase.variante is None:
-                colindexvariante = 6
-            else:
-                if rowvariantes >= 0:
-                    if self.dbase.variante == "Lamia":
-                        colindexvariante = 6
-                    else:
-                        for col in range(len(sheetdatas[rowvariantes])):
-                            try:
-                                if (
-                                    sheetdatas[rowvariantes][col] == self.dbase.variante
-                                    and sheetdatas[xlrow][col] != ""
-                                ):
-                                    colindexvariante = col
-                                    # print('colindexvariante', tablename, fieldname, colindexvariante)
-                                    break
-                            except:
-                                print(
-                                    "error", tablename, fieldname, self.dbase.variante
-                                )
-                        # if colindexvariante is None:
-                        #    colindexvariante = 5
-        if colindexvariante is None:
-            colindexvariante = 6
+        # if colindexvariante is None:
+        #     colindexvariante = None
+        #     if self.dbase.variante is None:
+        #         colindexvariante = 6
+        #     else:
+        #         if rowvariantes >= 0:
+        #             if self.dbase.variante == "Lamia":
+        #                 colindexvariante = 6
+        #             else:
+        #                 for col in range(len(sheetdatas[rowvariantes])):
+        #                     try:
+        #                         if (
+        #                             sheetdatas[rowvariantes][col] == self.dbase.variante
+        #                             and sheetdatas[xlrow][col] != ""
+        #                         ):
+        #                             colindexvariante = col
+        #                             # print('colindexvariante', tablename, fieldname, colindexvariante)
+        #                             break
+        #                     except:
+        #                         print(
+        #                             "error", tablename, fieldname, self.dbase.variante
+        #                         )
+        #                 # if colindexvariante is None:
+        #                 #    colindexvariante = 5
+        # if colindexvariante is None:
+        #     colindexvariante = 6
+        
+        # colindexvariante = self._getColVariante(tablename, sheetdatas, xlrow, colindexvariante)
+        
         if (
-            sheetdatas[xlrow][colindexvariante] is not None
-            and sheetdatas[xlrow][colindexvariante].strip() != ""
+            sheetdatas[xlrow][colidxvariante] is not None
+            and sheetdatas[xlrow][colidxvariante].strip() != ""
         ):
             if "Cst" in dbasefield.keys():
                 dbasefield["Cst"].append([])
             else:
                 dbasefield["Cst"] = [[]]
 
-            if colindexlocalvalue is None:
-                # if unicode(sheet.cell_value(xlrow, colindexvariante)).strip() != '':
-                # get showvalue column according to language
-                initcolumn = colindexvariante + 2
-                dictlang = {}
-                while (
-                    initcolumn < len(sheetdatas[rowlocale])
-                    and "Displayvalue" in sheetdatas[rowlocale][initcolumn].strip()
-                ):
-                    valuesplited = sheetdatas[rowlocale][initcolumn].split("_")
-                    if len(valuesplited):
-                        dictlang[valuesplited[1]] = initcolumn
-                    else:
-                        dictlang["None"] = initcolumn
-                    initcolumn += 1
-                if (
-                    loclanguage in dictlang.keys()
-                    and sheetdatas[xlrow][dictlang[loclanguage]] != ""
-                ):
-                    colindexlocalvalue = dictlang[loclanguage]
-                elif (
-                    "fr" in dictlang.keys() and sheetdatas[xlrow][dictlang["fr"]] != ""
-                ):
-                    colindexlocalvalue = dictlang["fr"]
-                elif (
-                    "None" in dictlang.keys()
-                    and sheetdatas[xlrow][dictlang["None"]] != ""
-                ):
-                    colindexlocalvalue = dictlang["None"]
+        #     if colindexlocalvalue is None:
+        #         # if unicode(sheet.cell_value(xlrow, colindexvariante)).strip() != '':
+        #         # get showvalue column according to language
+        #         initcolumn = colindexvariante + 2
+        #         dictlang = {}
+        #         while (
+        #             initcolumn < len(sheetdatas[rowlocale])
+        #             and "Displayvalue" in sheetdatas[rowlocale][initcolumn].strip()
+        #         ):
+        #             valuesplited = sheetdatas[rowlocale][initcolumn].split("_")
+        #             if len(valuesplited):
+        #                 dictlang[valuesplited[1]] = initcolumn
+        #             else:
+        #                 dictlang["None"] = initcolumn
+        #             initcolumn += 1
+        #         if (
+        #             loclanguage in dictlang.keys()
+        #             and sheetdatas[xlrow][dictlang[loclanguage]] != ""
+        #         ):
+        #             colindexlocalvalue = dictlang[loclanguage]
+        #         elif (
+        #             "fr" in dictlang.keys() and sheetdatas[xlrow][dictlang["fr"]] != ""
+        #         ):
+        #             colindexlocalvalue = dictlang["fr"]
+        #         elif (
+        #             "None" in dictlang.keys()
+        #             and sheetdatas[xlrow][dictlang["None"]] != ""
+        #         ):
+        #             colindexlocalvalue = dictlang["None"]
 
-            datavalue = self.convertxlsdataToString(sheetdatas[xlrow][colindexvariante])
+            datavalue = self.convertxlsdataToString(sheetdatas[xlrow][colidxvariante])
             showvalue = self.convertxlsdataToString(
-                sheetdatas[xlrow][colindexlocalvalue]
+                sheetdatas[xlrow][colidxdisplayedvalue]
             )
 
             if datavalue == "NULL":
@@ -825,16 +873,16 @@ class DBconfigReader:
             dbasefield["Cst"][-1].append(datavalue.strip())
 
             if (
-                sheetdatas[xlrow][colindexvariante + 1] is not None
-                and sheetdatas[xlrow][colindexvariante + 1].strip() != ""
+                sheetdatas[xlrow][colidxvariante + 1] is not None
+                and sheetdatas[xlrow][colidxvariante + 1].strip() != ""
             ):
                 dbasefield["Cst"][-1].append(
-                    eval(sheetdatas[xlrow][colindexvariante + 1].strip())
+                    eval(sheetdatas[xlrow][colidxvariante + 1].strip())
                 )
             else:
                 dbasefield["Cst"][-1].append(None)
 
-        return colindexvariante, colindexlocalvalue
+        # return colindexvariante, colindexlocalvalue
 
     # def readConstraints(self, tablename,fieldname  ,sheet, xlrow,cstcolumntoread=None):
     def readXlsConstraints(
@@ -899,6 +947,152 @@ class DBconfigReader:
                 dbasefield["Cst"][-1].append(None)
 
         return colindexvariante
+
+    def _getColVariante(self,tablename, sheetdatas,xlrow, colindexvariante=None):
+        """Get, for a field the index of col with the variante. 
+        If variante description is null for the field, take he default (Lamia) variante
+        """
+        # get lamia col
+        rowvariantes = self.dbasetables[tablename]["row_variantes"]
+        variantedefaultlamiacol = None
+        variantecol = None
+        for col in range(len(sheetdatas[rowvariantes])):
+            if sheetdatas[rowvariantes][col] and sheetdatas[rowvariantes][col].lower() == 'lamia':
+                variantedefaultlamiacol = col
+            elif sheetdatas[rowvariantes][col] and  sheetdatas[rowvariantes][col] == self.dbase.variante:
+                variantecol = col
+        
+        if colindexvariante is None:
+            if self.dbase.variante is None or self.dbase.variante == "Lamia":
+                colindexvariante = variantedefaultlamiacol
+            elif sheetdatas[xlrow][variantecol] != "" : #something is filled in the variante col
+                colindexvariante = variantecol
+            else:   #nothing is filled in the variant col
+                colindexvariante = variantedefaultlamiacol
+
+        # if colindexvariante is None:
+        #     # colindexvariante = None
+        #     if self.dbase.variante is None:
+        #         # colindexvariante = 6
+        #         colindexvariante = variantedefaultlamiacol
+        #     else:
+        #         if rowvariantes >= 0:
+        #             if self.dbase.variante == "Lamia":
+        #                 # colindexvariante = 6
+        #                 colindexvariante = variantedefaultlamiacol
+        #             else:
+        #                 for col in range(len(sheetdatas[rowvariantes])):
+        #                     try:
+        #                         if (
+        #                             sheetdatas[rowvariantes][col] == self.dbase.variante
+        #                             and sheetdatas[xlrow][col] != ""
+        #                         ):
+        #                             colindexvariante = col
+        #                             # print('colindexvariante', tablename, fieldname, colindexvariante)
+        #                             break
+        #                     except:
+        #                         pass
+        #                         # print(
+        #                         #     "error", tablename, fieldname, self.dbase.variante
+        #                         # )
+        #                 # if colindexvariante is None:
+        #                 #    colindexvariante = 5
+        # if colindexvariante is None:
+        #     colindexvariante = 6
+
+        return colindexvariante
+
+    def _getLocaleColumn(self,sheetdatas,xlrow, colindexvariante,fieldname,tablename ):
+        """get the column of displayed value for the choosen variante.
+        Take fr value if nooting is filled 
+        """
+        rowlocale = self.dbasetables[tablename]["row_locale"]
+        # dbasefield = self.dbasetables[tablename]["fields"][fieldname]
+        loclanguage = self.dbase.locale
+        colindexlocalvalue = None
+
+        if fieldname == 'presencesiphoidpartition':
+            print('ok')
+
+        if (
+            sheetdatas[xlrow][colindexvariante] is not None
+            and sheetdatas[xlrow][colindexvariante].strip() != ""
+        ):
+            # if "Cst" in dbasefield.keys():
+            #     dbasefield["Cst"].append([])
+            # else:
+            #     dbasefield["Cst"] = [[]]
+
+            if colindexlocalvalue is None:
+                # if unicode(sheet.cell_value(xlrow, colindexvariante)).strip() != '':
+                # get showvalue column according to language
+                initcolumn = colindexvariante + 2
+                # get dict : {..., locale:colidx,...}
+                dictlang = {}
+                while (
+                    initcolumn < len(sheetdatas[rowlocale])
+                    and "Displayvalue" in sheetdatas[rowlocale][initcolumn].strip()
+                ):
+                    valuesplited = sheetdatas[rowlocale][initcolumn].split("_")
+                    if len(valuesplited):
+                        dictlang[valuesplited[1]] = initcolumn
+                    else:
+                        dictlang["None"] = initcolumn
+                    initcolumn += 1
+                
+                if (
+                    loclanguage in dictlang.keys()
+                    and sheetdatas[xlrow][dictlang[loclanguage]] != ""
+                ):
+                    colindexlocalvalue = dictlang[loclanguage]
+                elif (
+                    "fr" in dictlang.keys() and sheetdatas[xlrow][dictlang["fr"]] != ""
+                ):
+                    colindexlocalvalue = dictlang["fr"]
+                elif (
+                    "None" in dictlang.keys()
+                    and sheetdatas[xlrow][dictlang["None"]] != ""
+                ):
+                    colindexlocalvalue = dictlang["None"]
+
+        return colindexlocalvalue
+
+    def _getDescriptionColumn(self,sheetdatas,xlrow,tablename ):
+        rowlocale = self.dbasetables[tablename]["row_locale"]
+        loclanguage = self.dbase.locale
+        colidxdescription = None
+
+        initcolumn = 1
+        # get dict : {..., locale:colidx,...}
+        dictlang = {}
+        while (
+            initcolumn < len(sheetdatas[rowlocale])
+            # and "Displayvalue" in sheetdatas[rowlocale][initcolumn].strip()
+        ):
+            valuesplited = sheetdatas[rowlocale][initcolumn].split("_")
+            if len(valuesplited) and valuesplited[0].lower() == 'description':
+                dictlang[valuesplited[1]] = initcolumn
+            # else:
+            #     dictlang["None"] = initcolumn
+            initcolumn += 1
+
+            if (
+                loclanguage in dictlang.keys()
+                and sheetdatas[xlrow][dictlang[loclanguage]] != ""
+            ):
+                colidxdescription = dictlang[loclanguage]
+            elif (
+                "fr" in dictlang.keys() and sheetdatas[xlrow][dictlang["fr"]] != ""
+            ):
+                colidxdescription = dictlang["fr"]
+            elif (
+                "None" in dictlang.keys()
+                and sheetdatas[xlrow][dictlang["None"]] != ""
+            ):
+                colidxdescription = dictlang["None"]
+        
+        return colidxdescription
+        
 
     def convertxlsdataToString(self, data):
         if data is None:

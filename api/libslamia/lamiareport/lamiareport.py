@@ -45,6 +45,9 @@ class ReportCore(AbstractLibsLamia):
 
     POSTPROTOOLNAME = "lamiareport"
     fileext = ".txt"
+    lamiaifacewidget = None
+
+
     if qgis.utils.iface is None:
         LAUNCHINQTHREAD = False
     else:
@@ -65,6 +68,7 @@ class ReportCore(AbstractLibsLamia):
             pdffile=destinationfile,
             pklist=pklist,
             pkzonegeolist=pkzonegeos,
+            lamiaifacewidget = self.lamiaifacewidget
         )
 
     def new(self, confpath):
@@ -226,6 +230,7 @@ class printPDFBaseWorker(QtCore.QObject):
         pdffile=None,
         pklist=None,
         pkzonegeolist=[],
+        lamiaifacewidget = None
     ):
         """
         reportcore : reportcore instance
@@ -246,6 +251,8 @@ class printPDFBaseWorker(QtCore.QObject):
         self.pageheightpx = None  # this print page height (without parent print)
 
         self.pkzonegeolist = pkzonegeolist
+
+        self.lamiaifacewidget = lamiaifacewidget
 
         if self.parentprintPDFworker is None:
             self.dbase = DBaseParserFactory(self.reportcore.dbase.TYPE).getDbaseParser()
@@ -320,16 +327,25 @@ class printPDFBaseWorker(QtCore.QObject):
             self.canvas.setDestinationCrs(dbaseqgiscrs)
             self.project.setCrs(dbaseqgiscrs)
             self.qgiscanvas.createLayers(self.dbase)
-            if self.dbase.base3version:
-                try:
-                    # self.qgiscanvas.applyStyle(self.dbase.worktype, "0_default")
-                    self.qgiscanvas.applyStyle(self.dbase, "0_default")
-                except:
-                    # self.qgiscanvas.applyStyle(self.dbase.worktype, "_default")
-                    self.qgiscanvas.applyStyle(self.dbase, "_default")
+            if self.lamiaifacewidget:
+                # currentstyle = #TODO
+                currentstyletxt = self.lamiaifacewidget.comboBox_style.currentText()
+                # stylesdict = self.qgiscanvas._getStyleDirectory(self.dbase)
+                self.qgiscanvas.applyStyle(self.dbase, currentstyletxt)
+
             else:
-                # self.qgiscanvas.applyStyle(self.dbase.worktype, "0_Defaut")
-                self.qgiscanvas.applyStyle(self.dbase, "0_Defaut")
+                if self.dbase.base3version:
+                    try:
+                        # self.qgiscanvas.applyStyle(self.dbase.worktype, "0_default")
+                        self.qgiscanvas.applyStyle(self.dbase, "0_default")
+                    except:
+                        # self.qgiscanvas.applyStyle(self.dbase.worktype, "_default")
+                        self.qgiscanvas.applyStyle(self.dbase, "_default")
+                else:
+                    # self.qgiscanvas.applyStyle(self.dbase.worktype, "0_Defaut")
+                    self.qgiscanvas.applyStyle(self.dbase, "0_Defaut")
+
+
 
             if self.dbase.base3version:
                 strtoexec = f"Lamia.config.{self.dbase.worktype.lower()}.lamiareport.lamiareportworktypefunc"

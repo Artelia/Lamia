@@ -188,7 +188,7 @@ class EdgeToNodeWidget(AbstractSubWidget):
 
     def _picknearestnode(self, point):
 
-        debug = False
+        debug = True
         typenode = False
         qgiscanvas = self.parentwdg.mainifacewidget.qgiscanvas
         dbase = self.parentwdg.dbase

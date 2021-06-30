@@ -285,6 +285,8 @@ class GpsUtil(QtCore.QObject):
         #     except (TypeError, AttributeError):
         #         pass
 
+        # print('***', sentence)
+
         if sentence.split(",")[0][3:] == "GGA":
             self.receiveGPGGA = True
             # self.lineEdit_gga.setText(sentence)
@@ -409,7 +411,7 @@ class GpsUtil(QtCore.QObject):
         yindex = abs(int((y - self.maxlat) / self.paslat))
         seekindex = self.lenline1 + (yindex * self.lenx + xindex) * 10
 
-        print("seekindex", seekindex)
+        # print("seekindex", seekindex)
 
         self.raf09file.seek(seekindex)
         # print('okokok', self.raf09file.read(7))
@@ -417,7 +419,7 @@ class GpsUtil(QtCore.QObject):
         raf1x = self.minlong + xindex * self.paslong
         raf1y = self.maxlat - yindex * self.paslat
 
-        print("raf1", raf1, raf1x, raf1y)
+        # print("raf1", raf1, raf1x, raf1y)
 
         # point2 (x suivant) - x2 y1
         self.raf09file.seek(3, 1)
@@ -429,7 +431,7 @@ class GpsUtil(QtCore.QObject):
         self.raf09file.seek(3, 1)
         raf4 = float(self.raf09file.read(7))
 
-        print(raf1, raf2, raf3, raf4)
+        # print(raf1, raf2, raf3, raf4)
 
         # resolution bilineaire
         Dfx = raf2 - raf1

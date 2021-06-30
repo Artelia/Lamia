@@ -74,6 +74,7 @@ class ReportTool(AbstractLamiaTool):
         self.reporttool = ReportCore(
             dbaseparser=self.dbase, messageinstance=self.mainifacewidget.connector
         )
+        self.reporttool.lamiaifacewidget = self.mainifacewidget
 
         self.filemanager = ExportRapportFileManager(
             self.mainifacewidget, self.reporttool

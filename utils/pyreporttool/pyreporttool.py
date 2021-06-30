@@ -48,6 +48,7 @@ def main(argv):
     print("start ReportCore")
 
     reportcore = ReportCore(tempparser, messageinstance=tempparser.messageinstance)
+    
     if PROFILING:
         pr.enable()
 
