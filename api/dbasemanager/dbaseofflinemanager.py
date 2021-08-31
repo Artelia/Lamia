@@ -878,7 +878,11 @@ class DBaseOfflineManager:
                 )
 
                 if childdbname.lower() == "rasters":
-                    typeraster = self.dbase.lamiaorm["rasters"].read(childpk)[
+                    # print('**',childpk )
+                    # input('**' + str(fromparser.lamiaorm["rasters"].read(childpk)))
+
+                    #
+                    typeraster = fromparser.lamiaorm["rasters"].read(childpk)[
                         "rastertype"
                     ]
                     if typeraster not in ["ORF", "IRF"]:
@@ -1180,6 +1184,7 @@ class DBaseOfflineManager:
             sql = "SELECT " + ",".join(noncriticalfieldtemp) + " FROM " + dbname.lower()
             if pkidfields:
                 sqlpk = "SELECT " + ",".join(pkidfields) + " FROM " + dbname.lower()
+        print('**',sql )
         results = dbaseparserfrom.query(sql)
         resultpk = dbaseparserfrom.query(sqlpk)
 

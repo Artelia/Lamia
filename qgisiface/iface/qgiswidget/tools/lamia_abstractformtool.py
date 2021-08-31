@@ -55,6 +55,7 @@ from qgis.PyQt.QtWidgets import (
     QDoubleSpinBox,
     QDialog,
     QVBoxLayout,
+    QHBoxLayout,
     QTreeWidget,
     QLineEdit,
     QCheckBox,
@@ -192,6 +193,8 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
         self.dbasechildwdgdesktop = []
 
         self.lamiawidgets = []  # subwidgets defined in lamia
+
+        self.otherswdg = [] #widgets ofr others tab
 
         # behaviour var
         self.currentFeaturePK = None  # the pk of selected feature
@@ -539,8 +542,22 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
                 elif fieldname.startswith("float") and fieldvalue['description']:
                     dblespinwdg = QDoubleSpinBox()
                     dblespinwdg.setObjectName(fieldname)
-                    formlay.addRow(QLabel(fieldvalue['description']),dblespinwdg )
+                    dblespinwdg.setMinimum(-1)
+                    dblespinwdg.setMaximum(999999)
+                    self.toolwidget.__dict__[fieldname] = dblespinwdg
+
+                    toolbut = QToolButton()
+                    toolbut.setObjectName('toolbutton_' + fieldname)
+                    self.toolwidget.__dict__['toolbutton_' + fieldname] = toolbut
+
+                    lay = QHBoxLayout()
+                    lay.addWidget(dblespinwdg)
+                    lay.addWidget(toolbut)
+                    formlay.addRow(QLabel(fieldvalue['description']),lay )
                     self.formtoolwidgetconfdict['descriptionsystem']['widgets'][fieldname] = dblespinwdg
+
+                    execstr = f"self.toolwidget.toolbutton_{fieldname}.clicked.connect(self.showNumPad)"
+                    eval(execstr)
 
 
 

@@ -1,3 +1,5 @@
+C:\01_WORKINGDIR\GPMB\temp\aep\mergeddbase.sqlite
+C:\01_WORKINGDIR\GPMB\temp\ass\mergeddbase.sqlite
 C:\01_WORKINGDIR\00_test\tetete.sqlite
 C:\01_WORKINGDIR\fauna\test.sqlite
 C:\01_WORKINGDIR\BACALAN\GPMB_Bacalan.sqlite

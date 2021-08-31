@@ -861,6 +861,14 @@ class DBconfigReader:
         #         ):
         #             colindexlocalvalue = dictlang["None"]
 
+            print('**', 
+                    tablename,
+                    fieldname,
+                    # sheetdatas,
+                    xlrow,
+                    colidxvariante,
+                    colidxdisplayedvalue)
+
             datavalue = self.convertxlsdataToString(sheetdatas[xlrow][colidxvariante])
             showvalue = self.convertxlsdataToString(
                 sheetdatas[xlrow][colidxdisplayedvalue]

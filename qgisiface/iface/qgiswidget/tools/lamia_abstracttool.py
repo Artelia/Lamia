@@ -388,6 +388,8 @@ class AbstractLamiaTool(QWidget):
         self.numpaddialog.exec_()
         number = self.numpaddialog.dialogIsFinished()
         if number:
+            if not finalwdg:
+                finalwdg = self.toolwidgetmain.__dict__['_'.join(self.sender().objectName().split('_')[1:])]
             finalwdg.setValue(number)
 
     def showImageinLabelWidget(self, wdg, savedfile):

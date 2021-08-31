@@ -10,6 +10,8 @@ path %UserProfile%\AppData\Roaming\Python\Python37\Scripts;%PATH%
 path C:\Program Files\nodejs\;%PATH%
 path C:\Program Files (x86)\Yarn\bin\;%PATH%
 path %SYSTEMROOT%\System32\OpenSSH\;%PATH%
+path C:\Program Files (x86)\gettext-iconv\bin;%PATH%
+
 set PYTHONPATH=%UserProfile%\AppData\Roaming\python\Python37\site-packages;%PYTHONPATH%
 
 

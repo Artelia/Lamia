@@ -523,7 +523,6 @@ class printPDFBaseWorker(QtCore.QObject):
                         "setGeneralMapExtentByZonegeo done"
                     )
 
-            # for indexpage, featid in enumerate(pksforreportdict[zonegeopk]):
             for indexpage, featpk in enumerate(pksforreportdict[zonegeopk]):
                 indexpagetotal += 1
                 if debug:
@@ -1616,26 +1615,38 @@ class printPDFBaseWorker(QtCore.QObject):
 
         else:
             # evaluate new page
-            futureverticalpositionpx = self.currentstartheightpx + self.pageheightpx
-            if futureverticalpositionpx > self.painter.device().height():
+            if newComposition.pageCollection().pageCount() > 1 :
+                # if indexpagetotal > 0:
                 self.printer.newPage()
-                futureverticalpositionpx = 10 + self.pageheightpx
-                self.currentstartheightpx = 10
 
-            self.painter.translate(0, self.currentstartheightpx)
-            exporter.renderPage(self.painter, 0)
-            beforeheight, beforewidth = (
-                self.printer.paperRect(QPrinter.Millimeter).height(),
-                self.printer.paperRect(QPrinter.Millimeter).width(),
-            )
-            exporter.print(self.printer, printsettings)
-            self.printer.setPaperSize(
-                QtCore.QSizeF(beforewidth, beforeheight), QPrinter.Millimeter
-            )
-            self.printer.setFullPage(True)
-            self.painter.translate(0, -self.currentstartheightpx)
+                for numpage in range(newComposition.pageCollection().pageCount()):
+                    if numpage > 0:
+                        self.printer.newPage()
+                    exporter.renderPage(self.painter, numpage)
+                    exporter.print(self.printer, printsettings)
+                self.updateStartHeight(self.pageheightpx)
 
-            self.updateStartHeight(futureverticalpositionpx)
+            else:
+                futureverticalpositionpx = self.currentstartheightpx + self.pageheightpx
+                if futureverticalpositionpx > self.painter.device().height():
+                    self.printer.newPage()
+                    futureverticalpositionpx = 10 + self.pageheightpx
+                    self.currentstartheightpx = 10
+
+                self.painter.translate(0, self.currentstartheightpx)
+                exporter.renderPage(self.painter, 0)
+                beforeheight, beforewidth = (
+                    self.printer.paperRect(QPrinter.Millimeter).height(),
+                    self.printer.paperRect(QPrinter.Millimeter).width(),
+                )
+                exporter.print(self.printer, printsettings)
+                self.printer.setPaperSize(
+                    QtCore.QSizeF(beforewidth, beforeheight), QPrinter.Millimeter
+                )
+                self.printer.setFullPage(True)
+                self.painter.translate(0, -self.currentstartheightpx)
+
+                self.updateStartHeight(futureverticalpositionpx)
 
         self.childPrint()
 

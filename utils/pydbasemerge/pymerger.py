@@ -84,7 +84,18 @@ def mergefiles(destparser, fromfiles):
 
     for mergefile in fromfiles:
         print("Merging : ", mergefile)
-        destparser.dbaseofflinemanager.addDBase(slfile=mergefile)
+        # destparser.dbaseofflinemanager.addDBase(slfile=mergefile)
+
+        toimportparser = DBaseParserFactory("spatialite").getDbaseParser()
+        toimportparser.loadDBase(dbtype="Spatialite", slfile=mergefile)
+
+        destparser.dbaseofflinemanager.importDBase(
+            toimportparser,
+            typeimport="append",
+            createnewversion=True,
+            ressourcesimport="None",
+            dobackup=False,
+    )
 
 
 def main(argv):
@@ -95,7 +106,8 @@ def main(argv):
             os.path.join(filepath) for filepath in argv[1].split(";") if filepath
         ]
     else:
-        destfile = r"C:\01_WORKINGDIR\reims\testast\mergeddbase.sqlite"
+        destfile = r"M:\FR\BOR\VT\FLUVIAL\4353036_85_SMVSA_Definition_SE\05_ETUDES\Lamia\Traitement\BdD_traitement\PVR\mergeddbase.sqlite"
+
         fromfiles = [
             r"C:\01_WORKINGDIR\herve\herve1_v3\terrain.sqlite",
             r"C:\01_WORKINGDIR\herve\herve2_v3\terrain epis_Troncon.sqlite",
@@ -105,6 +117,11 @@ def main(argv):
             r"C:\01_WORKINGDIR\reims\AST\BDD_REIMS_J1_AST.sqlite",
             r"C:\01_WORKINGDIR\reims\BER\BDD LAMIA BER\BDD_REIMS_BER_20200915.sqlite",
             r"C:\01_WORKINGDIR\reims\CLE\BDD LAMIA CLE\BDD LAMIA\TERRAIN_CLE_semaine_2_mardi.sqlite",
+        ]
+
+        fromfiles = [
+            # r"M:\FR\BOR\VT\FLUVIAL\4353036_85_SMVSA_Definition_SE\05_ETUDES\Lamia\Traitement\BdD_traitement\Bordeaux\Terrain_Marais_Poitevin.sqlite",
+            r"M:\FR\BOR\VT\FLUVIAL\4353036_85_SMVSA_Definition_SE\05_ETUDES\Lamia\Traitement\Nantes\VTA_SMVSA_SGU\Nantes.sqlite"
         ]
 
     spec = getSpecForNewFile(fromfiles)
