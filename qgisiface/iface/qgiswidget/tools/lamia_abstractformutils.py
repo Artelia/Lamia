@@ -693,10 +693,18 @@ class FormToolUtils(QtCore.QObject):
         #     featurepk,
         # )
         # self.formtoolwidget.dbase.query(sql)
+        # print('*_setGeometryToFeature', sqlqgsgeom)
 
+        # sqlqgsgeom = "ST_SnapToGrid(" + sqlqgsgeom + ", 0.01)"
+        # self.formtoolwidget.dbase.lamiaorm[self.formtoolwidget.DBASETABLENAME].update(
+        #     featurepk, {"geom": "ST_SnapToGrid(" + sqlqgsgeom + ", 0.01)"},
+        # )
         self.formtoolwidget.dbase.lamiaorm[self.formtoolwidget.DBASETABLENAME].update(
             featurepk, {"geom": sqlqgsgeom},
         )
+        # tempfordeb = self.formtoolwidget.dbase.lamiaorm[self.formtoolwidget.DBASETABLENAME].read(featurepk)
+        # print(tempfordeb['geom'])
+        # input()
 
     def _updateQgisLayerForSnapping(self):
         dbasetablename = self.formtoolwidget.DBASETABLENAME

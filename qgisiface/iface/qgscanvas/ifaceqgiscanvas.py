@@ -59,6 +59,7 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
         self.mtoolPan = None
 
         self.currentmaptool = None  # the maptool in use
+        self.currentmaptooladdpointtoline = False        #to know if addapoint to line
 
         self.maptools = {
             "mtooltorestore": self.mtooltorestore,
@@ -905,6 +906,8 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
                 str(fctonstopcapture),
             )
 
+
+
         self.createorresetRubberband(capturetype, rubtype="capture")
         if capturetype == qgis.core.QgsWkbTypes.PointGeometry:
             self.currentmaptool = self.mtoolpoint
@@ -923,6 +926,9 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
             # print(self.currentmaptool.cadDockWidget().cadEnabled())
             self.currentmaptool.activate()
 
+        if listpointinitialgeometry:
+            self.currentmaptooladdpointtoline = True 
+
         self.currentmaptool.stopCapture.connect(fctonstopcapture)
         self.currentmaptool.setMapPoints(listpointinitialgeometry)
         self.currentmaptool.startCapturing()
@@ -935,6 +941,7 @@ class QgisCanvas(LamiaAbstractIFaceCanvas):
                 pass
         self.currentmaptool = self.mtooltorestore
         self.canvas.setMapTool(self.mtooltorestore)
+        self.currentmaptooladdpointtoline = False 
 
     def ______________________________RubberbandManagement(self):
         pass

@@ -579,6 +579,8 @@ class BaseUrbandrainageNodeTool(BaseNodeTool):
             lambda: self.showNumPad(self.toolwidgetmain.depthinvert)
         )
 
+        self.toolwidgetmain.pushButton_getGPS.clicked.connect(self.getGPSValue)
+
         self.toolwidgetmain.nodetype.currentIndexChanged.connect(
             self.fieldui3TypeOhChanged
         )

@@ -28,6 +28,7 @@ This file is part of LAMIA.
 import logging, sys, re, os, qgis
 import numpy as np
 from pprint import pprint
+import math
 from ..abstractlibslamia import AbstractLibsLamia
 
 
@@ -193,20 +194,26 @@ class ImportCore(AbstractLibsLamia):
         query = self.dbase.query(sql, docommit=False)
 
     def convertDataType(self, rawtable, field, value):
+
         if field == "geom":
             return str(value)
 
         if self.dbase.utils.isAttributeNull(value):
             return "NULL"
 
+        rawvalue = value
         for temptable in [rawtable] + self.dbase.getParentTable(rawtable):
             if field in self.dbase.dbasetables[temptable]["fields"].keys():
                 # typevalue = self.dbase.dbasetables[temptable]["fields"][field]["PGtype"]
                 # getConstraintRawValueFromText(self, table, field, txt):
-                rawvalue = self.dbase.getConstraintRawValueFromText(
+                tempvalue = self.dbase.getConstraintRawValueFromText(
                     temptable, field, value
                 )
+                if tempvalue is not None:
+                    rawvalue = tempvalue
                 break
+
+
 
         # if "VARCHAR" in typevalue:
         #     returnvalue = "'" + str(rawvalue) + "'"

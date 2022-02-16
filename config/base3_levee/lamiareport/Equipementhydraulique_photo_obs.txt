@@ -1,0 +1,38 @@
+###atlaslayersql
+WITH operator AS (SELECT actor.society, actor.actorname  , tcobjectactor.lid_object 
+                 FROM tcobjectactor  
+                 INNER JOIN actor ON tcobjectactor.lid_actor = actor.id_actor  
+                 WHERE tcobjectactor.role = 'GES' )
+SELECT equipment_now.* , operator.society, operator.actorname , observation_now.pk_observation
+FROM equipment_now
+LEFT JOIN operator ON operator.lid_object = equipment_now.id_object
+LEFT JOIN deficiency_now ON deficiency_now.lid_descriptionsystem = equipment_now.id_descriptionsystem
+LEFT JOIN observation_now ON observation_now.lid_deficiency = deficiency_now.id_deficiency
+WHERE ( equipment_now.equipmentcategory = 'RHF' or equipment_now.equipmentcategory = 'RHO' or equipment_now.equipmentcategory = 'OUH') AND equipment_now.lid_descriptionsystem_1 IS NULL
+GROUP BY equipment_now.pk_equipment
+###atlaslayerid
+id_equipment
+###spatial
+True
+###ordering
+#type;               constraint (qgis typo)
+autoalongpath;      
+###atlaslayerstyle
+Equipementhydraulique_atlas.qml
+###atlasdrivemap
+#itemname;   minscale;   typescale;      layers
+map1;       2500;       Auto      ;['atlaslayer', 'edge', 'scan25']
+#map1;       2500;       Predefined      ;[]
+###generalmap
+#itemname;   minscale;   typescale; layers
+map0    ;           ;             ; ['edge', 'ortho']
+#map0    ;           ;             ; []
+###images
+#itemname   ; type
+photo1;observation_now.photo1
+###childprint
+#confname;                        linkcolumn;                               optionsql
+Equipementhydraulique_annexe;    equipment_now.lid_descriptionsystem_1 ;  
+
+
+

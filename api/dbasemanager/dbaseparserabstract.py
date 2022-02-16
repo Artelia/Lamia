@@ -347,7 +347,6 @@ class AbstractDBaseParser:
         self.workversion = workversion
         self.variante = variante
         self.worktype = worktype
-
         self.dbconfigreader.createDBDictionary(self.worktype)
         self.dbasetables = self.dbconfigreader.dbasetables
 

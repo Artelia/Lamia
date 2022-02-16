@@ -70,6 +70,8 @@ def isAttributeNull(attr):
 
     if TRY_QT and isinstance(attr, QtCore.QVariant) and attr.isNull():
         return True
+    elif isinstance(attr,float) and math.isnan(attr):
+        return True
     elif (isinstance(attr, bytes) or isinstance(attr, str)) and (
         attr == "NULL" or attr == "" or attr == "None"
     ):

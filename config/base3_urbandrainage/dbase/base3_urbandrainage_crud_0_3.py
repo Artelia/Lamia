@@ -92,12 +92,12 @@ class LamiaORM(TopologicLamiaORM):
         )
 
     def _wktPointToLine(self, wktstr):
-        print('**', wktstr)
+        # print('**', wktstr)
         qgisgeompoint = qgis.core.QgsGeometry.fromWkt(wktstr).asPoint()
         finalgeom = qgis.core.QgsGeometry.fromPolylineXY(
             [qgisgeompoint, qgisgeompoint]
         ).asWkt()
-        print('**',finalgeom)
+        # print('**',finalgeom)
         return finalgeom
 
     def _wktPolygonToLine(self, wktstr):

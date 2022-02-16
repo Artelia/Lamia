@@ -791,7 +791,8 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
                 initialgeomwkt = self.dbase.getValuesFromPk(
                     self.DBASETABLENAME, "ST_AsText(geom)", self.currentFeaturePK
                 )
-                initialgeom = qgis.core.QgsGeometry.fromWkt(initialgeomwkt).asPolyline()
+                if qgis.core.QgsGeometry.fromWkt(initialgeomwkt):
+                    initialgeom = qgis.core.QgsGeometry.fromWkt(initialgeomwkt).asPolyline()
 
         return initialgeom
 
@@ -961,6 +962,7 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
             logging.getLogger("Lamia_unittest").debug(
                 "start points : %s %s", self.DBASETABLENAME, points
             )
+        currentmaptooladdpointtoline = self.mainifacewidget.qgiscanvas.currentmaptooladdpointtoline
         self.mainifacewidget.qgiscanvas.stopCapture()
 
         pointsmapcanvas = []
@@ -979,7 +981,7 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
 
         # print('**','setTempGeometry', maptoolcapturetype, capturetype )
         #* Modify captured geom to fit the layer geom
-        if maptoolcapturetype == 1 and capturetype == 1:
+        if maptoolcapturetype == 1 and capturetype == 1 and not currentmaptooladdpointtoline:
             points.append(points[0])
         elif maptoolcapturetype == 1 and capturetype == 2:
                 points = [
@@ -1021,7 +1023,7 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
         if capturetype == 0:
             geometryformap = qgis.core.QgsGeometry.fromPointXY(pointsmapcanvas[0])
             geometryforlayer = qgis.core.QgsGeometry.fromPointXY(pointslayer[0])
-        elif capturetype == 1 and maptoolcapturetype == 1:   
+        elif capturetype == 1 and maptoolcapturetype == 1 and not currentmaptooladdpointtoline:   
             geometryformap = qgis.core.QgsGeometry.fromPointXY(pointsmapcanvas[0])
             geometryforlayer = qgis.core.QgsGeometry.fromMultiPolylineXY([pointslayer])
         elif capturetype == 1:
@@ -1035,7 +1037,7 @@ class AbstractLamiaFormTool(AbstractLamiaTool):
 
         #* show geom in rubberband
         if showinrubberband:
-            if capturetype == 1 and maptoolcapturetype == 1:   
+            if capturetype == 1 and maptoolcapturetype == 1 and not currentmaptooladdpointtoline:   
                 self.mainifacewidget.qgiscanvas.createorresetRubberband(
                     0, rubtype="capture"
                 )

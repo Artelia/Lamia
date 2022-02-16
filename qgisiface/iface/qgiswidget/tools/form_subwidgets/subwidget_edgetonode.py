@@ -94,7 +94,10 @@ class EdgeToNodeWidget(AbstractSubWidget):
         geomtext = dbase.getValuesFromPk(
             self.parentwdg.DBASETABLENAME, "ST_AsText(geom)", parentfeaturepk
         )
+        if not qgis.core.QgsGeometry.fromWkt(geomtext):
+            return
         fetgeom = qgis.core.QgsGeometry.fromWkt(geomtext).asPolyline()
+
 
         indexnodes = [1, 2]
         for indexnode in indexnodes:

@@ -1,5 +1,7 @@
-C:\01_WORKINGDIR\GPMB\temp\aep\mergeddbase.sqlite
-C:\01_WORKINGDIR\GPMB\temp\ass\mergeddbase.sqlite
-C:\01_WORKINGDIR\00_test\tetete.sqlite
+C:\01_WORKINGDIR\00_test\selles\lamiadef\lamia_selles_V1.sqlite
+C:\01_WORKINGDIR\aa\test.sqlite
+C:\01_WORKINGDIR\00_test\selles\lamia\lamia_V1.sqlite
+C:\01_WORKINGDIR\00_test\selles\lamia\lamia_V1_1.sqlite
+C:\01_WORKINGDIR\00_test\selles\lamia\lamia_V0.sqlite
 C:\01_WORKINGDIR\fauna\test.sqlite
 C:\01_WORKINGDIR\BACALAN\GPMB_Bacalan.sqlite

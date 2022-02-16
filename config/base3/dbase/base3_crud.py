@@ -149,6 +149,14 @@ class LamiaORM(object):
                     argus = [v for k, v in filtereddict.items() if k != "geom"]
                     self.dbase.query(sql, arguments=argus)
 
+                    if False: #checkpurpose
+                        try:
+                            sql = f"SELECT ST_AsText(geom) FROM {table} WHERE pk_{table} = {curpk}"
+                            res = self.dbase.query(sql)
+                            print('*res',res)
+                        except:
+                            print('*err')
+
                 curpk = None
             return pk
 
@@ -201,6 +209,7 @@ class LamiaORM(object):
                 #     else:
                 #         resulttemp = "NULL"
                 if k == "geom":
+                    # resulttemp = f"ST_SnapToGrid(ST_GeomFromText('{val}',{self.dbase.crsnumber}),0.001)" # dont work for line considered aspoint
                     resulttemp = f"ST_GeomFromText('{val}',{self.dbase.crsnumber})"
                     valdict[k] = resulttemp
 

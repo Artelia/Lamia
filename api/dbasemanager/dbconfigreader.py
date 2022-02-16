@@ -784,43 +784,8 @@ class DBconfigReader:
         colidxvariante=None,
         colidxdisplayedvalue=None,
     ):
-        # dbasefield self.dbasetables[tablename]['fields'][fieldname]
-        # print('readConstraints',tablename,fieldname  ,sheet, xlrow)
-        # rowvariantes = self.dbasetables[tablename]["row_variantes"]
-        # rowlocale = self.dbasetables[tablename]["row_locale"]
-        # colindexvariante = cstcolumntoread
-        # colindexlocalvalue = cstlocalvaluecolumntoread
-        dbasefield = self.dbasetables[tablename]["fields"][fieldname]
-        # loclanguage = self.dbase.locale
 
-        # if colindexvariante is None:
-        #     colindexvariante = None
-        #     if self.dbase.variante is None:
-        #         colindexvariante = 6
-        #     else:
-        #         if rowvariantes >= 0:
-        #             if self.dbase.variante == "Lamia":
-        #                 colindexvariante = 6
-        #             else:
-        #                 for col in range(len(sheetdatas[rowvariantes])):
-        #                     try:
-        #                         if (
-        #                             sheetdatas[rowvariantes][col] == self.dbase.variante
-        #                             and sheetdatas[xlrow][col] != ""
-        #                         ):
-        #                             colindexvariante = col
-        #                             # print('colindexvariante', tablename, fieldname, colindexvariante)
-        #                             break
-        #                     except:
-        #                         print(
-        #                             "error", tablename, fieldname, self.dbase.variante
-        #                         )
-        #                 # if colindexvariante is None:
-        #                 #    colindexvariante = 5
-        # if colindexvariante is None:
-        #     colindexvariante = 6
-        
-        # colindexvariante = self._getColVariante(tablename, sheetdatas, xlrow, colindexvariante)
+        dbasefield = self.dbasetables[tablename]["fields"][fieldname]
         
         if (
             sheetdatas[xlrow][colidxvariante] is not None
@@ -830,44 +795,6 @@ class DBconfigReader:
                 dbasefield["Cst"].append([])
             else:
                 dbasefield["Cst"] = [[]]
-
-        #     if colindexlocalvalue is None:
-        #         # if unicode(sheet.cell_value(xlrow, colindexvariante)).strip() != '':
-        #         # get showvalue column according to language
-        #         initcolumn = colindexvariante + 2
-        #         dictlang = {}
-        #         while (
-        #             initcolumn < len(sheetdatas[rowlocale])
-        #             and "Displayvalue" in sheetdatas[rowlocale][initcolumn].strip()
-        #         ):
-        #             valuesplited = sheetdatas[rowlocale][initcolumn].split("_")
-        #             if len(valuesplited):
-        #                 dictlang[valuesplited[1]] = initcolumn
-        #             else:
-        #                 dictlang["None"] = initcolumn
-        #             initcolumn += 1
-        #         if (
-        #             loclanguage in dictlang.keys()
-        #             and sheetdatas[xlrow][dictlang[loclanguage]] != ""
-        #         ):
-        #             colindexlocalvalue = dictlang[loclanguage]
-        #         elif (
-        #             "fr" in dictlang.keys() and sheetdatas[xlrow][dictlang["fr"]] != ""
-        #         ):
-        #             colindexlocalvalue = dictlang["fr"]
-        #         elif (
-        #             "None" in dictlang.keys()
-        #             and sheetdatas[xlrow][dictlang["None"]] != ""
-        #         ):
-        #             colindexlocalvalue = dictlang["None"]
-
-            print('**', 
-                    tablename,
-                    fieldname,
-                    # sheetdatas,
-                    xlrow,
-                    colidxvariante,
-                    colidxdisplayedvalue)
 
             datavalue = self.convertxlsdataToString(sheetdatas[xlrow][colidxvariante])
             showvalue = self.convertxlsdataToString(
@@ -969,11 +896,12 @@ class DBconfigReader:
                 variantedefaultlamiacol = col
             elif sheetdatas[rowvariantes][col] and  sheetdatas[rowvariantes][col] == self.dbase.variante:
                 variantecol = col
+
         
         if colindexvariante is None:
             if self.dbase.variante is None or self.dbase.variante == "Lamia":
                 colindexvariante = variantedefaultlamiacol
-            elif sheetdatas[xlrow][variantecol] != "" : #something is filled in the variante col
+            elif variantecol and sheetdatas[xlrow][variantecol] != "" : #something is filled in the variante col
                 colindexvariante = variantecol
             else:   #nothing is filled in the variant col
                 colindexvariante = variantedefaultlamiacol
