@@ -194,9 +194,19 @@ class BaseUrbandrainageNodeTool(BaseNodeTool):
                     "csoweirheight": self.toolwidgetmain.csoweirheight,
                     "scoweirlenght": self.toolwidgetmain.scoweirlenght,
                     "scoweirthickness": self.toolwidgetmain.scoweirthickness,
-                    "receivingenvironmentcomment": self.toolwidgetmain.receivingenvironmentcomment,
+                    "receivingenvironmentcomment": [
+                        self.toolwidgetmain.receivingenvironmentcomment,
+                        self.toolwidgetmain.receivingenvironmentcomment_2,
+                        self.toolwidgetmain.receivingenvironmentcomment_3,
+                        self.toolwidgetmain.receivingenvironmentcomment_4,
+                        ],
                     # septic tank
-                    "receivingenvironment": self.toolwidgetmain.receivingenvironment,
+                    "receivingenvironment": [
+                        self.toolwidgetmain.receivingenvironment,
+                        self.toolwidgetmain.receivingenvironment_2,
+                        self.toolwidgetmain.receivingenvironment_3,
+                        self.toolwidgetmain.receivingenvironment_4,
+                        ],
                     # autre
                     "depthinvert": self.toolwidgetmain.depthinvert,
                     "width": self.toolwidgetmain.width,
@@ -610,8 +620,10 @@ class BaseUrbandrainageNodeTool(BaseNodeTool):
             self.toolwidgetmain.stackedWidget_node.setCurrentIndex(5)
         elif currentvalue in ["24"]:  # septictank
             self.toolwidgetmain.stackedWidget_node.setCurrentIndex(6)
-        else:
+        elif currentvalue in ["50", "51", "52"]:  # outlet
             self.toolwidgetmain.stackedWidget_node.setCurrentIndex(7)
+        else:
+            self.toolwidgetmain.stackedWidget_node.setCurrentIndex(8)
         self.propertieswdgDesordre.propertieswdgOBSERVATION.updateObservationStackedWidget()
 
     def fieldui3TypeOhChanged(self, comboindex):

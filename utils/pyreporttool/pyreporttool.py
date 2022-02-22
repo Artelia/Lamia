@@ -36,8 +36,8 @@ def main(argv):
     # SLFILE = r"C:\01_WORKINGDIR\bm\BD_totale_ind15.sqlite"
     SLFILE = r"C:\01_WORKINGDIR\aaa\testd.sqlite"
     SLFILE = r"C:\01_WORKINGDIR\aaaa\sgu20200916.sqlite"
-    SLFILE = r"C:\01_WORKINGDIR\00_test\test2\testprint.sqlite"
-    SLFILE = r"C:\Users\patrice.verchere\OneDrive - ARTELIA\Bureau\Terrain_Marais_Poitevin.sqlite"
+    SLFILE = r"C:\01_WORKINGDIR\aa\test.sqlite"
+    # SLFILE = r"C:\Users\patrice.verchere\OneDrive - ARTELIA\Bureau\Terrain_Marais_Poitevin.sqlite"
 
     tempparser = DBaseParserFactory("spatialite").getDbaseParser()
     tempparser.loadDBase(dbtype="Spatialite", slfile=SLFILE)
@@ -58,8 +58,8 @@ def main(argv):
 
     # Infralineaire Equipementhydraulique Desordres EquipementhydrauliqueEtat
     reportcore.runReport(
-        r"C:\Users\patrice.verchere\OneDrive - ARTELIA\Bureau\des.pdf", "Equipementhydraulique_photo_obs", pkzonegeos=[1], pklist=None,
-    )
+        r"C:\Users\patrice.verchere\OneDrive - ARTELIA\Bureau\des.pdf", "Lamia_NODregard", pkzonegeos=[1], pklist=None,
+    multiplepages=True)
     # except Exception as e:
     #     print(e)
 

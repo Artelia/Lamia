@@ -116,7 +116,10 @@ class ReportTool(AbstractLamiaTool):
         pks = self.choosertreewidget.getSelectedPks()
 
         self.reporttool.runReport(
-            destinationfile=pdffile, reportconffilename=reporttype, pkzonegeos=pks
+            destinationfile=pdffile, 
+            reportconffilename=reporttype, 
+            pkzonegeos=pks,
+            multiplepages = self.toolwidgetmain.checkBox_exportmultiple.checkState() ,
         )
 
 

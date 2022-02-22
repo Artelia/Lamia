@@ -109,6 +109,16 @@
             </property>
            </widget>
           </item>
+          <item>
+           <widget class="QLabel" name="label_3">
+            <property name="text">
+             <string>Warning : Please check geometries validity of your layer to avoid import failure. Null geometries or line lenght equal to 0 are non acceptable geometries.</string>
+            </property>
+            <property name="wordWrap">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
          </layout>
         </widget>
        </item>

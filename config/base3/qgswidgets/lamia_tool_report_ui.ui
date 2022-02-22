@@ -31,9 +31,6 @@
       <enum>QFrame::Raised</enum>
      </property>
      <layout class="QGridLayout" name="gridLayout">
-      <item row="0" column="1">
-       <widget class="QLineEdit" name="lineEdit_nom"/>
-      </item>
       <item row="1" column="0" colspan="3">
        <widget class="QPushButton" name="pushButton_export">
         <property name="text">
@@ -48,7 +45,17 @@
         </property>
        </widget>
       </item>
-      <item row="2" column="0">
+      <item row="0" column="1">
+       <widget class="QLineEdit" name="lineEdit_nom"/>
+      </item>
+      <item row="0" column="2">
+       <widget class="QToolButton" name="toolButton_filechooser">
+        <property name="text">
+         <string>...</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0">
        <spacer name="verticalSpacer">
         <property name="orientation">
          <enum>Qt::Vertical</enum>
@@ -61,10 +68,10 @@
         </property>
        </spacer>
       </item>
-      <item row="0" column="2">
-       <widget class="QToolButton" name="toolButton_filechooser">
+      <item row="2" column="0" colspan="3">
+       <widget class="QCheckBox" name="checkBox_exportmultiple">
         <property name="text">
-         <string>...</string>
+         <string>Export multiple files</string>
         </property>
        </widget>
       </item>

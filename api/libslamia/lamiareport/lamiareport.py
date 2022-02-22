@@ -58,7 +58,7 @@ class ReportCore(AbstractLibsLamia):
         self.printingthread = printingThread(self)
 
     def runReport(
-        self, destinationfile, reportconffilename, pkzonegeos=[], pklist=None
+        self, destinationfile, reportconffilename, pkzonegeos=[], pklist=None, multiplepages=False
     ):
 
         self.printingthread.launchThread(
@@ -68,7 +68,8 @@ class ReportCore(AbstractLibsLamia):
             pdffile=destinationfile,
             pklist=pklist,
             pkzonegeolist=pkzonegeos,
-            lamiaifacewidget = self.lamiaifacewidget
+            lamiaifacewidget = self.lamiaifacewidget,
+            multiplepages = multiplepages,
         )
 
     def new(self, confpath):
@@ -230,7 +231,8 @@ class printPDFBaseWorker(QtCore.QObject):
         pdffile=None,
         pklist=None,
         pkzonegeolist=[],
-        lamiaifacewidget = None
+        lamiaifacewidget = None,
+        multiplepages=False,
     ):
         """
         reportcore : reportcore instance
@@ -271,6 +273,8 @@ class printPDFBaseWorker(QtCore.QObject):
             self.networkcore = NetWorkCore(
                 self.dbase, self.messageinstance, self.qgiscanvas
             )
+
+            self.multiplepages = multiplepages
 
             self.printer = QPrinter()
             self.painter = QtGui.QPainter()
@@ -525,6 +529,7 @@ class printPDFBaseWorker(QtCore.QObject):
 
             for indexpage, featpk in enumerate(pksforreportdict[zonegeopk]):
                 indexpagetotal += 1
+
                 if debug:
                     logging.getLogger("Lamia_unittest").debug(
                         "featpk %s , indexpage %s", str(featpk), str(indexpagetotal)
@@ -652,8 +657,15 @@ class printPDFBaseWorker(QtCore.QObject):
 
                 self.processLamiaVars(newComposition, dictfields, self.currentatlasfeat)
 
+                if self.multiplepages :
+                    name = coveragelayer.getFeature(featpk).attribute("name")
+                    if self.dbase.utils.isAttributeNull(name):
+                        name = None
+                else:
+                    name = None
+
                 self.printAtlasPage(
-                    newComposition, exporter, indexpagetotal, indexpage, idecalage
+                    newComposition, exporter, indexpagetotal, indexpage, idecalage, featpk, name
                 )
 
                 if False and sys.version_info.major == 3:
@@ -1538,7 +1550,6 @@ class printPDFBaseWorker(QtCore.QObject):
                 QtCore.QSizeF(paperWidth, paperHeight), QPrinter.Millimeter
             )
             self.printer.setFullPage(True)
-
             printReady = self.painter.begin(self.printer)
             if debug:
                 self.logger.debug("print ready %s", printReady)
@@ -1588,7 +1599,7 @@ class printPDFBaseWorker(QtCore.QObject):
                 newComposition.itemById(mapname).setScale(minscale * 5.0)
 
     def printAtlasPage(
-        self, newComposition, exporter, indexpagetotal, indexpage, idecalage
+        self, newComposition, exporter, indexpagetotal, indexpage, idecalage, featpk=None, name=None
     ):
         """
         Realise l'impression de la composition sur pdf
@@ -1603,6 +1614,18 @@ class printPDFBaseWorker(QtCore.QObject):
         printsettings = qgis.core.QgsLayoutExporter.PrintExportSettings()
 
         if self.parentprintPDFworker is None:
+
+            if self.multiplepages:
+                self.painter.end()
+                pagename = os.path.splitext(self.pdffile)[0] + f"_{featpk}" 
+                if name:
+                    pagename += f"_{name}"
+                pagename += os.path.splitext(self.pdffile)[1]
+                self.printer.setOutputFileName(pagename)
+                self.painter.begin(self.printer)
+                indexpagetotal = 0
+
+
             if indexpagetotal > 0:
                 self.printer.newPage()
 
