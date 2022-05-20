@@ -161,6 +161,7 @@ class FlowChartWidget(QDialog):
             self.fc.addTerminal(name, **opts)
 
         for i, field in enumerate(fromfields):
+            print('**', fromfields)
             if field != "":
                 fieldstandard = field
                 stringtoeval = (
@@ -170,6 +171,7 @@ class FlowChartWidget(QDialog):
                     + str(i)
                     + "]))"
                 )
+                print(stringtoeval)
                 eval(stringtoeval)
 
         self.fc.outputNode.graphicsItem().bounds = QtCore.QRectF(

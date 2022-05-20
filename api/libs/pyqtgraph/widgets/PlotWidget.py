@@ -1,13 +1,12 @@
-# -*- coding: utf-8 -*-
 """
 PlotWidget.py -  Convenience class--GraphicsView widget displaying a single PlotItem
 Copyright 2010  Luke Campagnola
-Distributed under MIT/X11 license. See license.txt for more infomation.
+Distributed under MIT/X11 license. See license.txt for more information.
 """
 
-from ..Qt import QtCore, QtGui
-from .GraphicsView import *
 from ..graphicsItems.PlotItem import *
+from ..Qt import QtCore, QtWidgets
+from .GraphicsView import *
 
 __all__ = ['PlotWidget']
 class PlotWidget(GraphicsView):
@@ -24,6 +23,7 @@ class PlotWidget(GraphicsView):
     :func:`addItem <pyqtgraph.PlotItem.addItem>`, 
     :func:`removeItem <pyqtgraph.PlotItem.removeItem>`, 
     :func:`clear <pyqtgraph.PlotItem.clear>`, 
+    :func:`setAxisItems <pyqtgraph.PlotItem.setAxisItems>`,
     :func:`setXRange <pyqtgraph.ViewBox.setXRange>`,
     :func:`setYRange <pyqtgraph.ViewBox.setYRange>`,
     :func:`setRange <pyqtgraph.ViewBox.setRange>`,
@@ -43,19 +43,22 @@ class PlotWidget(GraphicsView):
     For all 
     other methods, use :func:`getPlotItem <pyqtgraph.PlotWidget.getPlotItem>`.
     """
-    def __init__(self, parent=None, background='default', **kargs):
+    def __init__(self, parent=None, background='default', plotItem=None, **kargs):
         """When initializing PlotWidget, *parent* and *background* are passed to 
         :func:`GraphicsWidget.__init__() <pyqtgraph.GraphicsWidget.__init__>`
         and all others are passed
         to :func:`PlotItem.__init__() <pyqtgraph.PlotItem.__init__>`."""
         GraphicsView.__init__(self, parent, background=background)
-        self.setSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Expanding)
+        self.setSizePolicy(QtWidgets.QSizePolicy.Policy.Expanding, QtWidgets.QSizePolicy.Policy.Expanding)
         self.enableMouse(False)
-        self.plotItem = PlotItem(**kargs)
+        if plotItem is None:
+            self.plotItem = PlotItem(**kargs)
+        else:
+            self.plotItem = plotItem
         self.setCentralItem(self.plotItem)
         ## Explicitly wrap methods from plotItem
         ## NOTE: If you change this list, update the documentation above as well.
-        for m in ['addItem', 'removeItem', 'autoRange', 'clear', 'setXRange', 
+        for m in ['addItem', 'removeItem', 'autoRange', 'clear', 'setAxisItems', 'setXRange', 
                   'setYRange', 'setRange', 'setAspectLocked', 'setMouseEnabled', 
                   'setXLink', 'setYLink', 'enableAutoRange', 'disableAutoRange', 
                   'setLimits', 'register', 'unregister', 'viewRect']:
@@ -76,7 +79,7 @@ class PlotWidget(GraphicsView):
             m = getattr(self.plotItem, attr)
             if hasattr(m, '__call__'):
                 return m
-        raise NameError(attr)
+        raise AttributeError(attr)
     
     def viewRangeChanged(self, view, range):
         #self.emit(QtCore.SIGNAL('viewChanged'), *args)

@@ -1,0 +1,4 @@
+OSGEOPATH=C:\Program Files\QGIS 3.22.7
+QGISPATH=C:\Program Files\QGIS 3.22.7\apps\qgis-ltr
+#QGISPATH=/usr/....
+QGISPATHLINUX=/usr/lib

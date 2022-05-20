@@ -1,8 +1,10 @@
-from ..Qt import QtGui, QtCore
-from .. import parametertree as ptree
+from collections import OrderedDict
+
 import numpy as np
-from ..pgcollections import OrderedDict
+
 from .. import functions as fn
+from .. import parametertree as ptree
+from ..Qt import QtCore
 
 __all__ = ['ColorMapWidget']
 
@@ -42,6 +44,11 @@ class ColorMapWidget(ptree.ParameterTree):
     def restoreState(self, state):
         self.params.restoreState(state)
         
+    def addColorMap(self, name):
+        """Add a new color mapping and return the created parameter.
+        """
+        return self.params.addNew(name)
+
 
 class ColorMapParameter(ptree.types.GroupParameter):
     sigColorMapChanged = QtCore.Signal(object)
@@ -55,16 +62,34 @@ class ColorMapParameter(ptree.types.GroupParameter):
         self.sigColorMapChanged.emit(self)
         
     def addNew(self, name):
-        mode = self.fields[name].get('mode', 'range')
+        fieldSpec = self.fields[name]
+        
+        mode = fieldSpec.get('mode', 'range')        
         if mode == 'range':
             item = RangeColorMapItem(name, self.fields[name])
         elif mode == 'enum':
             item = EnumColorMapItem(name, self.fields[name])
+
+        defaults = fieldSpec.get('defaults', {})
+        for k, v in defaults.items():
+            if k == 'colormap':
+                if mode == 'range':
+                    item.setValue(v)
+                elif mode == 'enum':
+                    children = item.param('Values').children()
+                    for i, child in enumerate(children):
+                        try:
+                            child.setValue(v[i])
+                        except IndexError:
+                            continue
+            else:
+                item[k] = v
+
         self.addChild(item)
         return item
         
     def fieldNames(self):
-        return self.fields.keys()
+        return list(self.fields.keys())
     
     def setFields(self, fields):
         """
@@ -85,6 +110,11 @@ class ColorMapParameter(ptree.types.GroupParameter):
         values         List of unique values for which the user may assign a 
                        color when mode=='enum'. Optionally may specify a dict 
                        instead {value: name}.
+        defaults       Dict of default values to apply to color map items when
+                       they are created. Valid keys are 'colormap' to provide
+                       a default color map, or otherwise they a string or tuple
+                       indicating the parameter to be set, such as 'Operation' or
+                       ('Channels..', 'Red').
         ============== ============================================================
         """
         self.fields = OrderedDict(fields)
@@ -131,10 +161,9 @@ class ColorMapParameter(ptree.types.GroupParameter):
                 c3[:,3:4] = colors[:,3:4] + (1-colors[:,3:4]) * a
                 colors = c3
             elif op == 'Set':
-                colors[mask] = colors2[mask]
-            
+                colors[mask] = colors2[mask]            
                 
-        colors = np.clip(colors, 0, 1)
+        colors = fn.clip_array(colors, 0., 1.)
         if mode == 'byte':
             colors = (colors * 255).astype(np.ubyte)
         
@@ -152,24 +181,24 @@ class ColorMapParameter(ptree.types.GroupParameter):
     def restoreState(self, state):
         if 'fields' in state:
             self.setFields(state['fields'])
-        for itemState in state['items']:
+        for name, itemState in state['items'].items():
             item = self.addNew(itemState['field'])
             item.restoreState(itemState)
         
     
-class RangeColorMapItem(ptree.types.SimpleParameter):
+class RangeColorMapItem(ptree.types.ColorMapParameter):
     mapType = 'range'
     
     def __init__(self, name, opts):
         self.fieldName = name
         units = opts.get('units', '')
-        ptree.types.SimpleParameter.__init__(self, 
+        ptree.types.ColorMapParameter.__init__(self,
             name=name, autoIncrementName=True, type='colormap', removable=True, renamable=True, 
             children=[
-                #dict(name="Field", type='list', value=name, values=fields),
+                #dict(name="Field", type='list', value=name, limits=fields),
                 dict(name='Min', type='float', value=0.0, suffix=units, siPrefix=True),
                 dict(name='Max', type='float', value=1.0, suffix=units, siPrefix=True),
-                dict(name='Operation', type='list', value='Overlay', values=['Overlay', 'Add', 'Multiply', 'Set']),
+                dict(name='Operation', type='list', value='Overlay', limits=['Overlay', 'Add', 'Multiply', 'Set']),
                 dict(name='Channels..', type='group', expanded=False, children=[
                     dict(name='Red', type='bool', value=True),
                     dict(name='Green', type='bool', value=True),
@@ -179,17 +208,17 @@ class RangeColorMapItem(ptree.types.SimpleParameter):
                 dict(name='Enabled', type='bool', value=True),
                 dict(name='NaN', type='color'),
             ])
-    
+
     def map(self, data):
         data = data[self.fieldName]
         
-        scaled = np.clip((data-self['Min']) / (self['Max']-self['Min']), 0, 1)
+        scaled = fn.clip_array((data-self['Min']) / (self['Max']-self['Min']), 0, 1)
         cmap = self.value()
         colors = cmap.map(scaled, mode='float')
         
-        mask = np.isnan(data) | np.isinf(data)
+        mask = np.invert(np.isfinite(data))
         nanColor = self['NaN']
-        nanColor = (nanColor.red()/255., nanColor.green()/255., nanColor.blue()/255., nanColor.alpha()/255.)
+        nanColor = nanColor.getRgbF()
         colors[mask] = nanColor
         
         return colors        
@@ -201,9 +230,7 @@ class EnumColorMapItem(ptree.types.GroupParameter):
         self.fieldName = name
         vals = opts.get('values', [])
         if isinstance(vals, list):
-            vals = OrderedDict([(v,str(v)) for v in vals])
-        childs = [{'name': v, 'type': 'color'} for v in vals]
-        
+            vals = OrderedDict([(v,str(v)) for v in vals])        
         childs = []
         for val,vname in vals.items():
             ch = ptree.Parameter.create(name=vname, type='color')
@@ -214,7 +241,7 @@ class EnumColorMapItem(ptree.types.GroupParameter):
             name=name, autoIncrementName=True, removable=True, renamable=True, 
             children=[
                 dict(name='Values', type='group', children=childs),
-                dict(name='Operation', type='list', value='Overlay', values=['Overlay', 'Add', 'Multiply', 'Set']),
+                dict(name='Operation', type='list', value='Overlay', limits=['Overlay', 'Add', 'Multiply', 'Set']),
                 dict(name='Channels..', type='group', expanded=False, children=[
                     dict(name='Red', type='bool', value=True),
                     dict(name='Green', type='bool', value=True),
@@ -228,12 +255,12 @@ class EnumColorMapItem(ptree.types.GroupParameter):
     def map(self, data):
         data = data[self.fieldName]
         colors = np.empty((len(data), 4))
-        default = np.array(fn.colorTuple(self['Default'])) / 255.
+        default = np.array(self['Default'].getRgbF())
         colors[:] = default
         
         for v in self.param('Values'):
             mask = data == v.maskValue
-            c = np.array(fn.colorTuple(v.value())) / 255.
+            c = np.array(v.value().getRgbF())
             colors[mask] = c
         #scaled = np.clip((data-self['Min']) / (self['Max']-self['Min']), 0, 1)
         #cmap = self.value()
@@ -241,9 +268,7 @@ class EnumColorMapItem(ptree.types.GroupParameter):
         
         #mask = np.isnan(data) | np.isinf(data)
         #nanColor = self['NaN']
-        #nanColor = (nanColor.red()/255., nanColor.green()/255., nanColor.blue()/255., nanColor.alpha()/255.)
+        #nanColor = nanColor.getRgbF()
         #colors[mask] = nanColor
         
         return colors
-
-

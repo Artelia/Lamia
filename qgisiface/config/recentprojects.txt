@@ -1,4 +1,5 @@
 C:\01_WORKINGDIR\aa\test.sqlite
+C:\01_WORKINGDIR\test_audrey\20220127\Soissons_EP.sqlite
 C:\01_WORKINGDIR\00_test\selles\lamiadef\lamia_selles_V1.sqlite
 C:\01_WORKINGDIR\00_test\selles\lamia\lamia_V1.sqlite
 C:\01_WORKINGDIR\00_test\selles\lamia\lamia_V1_1.sqlite

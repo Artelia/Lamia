@@ -19,9 +19,11 @@ def launchIface():
     SLFILE = r"C:\01_WORKINGDIR\aaaa\variante_lamia.sqlite"
     # SHPFILE = r"C:\01_WORKINGDIR\alban\data\ART_RegardsEU.shp"
     SHPFILE = r"C:\01_WORKINGDIR\00_test\selles\virginie\layers\Regard Global_V1.shp"
+    SHPFILE = r"C:\01_WORKINGDIR\aa\Couches_SDA\VEA_Tronçons_SDA.shp"
     SLFILE = r"C:\01_WORKINGDIR\00_test\selles\lamia\lamia_V1.sqlite"
+    SLFILE = r"C:\01_WORKINGDIR\aa\test.sqlite"
 
-    IMPORTTYPE = "node"
+    IMPORTTYPE = "edge"
 
     lamiawidget.loadDBase(dbtype="Spatialite", slfile=SLFILE)
 

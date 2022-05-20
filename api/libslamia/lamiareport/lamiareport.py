@@ -24,7 +24,7 @@ This file is part of LAMIA.
   * License-Filename: LICENSING.md
  """
 
-import os, sys, logging, glob, inspect, importlib
+import os, sys, logging, glob, inspect, importlib, importlib.util
 
 import qgis, qgis.core
 from qgis.PyQt import QtGui, QtCore, QtXml
@@ -351,13 +351,19 @@ class printPDFBaseWorker(QtCore.QObject):
 
 
 
-            if self.dbase.base3version:
-                strtoexec = f"Lamia.config.{self.dbase.worktype.lower()}.lamiareport.lamiareportworktypefunc"
+            funcfile = os.path.join(self.dbase.dbaseressourcesdirectory, "config", "lamiareport", "lamiareportworktypefunc.py")
+            if os.path.isfile(funcfile):
+                spec = importlib.util.spec_from_file_location("test", funcfile)
+                self.addonimagesmodule = importlib.util.module_from_spec(spec)
+                spec.loader.exec_module(self.addonimagesmodule)
             else:
-                strtoexec = f"..{self.dbase.worktype.lower()}.lamiareportworktypefunc"
-            self.addonimagesmodule = importlib.import_module(
-                strtoexec, package=self.__module__
-            )
+                if self.dbase.base3version:
+                    strtoexec = f"Lamia.config.{self.dbase.worktype.lower()}.lamiareport.lamiareportworktypefunc"
+                else:
+                    strtoexec = f"..{self.dbase.worktype.lower()}.lamiareportworktypefunc"
+                self.addonimagesmodule = importlib.import_module(
+                    strtoexec, package=self.__module__
+                )
 
         self.printtype = "atlas"  # report atlas
         if debug:

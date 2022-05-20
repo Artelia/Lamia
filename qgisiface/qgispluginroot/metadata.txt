@@ -11,7 +11,7 @@ name=Lamia
 qgisMinimumVersion=3.10
 qgisMaximumVersion=3.99
 description=lamia
-version=1.033
+version=1.035
 author=ARTELIA
 email=patrice.verchere@arteliagroup.com
 
@@ -25,6 +25,8 @@ repository=erg
 
 # Uncomment the following line and add your changelog:
 # changelog=
+1.035 : fix qqgis3.22 bugs
+1.034 : pdf export by single file
 1.033 : bug fix add point to line
 1.031 : bug fix
 1.030 : multipage print

@@ -1,14 +1,22 @@
-import subprocess, atexit, os, sys, time, random, socket, signal
+import atexit
+import inspect
 import multiprocessing.connection
-try:
-    import cPickle as pickle
-except ImportError:
-    import pickle
+import os
+import signal
+import subprocess
+import sys
+import time
+import pickle
 
-from .remoteproxy import RemoteEventHandler, ClosedError, NoResultError, LocalObjectProxy, ObjectProxy
-from ..Qt import USE_PYSIDE
+from ..Qt import QT_LIB, mkQApp
 from ..util import cprint  # color printing for debugging
-
+from .remoteproxy import (
+    ClosedError,
+    LocalObjectProxy,
+    NoResultError,
+    ObjectProxy,
+    RemoteEventHandler,
+)
 
 __all__ = ['Process', 'QtProcess', 'ForkedProcess', 'ClosedError', 'NoResultError']
 
@@ -39,7 +47,7 @@ class Process(RemoteEventHandler):
     """
     _process_count = 1  # just used for assigning colors to each process for debugging
 
-    def __init__(self, name=None, target=None, executable=None, copySysPath=True, debug=False, timeout=20, wrapStdout=None):
+    def __init__(self, name=None, target=None, executable=None, copySysPath=True, debug=False, timeout=20, wrapStdout=None, pyqtapis=None):
         """
         ==============  =============================================================
         **Arguments:**
@@ -47,10 +55,12 @@ class Process(RemoteEventHandler):
                         from the remote process.
         target          Optional function to call after starting remote process.
                         By default, this is startEventLoop(), which causes the remote
-                        process to process requests from the parent process until it
+                        process to handle requests from the parent process until it
                         is asked to quit. If you wish to specify a different target,
                         it must be picklable (bound methods are not).
-        copySysPath     If True, copy the contents of sys.path to the remote process
+        copySysPath     If True, copy the contents of sys.path to the remote process.
+                        If False, then only the path required to import pyqtgraph is
+                        added.
         debug           If True, print detailed information about communication
                         with the child process.
         wrapStdout      If True (default on windows) then stdout and stderr from the
@@ -59,6 +69,9 @@ class Process(RemoteEventHandler):
                         for a python bug: http://bugs.python.org/issue3905
                         but has the side effect that child output is significantly
                         delayed relative to the parent output.
+        pyqtapis        Formerly optional dictionary of PyQt API version numbers to set
+                        before importing pyqtgraph in the remote process.
+                        No longer has any effect.
         ==============  =============================================================
         """
         if target is None:
@@ -82,7 +95,13 @@ class Process(RemoteEventHandler):
         port = l.address[1]
 
         ## start remote process, instruct it to run target function
-        sysPath = sys.path if copySysPath else None
+        if copySysPath:
+            sysPath = sys.path
+        else:
+            # what path do we need to make target importable?
+            mod = inspect.getmodule(target)
+            modroot = sys.modules[mod.__name__.split('.')[0]]
+            sysPath = os.path.abspath(os.path.join(os.path.dirname(modroot.__file__), '..'))
         bootstrap = os.path.abspath(os.path.join(os.path.dirname(__file__), 'bootstrap.py'))
         self.debugMsg('Starting child process (%s %s)' % (executable, bootstrap))
 
@@ -112,17 +131,28 @@ class Process(RemoteEventHandler):
         targetStr = pickle.dumps(target)  ## double-pickle target so that child has a chance to 
                                           ## set its sys.path properly before unpickling the target
         pid = os.getpid() # we must send pid to child because windows does not have getppid
-        
+
+        # When running in a venv on Windows platform, since Python >= 3.7.3, the launched
+        # subprocess is a grandchild instead of a child, leading to self.proc.pid not being
+        # the pid of the launched subprocess.
+        # https://bugs.python.org/issue38905
+        #
+        # As a workaround, when we detect such a situation, we perform exchange of pids via
+        # the multiprocessing connection. Technically, only the launched subprocess needs to
+        # send its pid back. Practically, we hijack the ppid parameter to indicate to the
+        # subprocess that pid exchange is needed.
+        xchg_pids = sys.platform == 'win32' and os.getenv('VIRTUAL_ENV') is not None
+
         ## Send everything the remote process needs to start correctly
         data = dict(
             name=name+'_child', 
             port=port, 
             authkey=authkey, 
-            ppid=pid, 
+            ppid=pid if not xchg_pids else None,
             targetStr=targetStr, 
             path=sysPath, 
-            pyside=USE_PYSIDE,
-            debug=procDebug
+            qt_lib=QT_LIB,
+            debug=procDebug,
             )
         pickle.dump(data, self.proc.stdin)
         self.proc.stdin.close()
@@ -139,7 +169,14 @@ class Process(RemoteEventHandler):
                 else:
                     raise
 
-        RemoteEventHandler.__init__(self, conn, name+'_parent', pid=self.proc.pid, debug=self.debug)
+        child_pid = self.proc.pid
+        if xchg_pids:
+            # corresponding code is in:
+            #   remoteproxy.py::RemoteEventHandler.__init__()
+            conn.send(pid)
+            child_pid = conn.recv()
+
+        RemoteEventHandler.__init__(self, conn, name+'_parent', pid=child_pid, debug=self.debug)
         self.debugMsg('Connected to child process.')
         
         atexit.register(self.join)
@@ -154,6 +191,15 @@ class Process(RemoteEventHandler):
                 if timeout is not None and time.time() - start > timeout:
                     raise Exception('Timed out waiting for remote process to end.')
                 time.sleep(0.05)
+        self.conn.close()
+
+        # Close remote polling threads, otherwise they will spin continuously
+        if hasattr(self, "_stdoutForwarder"):
+            self._stdoutForwarder.finish.set()
+            self._stderrForwarder.finish.set()
+            self._stdoutForwarder.join()
+            self._stderrForwarder.join()
+
         self.debugMsg('Child process exited. (%d)' % self.proc.returncode)
 
     def debugMsg(self, msg, *args):
@@ -182,7 +228,8 @@ def startEventLoop(name, port, authkey, ppid, debug=False):
             HANDLER.processRequests()  # exception raised when the loop should exit
             time.sleep(0.01)
         except ClosedError:
-            break
+            HANDLER.debugMsg('Exiting server loop.')
+            sys.exit(0)
 
 
 class ForkedProcess(RemoteEventHandler):
@@ -195,21 +242,21 @@ class ForkedProcess(RemoteEventHandler):
     
     However, fork() comes with some caveats and limitations:
 
-    - fork() is not available on Windows.
-    - It is not possible to have a QApplication in both parent and child process
-      (unless both QApplications are created _after_ the call to fork())
-      Attempts by the forked process to access Qt GUI elements created by the parent
-      will most likely cause the child to crash.
-    - Likewise, database connections are unlikely to function correctly in a forked child.
-    - Threads are not copied by fork(); the new process 
-      will have only one thread that starts wherever fork() was called in the parent process.
-    - Forked processes are unceremoniously terminated when join() is called; they are not 
-      given any opportunity to clean up. (This prevents them calling any cleanup code that
-      was only intended to be used by the parent process)
-    - Normally when fork()ing, open file handles are shared with the parent process, 
-      which is potentially dangerous. ForkedProcess is careful to close all file handles 
-      that are not explicitly needed--stdout, stderr, and a single pipe to the parent 
-      process.
+      - fork() is not available on Windows.
+      - It is not possible to have a QApplication in both parent and child process
+        (unless both QApplications are created _after_ the call to fork())
+        Attempts by the forked process to access Qt GUI elements created by the parent
+        will most likely cause the child to crash.
+      - Likewise, database connections are unlikely to function correctly in a forked child.
+      - Threads are not copied by fork(); the new process
+        will have only one thread that starts wherever fork() was called in the parent process.
+      - Forked processes are unceremoniously terminated when join() is called; they are not
+        given any opportunity to clean up. (This prevents them calling any cleanup code that
+        was only intended to be used by the parent process)
+      - Normally when fork()ing, open file handles are shared with the parent process,
+        which is potentially dangerous. ForkedProcess is careful to close all file handles
+        that are not explicitly needed--stdout, stderr, and a single pipe to the parent
+        process.
       
     """
     
@@ -238,7 +285,7 @@ class ForkedProcess(RemoteEventHandler):
         
         proxyIDs = {}
         if preProxy is not None:
-            for k, v in preProxy.iteritems():
+            for k, v in preProxy.items():
                 proxyId = LocalObjectProxy.registerObject(v)
                 proxyIDs[k] = proxyId
         
@@ -287,7 +334,7 @@ class ForkedProcess(RemoteEventHandler):
             RemoteEventHandler.__init__(self, remoteConn, name+'_child', pid=ppid)
             
             self.forkedProxies = {}
-            for name, proxyId in proxyIDs.iteritems():
+            for name, proxyId in proxyIDs.items():
                 self.forkedProxies[name] = ObjectProxy(ppid, proxyId=proxyId, typeStr=repr(preProxy[name]))
             
             if target is not None:
@@ -321,9 +368,15 @@ class ForkedProcess(RemoteEventHandler):
         #os.kill(pid, 9)  
         try:
             self.close(callSync='sync', timeout=timeout, noCleanup=True)  ## ask the child process to exit and require that it return a confirmation.
-            os.waitpid(self.childPid, 0)
         except IOError:  ## probably remote process has already quit
             pass  
+        
+        try:
+            os.waitpid(self.childPid, 0)
+        except OSError:  ## probably remote process has already quit
+            pass
+        
+        self.conn.close()  # don't leak file handles!
         self.hasJoined = True
 
     def kill(self):
@@ -342,7 +395,7 @@ class RemoteQtEventHandler(RemoteEventHandler):
         RemoteEventHandler.__init__(self, *args, **kwds)
         
     def startEventTimer(self):
-        from ..Qt import QtGui, QtCore
+        from ..Qt import QtCore
         self.timer = QtCore.QTimer()
         self.timer.timeout.connect(self.processRequests)
         self.timer.start(10)
@@ -351,8 +404,8 @@ class RemoteQtEventHandler(RemoteEventHandler):
         try:
             RemoteEventHandler.processRequests(self)
         except ClosedError:
-            from ..Qt import QtGui, QtCore
-            QtGui.QApplication.instance().quit()
+            from ..Qt import QtWidgets
+            QtWidgets.QApplication.instance().quit()
             self.timer.stop()
             #raise SystemExit
 
@@ -360,20 +413,20 @@ class QtProcess(Process):
     """
     QtProcess is essentially the same as Process, with two major differences:
     
-    - The remote process starts by running startQtEventLoop() which creates a 
-      QApplication in the remote process and uses a QTimer to trigger
-      remote event processing. This allows the remote process to have its own 
-      GUI.
-    - A QTimer is also started on the parent process which polls for requests
-      from the child process. This allows Qt signals emitted within the child 
-      process to invoke slots on the parent process and vice-versa. This can 
-      be disabled using processRequests=False in the constructor.
+      - The remote process starts by running startQtEventLoop() which creates a
+        QApplication in the remote process and uses a QTimer to trigger
+        remote event processing. This allows the remote process to have its own
+        GUI.
+      - A QTimer is also started on the parent process which polls for requests
+        from the child process. This allows Qt signals emitted within the child
+        process to invoke slots on the parent process and vice-versa. This can
+        be disabled using processRequests=False in the constructor.
       
     Example::
     
         proc = QtProcess()            
         rQtGui = proc._import('PyQt4.QtGui')
-        btn = rQtGui.QPushButton('button on child process')
+        btn = rQtWidgets.QPushButton('button on child process')
         btn.show()
         
         def slot():
@@ -384,15 +437,17 @@ class QtProcess(Process):
     def __init__(self, **kwds):
         if 'target' not in kwds:
             kwds['target'] = startQtEventLoop
-        from ..Qt import QtGui  ## avoid module-level import to keep bootstrap snappy.
+        from ..Qt import (  # # avoid module-level import to keep bootstrap snappy.
+            QtWidgets,
+        )
         self._processRequests = kwds.pop('processRequests', True)
-        if self._processRequests and QtGui.QApplication.instance() is None:
+        if self._processRequests and QtWidgets.QApplication.instance() is None:
             raise Exception("Must create QApplication before starting QtProcess, or use QtProcess(processRequests=False)")
         Process.__init__(self, **kwds)
         self.startEventTimer()
         
     def startEventTimer(self):
-        from ..Qt import QtCore  ## avoid module-level import to keep bootstrap snappy.
+        from ..Qt import QtCore  # # avoid module-level import to keep bootstrap snappy.
         self.timer = QtCore.QTimer()
         if self._processRequests:
             self.startRequestProcessing()
@@ -402,7 +457,7 @@ class QtProcess(Process):
         This allows signals to be connected from the child process to the parent.
         """
         self.timer.timeout.connect(self.processRequests)
-        self.timer.start(interval*1000)
+        self.timer.start(int(interval*1000))
         
     def stopRequestProcessing(self):
         self.timer.stop()
@@ -420,20 +475,22 @@ def startQtEventLoop(name, port, authkey, ppid, debug=False):
     conn = multiprocessing.connection.Client(('localhost', int(port)), authkey=authkey)
     if debug:
         cprint.cout(debug, '[%d] connected; starting remote proxy.\n' % os.getpid(), -1)
-    from ..Qt import QtGui, QtCore
-    app = QtGui.QApplication.instance()
+    from ..Qt import QtWidgets
+    app = QtWidgets.QApplication.instance()
     #print app
     if app is None:
-        app = QtGui.QApplication([])
+        app = mkQApp()
         app.setQuitOnLastWindowClosed(False)  ## generally we want the event loop to stay open 
                                               ## until it is explicitly closed by the parent process.
     
     global HANDLER
     HANDLER = RemoteQtEventHandler(conn, name, ppid, debug=debug)
     HANDLER.startEventTimer()
-    app.exec_()
+    app.exec() if hasattr(app, 'exec') else app.exec_()
 
 import threading
+
+
 class FileForwarder(threading.Thread):
     """
     Background thread that forwards data from one pipe to another. 
@@ -454,24 +511,24 @@ class FileForwarder(threading.Thread):
         self.lock = threading.Lock()
         self.daemon = True
         self.color = color
+        self.finish = threading.Event()
         self.start()
 
     def run(self):
-        if self.output == 'stdout':
-            while True:
+        if self.output == 'stdout' and self.color is not False:
+            while not self.finish.is_set():
                 line = self.input.readline()
                 with self.lock:
-                    cprint.cout(self.color, line, -1)
-        elif self.output == 'stderr':
-            while True:
+                    cprint.cout(self.color, line.decode('utf8'), -1)
+        elif self.output == 'stderr' and self.color is not False:
+            while not self.finish.is_set():
                 line = self.input.readline()
                 with self.lock:
-                    cprint.cerr(self.color, line, -1)
+                    cprint.cerr(self.color, line.decode('utf8'), -1)
         else:
-            while True:
+            if isinstance(self.output, str):
+                self.output = getattr(sys, self.output)
+            while not self.finish.is_set():
                 line = self.input.readline()
                 with self.lock:
-                    self.output.write(line)
-
-
-
+                    self.output.write(line.decode('utf8'))

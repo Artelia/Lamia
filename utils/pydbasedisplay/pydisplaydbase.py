@@ -122,6 +122,7 @@ def launchIface():
     SLFILE = r"C:\01_WORKINGDIR\00_test\tetete.sqlite"
 
     SLFILE = r"C:\01_WORKINGDIR\00_test\selles\lamiadef\lamia_selles_V1.sqlite"
+    SLFILE = r"C:\01_WORKINGDIR\test_audrey\20220127\Soissons_EP.sqlite"
     SLFILE = r"C:\01_WORKINGDIR\aa\test.sqlite"
 
     

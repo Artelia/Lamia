@@ -1,5 +1,11 @@
-from ..pgcollections import OrderedDict
+import copy
+from collections import OrderedDict
+from math import log2
+
 import numpy as np
+
+from .. import functions as fn
+
 
 class SystemSolver(object):
     """
@@ -48,16 +54,17 @@ class SystemSolver(object):
     1) The *defaultState* class attribute: This is a dict containing a 
        description of the variables in the system--their default values,
        data types, and the ways they can be constrained. The format is::
-       
+
            { name: [value, type, constraint, allowed_constraints], ...}
-       
-       * *value* is the default value. May be None if it has not been specified
-         yet.
-       * *type* may be float, int, bool, np.ndarray, ...
-       * *constraint* may be None, single value, or (min, max)
-            * None indicates that the value is not constrained--it may be 
-              automatically generated if the value is requested.
-       * *allowed_constraints* is a string composed of (n)one, (f)ixed, and (r)ange. 
+
+       Where:
+         * *value* is the default value. May be None if it has not been specified
+           yet.
+         * *type* may be float, int, bool, np.ndarray, ...
+         * *constraint* may be None, single value, or (min, max)
+              * None indicates that the value is not constrained--it may be
+                automatically generated if the value is requested.
+         * *allowed_constraints* is a string composed of (n)one, (f)ixed, and (r)ange.
        
        Note: do not put mutable objects inside defaultState!
        
@@ -73,6 +80,12 @@ class SystemSolver(object):
         self.__dict__['_currentGets'] = set()
         self.reset()
         
+    def copy(self):
+        sys = type(self)()
+        sys.__dict__['_vars'] = copy.deepcopy(self.__dict__['_vars'])
+        sys.__dict__['_currentGets'] = copy.deepcopy(self.__dict__['_currentGets'])
+        return sys
+
     def reset(self):
         """
         Reset all variables in the solver to their default state.
@@ -167,6 +180,16 @@ class SystemSolver(object):
         elif constraint == 'fixed':
             if 'f' not in var[3]:
                 raise TypeError("Fixed constraints not allowed for '%s'" % name)
+            # This is nice, but not reliable because sometimes there is 1 DOF but we set 2
+            # values simultaneously. 
+            # if var[2] is None:
+            #     try:
+            #         self.get(name)
+            #         # has already been computed by the system; adding a fixed constraint
+            #         # would overspecify the system.
+            #         raise ValueError("Cannot fix parameter '%s'; system would become overconstrained." % name)
+            #     except RuntimeError:
+            #         pass
             var[2] = constraint
         elif isinstance(constraint, tuple):
             if 'r' not in var[3]:
@@ -177,7 +200,7 @@ class SystemSolver(object):
             raise TypeError("constraint must be None, True, 'fixed', or tuple. (got %s)" % constraint)
         
         # type checking / massaging
-        if var[1] is np.ndarray:
+        if var[1] is np.ndarray and value is not None:
             value = np.array(value, dtype=float)
         elif var[1] in (int, float, tuple) and value is not None:
             value = var[1](value)
@@ -185,9 +208,9 @@ class SystemSolver(object):
         # constraint checks
         if constraint is True and not self.check_constraint(name, value):
             raise ValueError("Setting %s = %s violates constraint %s" % (name, value, var[2]))
-        
+
         # invalidate other dependent values
-        if var[0] is not None:
+        if var[0] is not None or value is None:
             # todo: we can make this more clever..(and might need to) 
             # we just know that a value of None cannot have dependencies
             # (because if anyone else had asked for this value, it wouldn't be 
@@ -237,6 +260,31 @@ class SystemSolver(object):
         for k in self._vars:
             getattr(self, k)
                 
+    def checkOverconstraint(self):
+        """Check whether the system is overconstrained. If so, return the name of
+        the first overconstrained parameter.
+
+        Overconstraints occur when any fixed parameter can be successfully computed by the system.
+        (Ideally, all parameters are either fixed by the user or constrained by the
+        system, but never both).
+        """
+        for k,v in self._vars.items():
+            if v[2] == 'fixed' and 'n' in v[3]:
+                oldval = v[:]
+                self.set(k, None, None)
+                try:
+                    self.get(k)
+                    return k
+                except RuntimeError:
+                    pass
+                finally:
+                    self._vars[k] = oldval
+
+        return False
+
+
+
+
     def __repr__(self):
         state = OrderedDict()
         for name, var in self._vars.items():
@@ -347,15 +395,12 @@ if __name__ == '__main__':
                 sh = self.shutter   # this raises RuntimeError if shutter has not
                                    # been specified
                 ap = 4.0 * (sh / (1./60.)) * (iso / 100.) * (2 ** exp) * (2 ** light)
-                ap = np.clip(ap, 2.0, 16.0)
+                ap = fn.clip_scalar(ap, 2.0, 16.0)
             except RuntimeError:
                 # program mode; we can select a suitable shutter
                 # value at the same time.
                 sh = (1./60.)
                 raise
-            
-            
-            
             return ap
 
         def _balance(self):
@@ -363,10 +408,8 @@ if __name__ == '__main__':
             light = self.lightMeter
             sh = self.shutter
             ap = self.aperture
-            fl = self.flash
-            
             bal = (4.0 / ap) * (sh / (1./60.)) * (iso / 100.) * (2 ** light)
-            return np.log2(bal)
+            return log2(bal)
     
     camera = Camera()
     

@@ -1,24 +1,32 @@
-from ..Qt import QtGui, QtCore
+from contextlib import contextmanager
 
-__all__ = ['BusyCursor']
+from ..Qt import QtCore, QtGui, QtWidgets
 
-class BusyCursor(object):
-    """Class for displaying a busy mouse cursor during long operations.
+__all__ = ["BusyCursor"]
+
+
+@contextmanager
+def BusyCursor():
+    """
+    Display a busy mouse cursor during long operations.
     Usage::
 
-        with pyqtgraph.BusyCursor():
+        with BusyCursor():
             doLongOperation()
 
-    May be nested.
+    May be nested. If called from a non-gui thread, then the cursor will not be affected.
     """
-    active = []
-
-    def __enter__(self):
-        QtGui.QApplication.setOverrideCursor(QtGui.QCursor(QtCore.Qt.WaitCursor))
-        BusyCursor.active.append(self)
-
-    def __exit__(self, *args):
-        BusyCursor.active.pop(-1)
-        if len(BusyCursor.active) == 0:
-            QtGui.QApplication.restoreOverrideCursor()
-        
+    app = QtCore.QCoreApplication.instance()
+    in_gui_thread = (app is not None) and (QtCore.QThread.currentThread() == app.thread())
+    need_cleanup = in_gui_thread
+    try:
+        if in_gui_thread:
+            guard = QtWidgets.QApplication.setOverrideCursor(QtGui.QCursor(QtCore.Qt.CursorShape.WaitCursor))
+            if hasattr(QtGui, 'QOverrideCursorGuard') and isinstance(guard, QtGui.QOverrideCursorGuard):
+                # on PySide6 6.3.0, setOverrideCursor() returns a QOverrideCursorGuard context manager
+                # object that calls restoreOverrideCursor() for us
+                need_cleanup = False
+        yield
+    finally:
+        if need_cleanup:
+            QtWidgets.QApplication.restoreOverrideCursor()

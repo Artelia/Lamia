@@ -1,9 +1,10 @@
+from OpenGL.GL import *  # noqa
+from OpenGL.GL import shaders  # noqa
 try:
     from OpenGL import NullFunctionError
 except ImportError:
     from OpenGL.error import NullFunctionError
-from OpenGL.GL import *
-from OpenGL.GL import shaders
+import numpy as np
 import re
 
 ## For centralizing and managing vertex/fragment shader programs.
@@ -140,9 +141,9 @@ def initShaders():
         ## colors fragments by z-value.
         ## This is useful for coloring surface plots by height.
         ## This shader uses a uniform called "colorMap" to determine how to map the colors:
-        ##    red   = pow(z * colorMap[0] + colorMap[1], colorMap[2])
-        ##    green = pow(z * colorMap[3] + colorMap[4], colorMap[5])
-        ##    blue  = pow(z * colorMap[6] + colorMap[7], colorMap[8])
+        ##    red   = pow(colorMap[0]*(z + colorMap[1]), colorMap[2])
+        ##    green = pow(colorMap[3]*(z + colorMap[4]), colorMap[5])
+        ##    blue  = pow(colorMap[6]*(z + colorMap[7]), colorMap[8])
         ## (set the values like this: shader['uniformMap'] = array([...])
         ShaderProgram('heightColor', [
             VertexShader("""
@@ -322,7 +323,7 @@ class ShaderProgram(object):
                     loc = self.uniform(uniformName)
                     if loc == -1:
                         raise Exception('Could not find uniform variable "%s"' % uniformName)
-                    glUniform1fv(loc, len(data), data)
+                    glUniform1fv(loc, len(data), np.array(data, dtype=np.float32))
                     
                 ### bind buffer data to program blocks
                 #if len(self.blockData) > 0:

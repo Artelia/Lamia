@@ -5,4 +5,6 @@
     "git.ignoreLimitWarning": true,
     "http.proxyStrictSSL": false,
     "restructuredtext.confPath": "${workspaceFolder}\\doc\\source_fr",
+    "esbonio.server.enabled": true,
+    "esbonio.sphinx.confDir": "${workspaceFolder}\\doc\\source_fr",
 }

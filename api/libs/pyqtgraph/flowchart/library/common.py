@@ -1,12 +1,17 @@
-# -*- coding: utf-8 -*-
-from ...Qt import QtCore, QtGui
-from ...widgets.SpinBox import SpinBox
+__all__ = ["CtrlNode", "PlottingCtrlNode", "metaArrayWrapper"]
+
+import numpy as np
+
+from ...Qt import QtCore, QtWidgets
+
 #from ...SignalProxy import SignalProxy
 from ...WidgetGroup import WidgetGroup
+from ...widgets.ColorButton import ColorButton
+from ...widgets.SpinBox import SpinBox
+
 #from ColorMapper import ColorMapper
 from ..Node import Node
-import numpy as np
-from ...widgets.ColorButton import ColorButton
+
 try:
     import metaarray
     HAVE_METAARRAY = True
@@ -16,8 +21,8 @@ except:
 
 def generateUi(opts):
     """Convenience function for generating common UI types"""
-    widget = QtGui.QWidget()
-    l = QtGui.QFormLayout()
+    widget = QtWidgets.QWidget()
+    l = QtWidgets.QFormLayout()
     l.setSpacing(0)
     widget.setLayout(l)
     ctrls = {}
@@ -30,8 +35,13 @@ def generateUi(opts):
             k, t, o = opt
         else:
             raise Exception("Widget specification must be (name, type) or (name, type, {opts})")
+            
+        ## clean out these options so they don't get sent to SpinBox
+        hidden = o.pop('hidden', False)
+        tip = o.pop('tip', None)
+
         if t == 'intSpin':
-            w = QtGui.QSpinBox()
+            w = QtWidgets.QSpinBox()
             if 'max' in o:
                 w.setMaximum(o['max'])
             if 'min' in o:
@@ -39,7 +49,7 @@ def generateUi(opts):
             if 'value' in o:
                 w.setValue(o['value'])
         elif t == 'doubleSpin':
-            w = QtGui.QDoubleSpinBox()
+            w = QtWidgets.QDoubleSpinBox()
             if 'max' in o:
                 w.setMaximum(o['max'])
             if 'min' in o:
@@ -50,11 +60,11 @@ def generateUi(opts):
             w = SpinBox()
             w.setOpts(**o)
         elif t == 'check':
-            w = QtGui.QCheckBox()
+            w = QtWidgets.QCheckBox()
             if 'checked' in o:
                 w.setChecked(o['checked'])
         elif t == 'combo':
-            w = QtGui.QComboBox()
+            w = QtWidgets.QComboBox()
             for i in o['values']:
                 w.addItem(i)
         #elif t == 'colormap':
@@ -63,11 +73,12 @@ def generateUi(opts):
             w = ColorButton()
         else:
             raise Exception("Unknown widget type '%s'" % str(t))
-        if 'tip' in o:
-            w.setToolTip(o['tip'])
+
+        if tip is not None:
+            w.setToolTip(tip)
         w.setObjectName(k)
         l.addRow(k, w)
-        if o.get('hidden', False):
+        if hidden:
             w.hide()
             label = l.labelForField(w)
             label.hide()
@@ -85,14 +96,15 @@ class CtrlNode(Node):
     sigStateChanged = QtCore.Signal(object)
     
     def __init__(self, name, ui=None, terminals=None):
+        if terminals is None:
+            terminals = {'In': {'io': 'in'}, 'Out': {'io': 'out', 'bypass': 'In'}}
+        Node.__init__(self, name=name, terminals=terminals)
+        
         if ui is None:
             if hasattr(self, 'uiTemplate'):
                 ui = self.uiTemplate
             else:
                 ui = []
-        if terminals is None:
-            terminals = {'In': {'io': 'in'}, 'Out': {'io': 'out', 'bypass': 'In'}}
-        Node.__init__(self, name=name, terminals=terminals)
         
         self.ui, self.stateGroup, self.ctrls = generateUi(ui)
         self.stateGroup.sigChanged.connect(self.changed)
@@ -181,4 +193,3 @@ def metaArrayWrapper(fn):
         else:
             return fn(self, data, *args, **kargs)
     return newFn
-

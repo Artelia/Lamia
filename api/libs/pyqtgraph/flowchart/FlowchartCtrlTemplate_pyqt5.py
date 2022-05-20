@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 
 # Form implementation generated from reading ui file './pyqtgraph/flowchart/FlowchartCtrlTemplate.ui'
 #
@@ -56,7 +55,7 @@ class Ui_Form(object):
 
     def retranslateUi(self, Form):
         _translate = QtCore.QCoreApplication.translate
-        Form.setWindowTitle(_translate("Form", "Form"))
+        Form.setWindowTitle(_translate("Form", "PyQtGraph"))
         self.loadBtn.setText(_translate("Form", "Load.."))
         self.saveBtn.setText(_translate("Form", "Save"))
         self.saveAsBtn.setText(_translate("Form", "As.."))
